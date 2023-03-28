@@ -1,0 +1,32 @@
+{
+  "name": "quizzer-server",
+  "version": "0.0.1",
+  "description": "Server for the Quizzer app",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Kenneth Jagenheim",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kernie66/react-quizzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kernie66/react-quizzer/issues"
+  },
+  "homepage": "https://github.com/kernie66/react-quizzer#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "nodemon": "^2.0.22"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "eslint-plugin-react": "^7.32.2"
+  }
+}
