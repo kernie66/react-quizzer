@@ -1,15 +1,22 @@
 import { DataTypes } from 'sequelize';
+import { sq } from '../src/db/db.config.js';
 
-export default function usersModel(db) {
-  const userModel = db.sequelize.define('user', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+export const User = sq.define('user', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isEmail: true,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  },
+  hashedPassword: {
+    type: DataTypes.STRING(64),
+    validate: {
+      is: /^[0-9a-f]{64}$/i,
     },
-  });
-  return userModel;
-}
+  },
+});
