@@ -6,12 +6,10 @@ import cors from 'cors';
 
 import normalizePort from './utils/normalizePort.js';
 import { logger } from './logger/logger.js';
-import quizzerDb from './db/db.config.js';
-import testDbConnection from './db/testDbConnection.js';
+import { testDbConnection } from './db/db.config.js';
 
 const app = express();
 const apiPort = normalizePort(process.env.PORT || '3000');
-const db = quizzerDb();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -19,7 +17,7 @@ app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('Initializing database...');
-  testDbConnection(db);
+  testDbConnection();
 });
 
 app.listen(apiPort, () =>
