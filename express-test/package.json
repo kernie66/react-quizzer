@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "server": "node --es-module-specifier-resolution=node ./server/bin/www.js"
+    "server": "node ./server/bin/www.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
