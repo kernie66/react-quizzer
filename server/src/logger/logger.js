@@ -1,23 +1,8 @@
-import clc from 'cli-color';
 import { createLogger, format, transports } from 'winston';
 import 'winston-daily-rotate-file';
+import pkg from 'winston-format-pretty-console';
 
-const logFormat = format.printf((info) => {
-  const formattedDate = info.timestamp
-    .replace('T', ' ')
-    .replace('Z', '');
-  const delimiter = clc.yellowBright.bold('|');
-  const service = clc.blue(info.service);
-  const logText =
-    formattedDate +
-    delimiter +
-    service +
-    delimiter +
-    info.level +
-    delimiter +
-    info.message;
-  return logText;
-});
+const prettyConsoleFormat = pkg;
 
 const fileRotateTransport = new transports.DailyRotateFile({
   filename: 'logs/quizzer-rotate-%DATE%.log',
@@ -66,7 +51,17 @@ if (process.env.NODE_ENV !== 'production') {
       format: format.combine(
         format.timestamp(),
         format.colorize(),
-        logFormat
+        format.metadata({
+          fillExcept: [
+            'message',
+            'level',
+            'timestamp',
+            'label',
+            'service',
+          ],
+        }),
+        prettyConsoleFormat()
+        //        logFormat
       ), // colorize(), format.simple()),
     })
   );

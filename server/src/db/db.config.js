@@ -1,5 +1,4 @@
-// import 'dotenv/config';
-import { Sequelize } from 'sequelize';
+import { Sequelize } from '@sequelize/core';
 import { logger } from '../logger/logger.js';
 
 const hostName = process.env.HOSTNAME;
@@ -9,7 +8,7 @@ const database = process.env.DATABASE;
 const dialect = 'postgres';
 const logLevel = process.env.SEQUELIZE_LOG_LEVEL || 'debug';
 
-export const sq = new Sequelize(database, userName, password, {
+export const db = new Sequelize(database, userName, password, {
   host: hostName,
   dialect: dialect,
   pool: {
@@ -24,7 +23,7 @@ export const sq = new Sequelize(database, userName, password, {
 
 export const testDbConnection = async () => {
   try {
-    await sq.authenticate();
+    await db.authenticate();
     logger.info('Connection has been established successfully.');
   } catch (error) {
     logger.error('Unable to connect to the database:', error);

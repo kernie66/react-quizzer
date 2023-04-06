@@ -28,8 +28,13 @@ app.get('/sync', (req, res) => {
 });
 
 app.get('/user', (req, res) => {
+  const userData = {
+    name: 'Jane',
+    email: 'jane.doe2@example.com',
+    nicknames: 'JD',
+  };
+  createUser(userData);
   res.send('Initialize user...');
-  createUser();
   // dbSync();
 });
 
