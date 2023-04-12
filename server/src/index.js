@@ -8,7 +8,13 @@ import normalizePort from './utils/normalizePort.js';
 import { logger } from './logger/logger.js';
 import { testDbConnection } from './db/db.config.js';
 import dbSync from './db/db.sync.js';
-import createUser from './createUser.js';
+import { createUser, deleteUser, getUsers } from './queries/users.js';
+import morgan from 'morgan';
+
+const invalidPathHandler = (req, res) => {
+  res.status(400);
+  res.send('Invalid path');
+};
 
 const app = express();
 const apiPort = normalizePort(process.env.PORT || '3000');
@@ -16,6 +22,7 @@ const apiPort = normalizePort(process.env.PORT || '3000');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
   res.send('Initializing database...');
@@ -27,16 +34,13 @@ app.get('/sync', (req, res) => {
   res.send('Synchronize database...');
 });
 
-app.get('/user', (req, res) => {
-  const userData = {
-    name: 'Jane',
-    email: 'jane.doe2@example.com',
-    nicknames: 'JD',
-  };
-  createUser(userData);
-  res.send('Initialize user...');
-  // dbSync();
-});
+app.get('/users', getUsers);
+
+app.post('/users', createUser);
+
+app.delete('/users', deleteUser);
+
+app.use(invalidPathHandler);
 
 app.listen(apiPort, () =>
   logger.info(`Server running on port ${apiPort}`)

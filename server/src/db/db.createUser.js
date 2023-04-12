@@ -1,25 +1,37 @@
-import { User } from '../models/user.model.js';
-import { logger } from './logger/logger.js';
+import { Op } from '@sequelize/core';
+import { User } from '../../models/user.model.js';
+import { logger } from '../logger/logger.js';
+import isEmpty from '../utils/isEmpty.js';
 
-export default async function createUser(userData) {
+export default async function dbCreateUser(userData) {
+  const lowerCaseEmail = userData.email.trim().toLowerCase();
   const existingUser = JSON.parse(
     JSON.stringify(
       await User.findAll({
         where: {
-          email: userData.email,
+          [Op.or]: [
+            {
+              email: lowerCaseEmail,
+            },
+            { username: userData.username },
+          ],
         },
       })
     )
   );
 
-  logger.info('Logger:', existingUser ? existingUser : 'No data');
+  logger.info(
+    'Existing user:',
+    isEmpty(existingUser) ? 'No data' : existingUser
+  );
 
-  if (existingUser.length === 0) {
+  if (isEmpty(existingUser)) {
     const lastSeen = new Date();
     try {
       const newUser = await User.create({
         name: userData.name,
-        email: userData.email,
+        email: lowerCaseEmail,
+        username: userData.username,
         // nicknames: userData.nickname,
         lastSeen: lastSeen,
       });
@@ -37,7 +49,7 @@ export default async function createUser(userData) {
     }
   } else {
     logger.info(
-      'User with same email already exist:',
+      'User with same info already exist:',
       existingUser[0].name
     );
   }

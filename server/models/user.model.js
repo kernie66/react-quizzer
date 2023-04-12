@@ -4,7 +4,12 @@ import { DataTypes } from '@sequelize/core';
 export const User = db.define('user', {
   name: {
     type: DataTypes.STRING(32),
+    allowNull: true,
+  },
+  username: {
+    type: DataTypes.STRING(16),
     allowNull: false,
+    unique: true,
   },
   email: {
     type: DataTypes.STRING(64),

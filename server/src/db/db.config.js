@@ -4,9 +4,16 @@ import { logger } from '../logger/logger.js';
 const hostName = process.env.HOSTNAME;
 const userName = process.env.USERNAME;
 const password = process.env.PASSWORD;
-const database = process.env.DATABASE;
 const dialect = 'postgres';
 const logLevel = process.env.SEQUELIZE_LOG_LEVEL || 'debug';
+let database = process.env.DATABASE;
+
+if (process.env.NODE_ENV === 'development') {
+  database = database + '_dev';
+}
+if (process.env.NODE_ENV === 'test') {
+  database = database + '_test';
+}
 
 export const db = new Sequelize(database, userName, password, {
   host: hostName,
