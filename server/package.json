@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node ./src/index.js"
+    "server": "nodemon ./src/index.js"
   },
   "keywords": [],
   "author": "Kenneth Jagenheim",
@@ -31,7 +31,8 @@
     "pg-hstore": "^2.3.4",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1",
-    "winston-format-pretty-console": "^1.2.2"
+    "winston-format-pretty-console": "^1.2.2",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "eslint": "^8.36.0",

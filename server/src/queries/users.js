@@ -1,9 +1,10 @@
+import { col, fn } from '@sequelize/core';
 import { User } from '../../models/user.model.js';
 import dbCreateUser from '../db/db.createUser.js';
 import { logger } from '../logger/logger.js';
 import isEmpty from '../utils/isEmpty.js';
 
-export const getUsers = async (req, res) => {
+async function parseUser(req) {
   let users;
   // Use findAll for all to ensure that the result is an array
   if (req.query.id) {
@@ -30,6 +31,11 @@ export const getUsers = async (req, res) => {
   } else {
     users = await User.findAll();
   }
+  return users;
+}
+
+export const getUsers = async (req, res) => {
+  const users = await parseUser(req);
   logger.info(
     'Number of users found:',
     isEmpty(users) ? 'None' : users.length
@@ -53,6 +59,36 @@ export const createUser = async (req, res) => {
       .send(
         `User with same info already exist: ${userData.username}`
       );
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const userData = await parseUser(req);
+  if (!isEmpty(userData)) {
+    try {
+      const user = userData[0];
+      user.name = req.body.name;
+      user.email = req.body.email;
+      const updatedUser = await user.save();
+      if (req.body.nickname) {
+        if (!user.nicknames.includes(req.body.nickname)) {
+          await user.update({
+            nicknames: fn(
+              'array_append',
+              col('nicknames'),
+              req.body.nickname
+            ),
+          });
+        } else {
+          logger.debug('Nickname already exist:', req.body.nickname);
+        }
+      }
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  } else {
+    res.status(404).send('No matching user found.');
   }
 };
 

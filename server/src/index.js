@@ -8,8 +8,14 @@ import normalizePort from './utils/normalizePort.js';
 import { logger } from './logger/logger.js';
 import { testDbConnection } from './db/db.config.js';
 import dbSync from './db/db.sync.js';
-import { createUser, deleteUser, getUsers } from './queries/users.js';
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+} from './queries/users.js';
 import morgan from 'morgan';
+import zxcvbn from 'zxcvbn';
 
 const invalidPathHandler = (req, res) => {
   res.status(400);
@@ -34,10 +40,14 @@ app.get('/sync', (req, res) => {
   res.send('Synchronize database...');
 });
 
+app.get('/password', (req, res) => {
+  res.send(zxcvbn('audi100'));
+});
+
+// Manage users
 app.get('/users', getUsers);
-
 app.post('/users', createUser);
-
+app.put('/users', updateUser);
 app.delete('/users', deleteUser);
 
 app.use(invalidPathHandler);
