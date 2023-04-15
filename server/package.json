@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest --runInBand --testTimeout=10000",
+    "test": "NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest --runInBand --testTimeout=10000",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
     "server": "nodemon ./src/index.js"
   },
@@ -30,6 +30,7 @@
     "@sequelize/core": "^7.0.0-alpha.23",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "morgan": "^1.10.0",
@@ -42,7 +43,6 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "eslint": "^8.38.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",

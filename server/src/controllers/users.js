@@ -1,8 +1,8 @@
-import { col, fn } from '@sequelize/core';
-import { User } from '../../models/user.model.js';
-import dbCreateUser from '../db/db.createUser.js';
-import { logger } from '../logger/logger.js';
-import isEmpty from '../utils/isEmpty.js';
+import { col, fn } from "@sequelize/core";
+import { User } from "../../models/user.model.js";
+import dbCreateUser from "../db/db.createUser.js";
+import { logger } from "../logger/logger.js";
+import isEmpty from "../utils/isEmpty.js";
 
 async function parseUser(req) {
   let users;
@@ -36,29 +36,24 @@ async function parseUser(req) {
 
 export const getUsers = async (req, res) => {
   const users = await parseUser(req);
-  logger.info(
-    'Number of users found:',
-    isEmpty(users) ? 'None' : users.length
-  );
+  logger.info("Number of users found:", isEmpty(users) ? "None" : users.length);
   if (!isEmpty(users)) {
     res.status(200).json(users);
   } else {
-    res.status(404).send('No matching users found.');
+    res.status(500).send("No matching users found.");
+    logger.debug("No users found.");
   }
 };
 
 export const createUser = async (req, res) => {
   const userData = req.body;
-  logger.info('User', userData.name, userData.email, req.body);
+  logger.info("User", userData.name, userData.email, req.body);
   const status = await dbCreateUser(userData);
   if (status) {
     res.status(201).send(`User created for ${userData.name}`);
   } else {
-    res
-      .status(200)
-      .send(
-        `User with same info already exist: ${userData.username}`
-      );
+    res.status(500).send(`User with same info already exist: ${userData.username}`);
+    logger.debug("Duplicate user info.");
   }
 };
 
@@ -67,28 +62,31 @@ export const updateUser = async (req, res) => {
   if (!isEmpty(userData)) {
     try {
       const user = userData[0];
-      user.name = req.body.name;
-      user.email = req.body.email;
+      if (req.body.name) {
+        user.name = req.body.name;
+      }
+      if (req.body.email) {
+        user.email = req.body.email;
+      }
       const updatedUser = await user.save();
       if (req.body.nickname) {
-        if (!user.nicknames.includes(req.body.nickname)) {
+        if (!user.nicknames || (user.nicknames && !user.nicknames.includes(req.body.nickname))) {
           await user.update({
-            nicknames: fn(
-              'array_append',
-              col('nicknames'),
-              req.body.nickname
-            ),
+            nicknames: fn("array_append", col("nicknames"), req.body.nickname),
           });
         } else {
-          logger.debug('Nickname already exist:', req.body.nickname);
+          logger.debug("Nickname already exist:", req.body.nickname);
         }
       }
+      logger.info(`User ${user.username} has been updated`);
       res.status(200).json(updatedUser);
     } catch (error) {
-      res.status(400).json(error);
+      res.status(500).json(error);
+      logger.error("Update error:", error);
     }
   } else {
-    res.status(404).send('No matching user found.');
+    res.status(500).send("No matching user found.");
+    logger.debug("No user found.");
   }
 };
 
@@ -97,9 +95,10 @@ export const deleteUser = async (req, res) => {
   const user = await User.findByPk(id);
   if (!isEmpty(user)) {
     const done = await user.destroy();
-    logger.info('User delete result:', done);
+    logger.info("User delete result:", done);
     res.status(200).json(user);
   } else {
-    res.status(404).send('No matching user found.');
+    res.status(500).send("No matching user found.");
+    logger.debug("No user found.");
   }
 };
