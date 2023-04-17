@@ -95,10 +95,9 @@ export const deleteUser = async (req, res) => {
   const user = await User.findByPk(id);
   if (!isEmpty(user)) {
     const done = await user.destroy();
-    logger.info("User delete result:", done);
-    res.status(200).json(user);
+    res.status(200).send(`User ${user.username} deleted.`);
   } else {
     res.status(500).send("No matching user found.");
-    logger.debug("No user found.");
+    logger.debug("No user found to delete.");
   }
 };
