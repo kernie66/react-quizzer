@@ -31,6 +31,7 @@ describe("User API", () => {
   it("should show one user", async () => {
     const res = await request(app).get("/api/users");
     expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(1);
     expect(res.body[0].id).toEqual(1);
     expect(res.body[0].username).toEqual("john");
     expect(res.body[0].name).toEqual("John");
@@ -50,6 +51,7 @@ describe("User API", () => {
   it("should show two users", async () => {
     const res = await request(app).get("/api/users");
     expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(2);
     expect(res.body[0].id).toEqual(1);
     expect(res.body[0].username).toEqual("john");
     expect(res.body[0].email).toEqual("john@example.com");
@@ -66,6 +68,13 @@ describe("User API", () => {
     expect(res.body[0].email).toEqual("sarah@example.com");
   });
 
+  it("should show user with username john", async () => {
+    const res = await request(app).get("/api/users?username=john");
+    expect(res.statusCode).toEqual(200);
+    expect(res.body[0].id).toEqual(1);
+    expect(res.body[0].name).toEqual("John");
+  });
+
   it("should update user with ID 2", async () => {
     const userData = {
       name: "Sarah Dawn",
@@ -73,6 +82,22 @@ describe("User API", () => {
     };
     const res = await request(app).put("/api/users?id=2").send(userData);
     expect(res.statusCode).toEqual(200);
+  });
+
+  it("should delete user with ID 1", async () => {
+    const res = await request(app).delete("/api/users?id=1");
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("should show one users", async () => {
+    const res = await request(app).get("/api/users");
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(1);
+    expect(res.body[0].id).toEqual(2);
+    expect(res.body[0].username).toEqual("sarah");
+    expect(res.body[0].email).toEqual("sarah@example.com");
+    expect(res.body[0].name).toEqual("Sarah Dawn");
+    expect(res.body[0].nicknames).toContainEqual("Finer");
   });
 
   afterAll(async () => {
