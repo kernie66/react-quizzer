@@ -1,26 +1,26 @@
-import { db } from '../src/db/db.config.js';
-import { DataTypes } from '@sequelize/core';
+import { db } from "../src/db/db.config.js";
+import { DataTypes } from "@sequelize/core";
 
-export const Quiz = db.define('quiz', {
+export const Quiz = db.define("quiz", {
   quizTitle: {
     type: DataTypes.STRING(32),
     allowNull: false,
     unique: true,
   },
   quizSynopsis: {
-    type: DataTypes.STRING(128),
+    type: DataTypes.STRING(1023),
     allowNull: true,
   },
   nrOfQuestions: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   lastUsed: {
     type: DataTypes.DATE,
   },
 });
 
-export const Question = db.define('question', {
+export const Question = db.define("question", {
   questionNumber: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -32,7 +32,7 @@ export const Question = db.define('question', {
   questionType: {
     type: DataTypes.STRING(8), // "text"/"photo"
     allowNull: false,
-    default: 'text',
+    default: "text",
   },
   questionPic: {
     type: DataTypes.STRING(128),
@@ -41,7 +41,7 @@ export const Question = db.define('question', {
   answerSelectionType: {
     type: DataTypes.STRING(8), // "single"/"multiple"
     allowNull: false,
-    default: 'single',
+    default: "single",
   },
   answers: {
     type: DataTypes.ARRAY(DataTypes.INTEGER),
