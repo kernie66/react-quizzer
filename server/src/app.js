@@ -10,6 +10,9 @@ import dbSync from "./db/db.sync.js";
 import morgan from "morgan";
 import zxcvbn from "zxcvbn";
 import { router } from "./routes/index.js";
+import { register } from "./auth/register.js";
+import { login } from "./auth/login.js";
+import "./auth/passportConfig.js";
 
 const invalidPathHandler = (req, res) => {
   res.status(400);
@@ -23,6 +26,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use("/api", router);
+app.post("/register", register);
+app.post("/login", login);
 
 app.get("/", (req, res) => {
   res.send("Initializing database...");

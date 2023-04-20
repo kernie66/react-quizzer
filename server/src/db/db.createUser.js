@@ -1,7 +1,7 @@
-import { Op } from '@sequelize/core';
-import { User } from '../../models/user.model.js';
-import { logger } from '../logger/logger.js';
-import isEmpty from '../utils/isEmpty.js';
+import { Op } from "@sequelize/core";
+import { User } from "../../models/user.model.js";
+import { logger } from "../logger/logger.js";
+import isEmpty from "../utils/isEmpty.js";
 
 export default async function dbCreateUser(userData) {
   const lowerCaseEmail = userData.email.trim().toLowerCase();
@@ -16,14 +16,11 @@ export default async function dbCreateUser(userData) {
             { username: userData.username },
           ],
         },
-      })
-    )
+      }),
+    ),
   );
 
-  logger.info(
-    'Existing user:',
-    isEmpty(existingUser) ? 'No data' : existingUser
-  );
+  logger.info("Existing user:", isEmpty(existingUser) ? "No data" : existingUser);
 
   if (isEmpty(existingUser)) {
     const lastSeen = new Date();
@@ -32,7 +29,7 @@ export default async function dbCreateUser(userData) {
         name: userData.name,
         email: lowerCaseEmail,
         username: userData.username,
-        // nicknames: userData.nickname,
+        hashedPassword: userData.hashedPassword,
         lastSeen: lastSeen,
       });
       if (userData.nicknames) {
@@ -42,16 +39,13 @@ export default async function dbCreateUser(userData) {
           nicknames: nicknames,
         });
       }
-      logger.info('Successfully created user', userData.name);
+      logger.info("Successfully created user", userData.username);
       return true;
     } catch (error) {
-      logger.error('Failed to create user:', error);
+      logger.error("Failed to create user:", error);
     }
   } else {
-    logger.info(
-      'User with same info already exist:',
-      existingUser[0].name
-    );
+    logger.info("User with same info already exist:", existingUser[0].name);
   }
   return false;
 }
