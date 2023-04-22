@@ -1,5 +1,5 @@
 import { db } from "../src/db/db.config.js";
-import { DataTypes } from "@sequelize/core";
+import { DataTypes } from "sequelize";
 
 export const User = db.define("user", {
   name: {
@@ -21,6 +21,7 @@ export const User = db.define("user", {
   },
   hashedPassword: {
     type: DataTypes.STRING(64),
+    allowNull: false,
   },
   nicknames: {
     type: DataTypes.ARRAY(DataTypes.STRING(32)),

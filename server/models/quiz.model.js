@@ -1,5 +1,5 @@
 import { db } from "../src/db/db.config.js";
-import { DataTypes } from "@sequelize/core";
+import { DataTypes } from "sequelize";
 
 export const Quiz = db.define("quiz", {
   quizTitle: {

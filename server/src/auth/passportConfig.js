@@ -10,10 +10,10 @@ const secret = process.env.SECRET;
 
 passport.use(
   new LocalStrategy(
-    /*    {
-        usernameField: username,
-        passwordField: password,
-      }, */
+    {
+      usernameField: "username",
+      passwordField: "password",
+    },
     async (username, password, done) => {
       try {
         const user = await User.findOne({ where: { username: username } });
@@ -35,6 +35,8 @@ passport.use(
   ),
 );
 
+passport.
+/*
 passport.use(
   new JWTStrategy(
     {
@@ -49,3 +51,4 @@ passport.use(
     },
   ),
 );
+*/

@@ -1,4 +1,4 @@
-import { col, fn } from "@sequelize/core";
+import { col, fn } from "sequelize";
 import { User } from "../../models/user.model.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";

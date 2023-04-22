@@ -1,8 +1,9 @@
-import { col, fn } from "@sequelize/core";
+import { col, fn } from "sequelize";
 import { User } from "../../models/user.model.js";
 import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
+import bcrypt from "bcrypt";
 
 async function parseUser(req) {
   let users;
@@ -48,12 +49,21 @@ export const getUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   const userData = req.body;
   logger.info("User", userData.name, userData.email, req.body);
-  const status = await dbCreateUser(userData);
-  if (status) {
-    res.status(201).send(`User created for ${userData.name}`);
-  } else {
-    res.status(500).send(`User with same info already exist: ${userData.username}`);
-    logger.debug("Duplicate user info.");
+  const hashCost = 10;
+
+  try {
+    const hashedPassword = await bcrypt.hash(userData.password, hashCost);
+    userData.hashedPassword = hashedPassword;
+
+    const status = await dbCreateUser(userData);
+    if (status) {
+      res.status(201).send(`User created for ${userData.name}`);
+    } else {
+      res.status(500).send("Error creating user");
+      logger.error("Wrong user info.");
+    }
+  } catch (error) {
+    res.status(500).send("Error creating user:", error);
   }
 };
 

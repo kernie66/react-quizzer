@@ -1,4 +1,4 @@
-import { Sequelize } from "@sequelize/core";
+import { Sequelize } from "sequelize";
 import { logger } from "../logger/logger.js";
 
 const hostName = process.env.HOSTNAME;
