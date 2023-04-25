@@ -5,7 +5,7 @@ const hostName = process.env.HOSTNAME;
 const userName = process.env.USERNAME;
 const password = process.env.PASSWORD;
 const dialect = "postgres";
-let logLevel = process.env.SEQUELIZE_LOG_LEVEL || "debug";
+let logLevel = process.env.SEQUELIZE_LOG_LEVEL || "info";
 let database = process.env.DATABASE;
 
 if (process.env.NODE_ENV === "development") {

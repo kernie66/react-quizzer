@@ -17,14 +17,27 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import storeBuilder from "connect-session-sequelize";
-import { authUser, checkLoggedIn } from "./auth/authUser.js";
+import {
+  authUser,
+  checkAuthenticated,
+  checkLoggedIn,
+  deserializeUser,
+  printData,
+  serializeUser,
+} from "./auth/authUser.js";
 import { dbRouter } from "./routes/dbRouter.js";
+import setPath from "./utils/setPath.js";
 const invalidPathHandler = (req, res) => {
   res.status(400);
   res.send("Invalid path");
 };
 
 export const app = express();
+
+app.use(express.static(setPath("../public")));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(bodyParser.json());
 
 const SequelizeStore = storeBuilder(session.Store);
 const myStore = new SequelizeStore({
@@ -43,30 +56,21 @@ myStore.sync();
 
 app.use(passport.session());
 passport.use(new LocalStrategy(authUser));
-passport.serializeUser((userObj, done) => {
-  logger.info("Serialize:", userObj);
-  done(null, userObj);
-});
-passport.deserializeUser((userObj, done) => {
-  logger.info("Deserialize:", userObj);
-  done(null, userObj);
-});
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-app.use(bodyParser.json());
+passport.serializeUser(serializeUser);
+passport.deserializeUser(deserializeUser);
+// app.use(printData);
 app.use(morgan("dev"));
-app.use("/api", apiRouter);
-app.use("/db", dbRouter);
-// app.post("/register", register);
+app.use("/api", checkAuthenticated, apiRouter);
+app.use("/db", checkAuthenticated, dbRouter);
+app.post("/register", register);
 app.get("/login", checkLoggedIn, (req, res) => {
   res.send("User already logged in...");
 });
 app.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect: "/password",
-    failureRedirect: "/login",
+    successRedirect: "/success",
+    failureRedirect: "/error",
   }),
 );
 //app.post("/login", login);
@@ -75,8 +79,12 @@ app.post("/logout", (req, res, next) => {
     if (error) {
       return next(error);
     }
+    logger.info("Passport", req.session.passport);
+    logger.info("User:", req.user);
     res.redirect("/login");
     logger.info(`-------> User Logged out`);
+    logger.info("Passport", req.session.passport);
+    logger.info("User:", req.user);
   });
 });
 
@@ -92,6 +100,14 @@ app.get("/sync", (req, res) => {
 
 app.get("/password", (req, res) => {
   res.send(zxcvbn("audi100"));
+});
+
+app.get("/success", (req, res) => {
+  res.send(req.user);
+});
+
+app.get("/error", (req, res) => {
+  res.send("Error page");
 });
 
 app.use(invalidPathHandler);

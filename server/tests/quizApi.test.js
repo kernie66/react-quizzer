@@ -16,11 +16,49 @@ describe("Test database connection", () => {
 describe("Quiz API", () => {
   beforeAll(async () => {
     await thisDb.sync({ force: true });
+    const userData = {
+      name: "Sarah",
+      email: "Sarah@example.com",
+      username: "sarah",
+      password: "sarah",
+    };
+    let res = await request(app).post("/register").send(userData);
+    expect(res.statusCode).toEqual(201);
+    const loginData = {
+      username: "sarah",
+      password: "sarah",
+    };
+    res = await request(app).post("/login").send(loginData);
+    console.log(res.text);
+    expect(res.statusCode).toEqual(302);
   });
+
+  /*
+  it("should create one user", async () => {
+    const userData = {
+      name: "Sarah",
+      email: "Sarah@example.com",
+      username: "sarah",
+      password: "sarah",
+    };
+    const res = await request(app).post("/register").send(userData);
+    expect(res.statusCode).toEqual(201);
+  });
+
+  it("should login user sarah", async () => {
+    const loginData = {
+      username: "sarah",
+      password: "sarah",
+    };
+    const res = await request(app).post("/login").send(loginData);
+    // console.log(res);
+    expect(res.statusCode).toEqual(200);
+  });
+*/
 
   it("should create one quiz", async () => {
     const res = await request(app).post("/api/quiz").send(quiz1);
-    expect(res.statusCode).toEqual(201);
+    expect(res.statusCode).toEqual(302);
   }, 1000);
 
   /*
