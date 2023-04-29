@@ -27,9 +27,9 @@ import {
 } from "./auth/authUser.js";
 import { dbRouter } from "./routes/dbRouter.js";
 import setPath from "./utils/setPath.js";
+
 const invalidPathHandler = (req, res) => {
-  res.status(400);
-  res.send("Invalid path");
+  res.status(404).json({ error: "Invalid path" });
 };
 
 export const app = express();

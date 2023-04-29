@@ -16,12 +16,12 @@ export const register = async (req, res) => {
     userData.email = email;
     const statusOk = await dbCreateUser(userData);
     if (statusOk) {
-      res.status(201).send({ username });
+      res.status(201).json({ success: username });
     } else {
-      res.status(500).send({ error: "Invalid request data" });
+      res.status(400).json({ error: "Invalid request data" });
     }
   } catch (error) {
     logger.error("Error creating user:", error);
-    res.status(500).send({ error: "Request should be { username, password }" });
+    res.status(500).json(error);
   }
 };

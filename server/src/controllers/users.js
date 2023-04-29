@@ -5,11 +5,19 @@ import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
 import bcrypt from "bcrypt";
 
+/* ==========================================================
+This function looks for one or more matching users. The users
+can be given in the following ways:
+  As a URL id parameter, e.g. /users/1
+  As a query id, e.g. /users?id=1
+  As a query username, e.g. /users?username=john
+  As a query name, e.g. /users?name=John
+===========================================================*/
 async function parseUser(req) {
   let users;
   // Use findAll for all to ensure that the result is an array
-  if (req.query.id) {
-    const userId = parseInt(req.query.id);
+  if (req.params.id || req.query.id) {
+    const userId = parseInt(req.params.id ? req.params.id : req.query.id);
     users = await User.findAll({
       where: {
         id: userId,
@@ -41,7 +49,7 @@ export const getUsers = async (req, res) => {
   if (!isEmpty(users)) {
     res.status(200).json(users);
   } else {
-    res.status(500).send("No matching users found.");
+    res.status(404).json({ error: "No matching users found." });
     logger.debug("No users found.");
   }
 };
@@ -57,13 +65,12 @@ export const createUser = async (req, res) => {
 
     const status = await dbCreateUser(userData);
     if (status) {
-      res.status(201).send(`User created for ${userData.name}`);
+      res.status(201).json({ success: `User created for ${userData.name}` });
     } else {
-      res.status(500).send("Error creating user");
-      logger.error("Wrong user info.");
+      res.status(400).json({ error: "Error creating user" });
     }
   } catch (error) {
-    res.status(500).send("Error creating user:", error);
+    res.status(500).json(error);
   }
 };
 
@@ -95,19 +102,19 @@ export const updateUser = async (req, res) => {
       logger.error("Update error:", error);
     }
   } else {
-    res.status(500).send("No matching user found.");
+    res.status(404).json({ error: "No matching user found." });
     logger.debug("No user found.");
   }
 };
 
 export const deleteUser = async (req, res) => {
-  const id = parseInt(req.query.id);
+  const id = parseInt(req.params.id);
   const user = await User.findByPk(id);
   if (!isEmpty(user)) {
     const done = await user.destroy();
-    res.status(200).send(`User ${user.username} deleted.`);
+    res.status(200).json({ success: `User ${user.username} deleted.` });
   } else {
-    res.status(500).send("No matching user found.");
+    res.status(404).json({ error: "No matching user found." });
     logger.debug("No user found to delete.");
   }
 };

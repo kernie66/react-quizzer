@@ -40,7 +40,7 @@ export const getQuizzes = async (req, res) => {
   if (!isEmpty(users)) {
     res.status(200).json(users);
   } else {
-    res.status(500).send("No matching users found.");
+    res.status(404).json({ error: "No matching users found." });
     logger.debug("No users found.");
   }
 };
@@ -50,9 +50,9 @@ export const createQuiz = async (req, res) => {
   logger.info("Quiz", quizData.quizTitle, req.body);
   const status = await dbCreateQuiz(quizData);
   if (status) {
-    res.status(201).send(`Quiz created: ${quizData.quizTitle}`);
+    res.status(201).json({ success: `Quiz created: ${quizData.quizTitle}` });
   } else {
-    res.status(500).send(`Quiz couldn't be created: ${quizData.quizTitle}`);
+    res.status(400).json({ error: `Quiz couldn't be created: ${quizData.quizTitle}` });
     logger.debug("Wrong quiz info.");
   }
 };
@@ -85,7 +85,7 @@ export const updateQuiz = async (req, res) => {
       logger.error("Update error:", error);
     }
   } else {
-    res.status(500).send("No matching user found.");
+    res.status(404).json({ error: "No matching user found." });
     logger.debug("No user found.");
   }
 };
@@ -95,9 +95,9 @@ export const deleteQuiz = async (req, res) => {
   const user = await User.findByPk(id);
   if (!isEmpty(user)) {
     const done = await user.destroy();
-    res.status(200).send(`User ${user.username} deleted.`);
+    res.status(200).json({ success: `User ${user.username} deleted.` });
   } else {
-    res.status(500).send("No matching user found.");
+    res.status(404).json({ error: "No matching user found." });
     logger.debug("No user found to delete.");
   }
 };

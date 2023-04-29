@@ -3,7 +3,7 @@ import passport from "passport";
 export const login = async (req, res) => {
   await passport.authenticate("local", { session: false }, (error, user) => {
     if (error || !user) {
-      res.status(400).json({ error });
+      res.status(403).json({ error: "Not authorized" });
     }
 
     /** This is what ends up in our JWT */

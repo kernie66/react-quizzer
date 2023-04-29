@@ -13,9 +13,9 @@ export const syncDb = async (req, res) => {
   try {
     await db.sync(option);
     logger.info("Successfully synced database");
-    res.status(200).send(`Successfully synced database (option: ${req.body.options})`);
+    res.status(200).json({ success: `Successfully synced database (option: ${req.body.options})` });
   } catch (error) {
     logger.error("Error syncing database:", error);
-    res.status(500).send("Couldn't sync database", error);
+    res.status(500).json(error);
   }
 };

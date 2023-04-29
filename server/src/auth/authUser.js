@@ -35,10 +35,15 @@ export const serializeUser = (user, done) => {
 };
 
 export const deserializeUser = async (id, done) => {
-  logger.info("Deserialize:", id);
-  const user = await User.findByPk(id);
-  logger.info("Found user:", user.dataValues);
-  done(null, user.dataValues);
+  try {
+    logger.info("Deserialize:", id);
+    const user = await User.findByPk(id);
+    logger.info("Found user:", user.dataValues);
+    done(null, user.dataValues);
+  } catch (error) {
+    logger.warn("Deserialize error, assuming database 'Users' needs to be synced");
+    done(null, error);
+  }
 };
 
 export function checkAuthenticated(req, res, next) {

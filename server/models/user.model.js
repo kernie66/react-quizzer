@@ -26,6 +26,9 @@ export const User = db.define("user", {
   nicknames: {
     type: DataTypes.ARRAY(DataTypes.STRING(32)),
   },
+  numberOfWins: {
+    type: DataTypes.INTEGER,
+  },
   lastSeen: {
     type: DataTypes.DATE,
   },
