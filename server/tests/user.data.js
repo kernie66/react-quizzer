@@ -10,4 +10,5 @@ export const John = {
   email: "john.doe@example.com",
   username: "john",
   password: "buildSnowmanSummer",
+  nicknames: "Johnny",
 };

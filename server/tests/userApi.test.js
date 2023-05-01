@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../src/app.js";
 import { db, testDbConnection } from "../src/db/db.config.js";
+import { John, Sarah } from "./user.data.js";
 
 // const request = supertest();
 const thisDb = db;
@@ -13,109 +14,101 @@ describe("Test database connection", () => {
 });
 
 describe("User API", () => {
-  beforeAll(async () => {
-    await thisDb.sync({ force: true });
-    const userData = {
-      name: "Sarah",
-      email: "Sarah@example.com",
-      username: "sarah",
-      password: "sarah",
-    };
-    let res = await request(app).post("/register").send(userData);
-    expect(res.statusCode).toEqual(201);
-    const loginData = {
-      username: "sarah",
-      password: "sarah",
-    };
-    res = await request(app).post("/login").send(loginData);
-    console.log(res.text);
-    expect(res.statusCode).toEqual(200);
-  });
+  let session;
 
-  it("should create one user", async () => {
-    const userData = {
-      name: "John",
-      email: "john@example.com",
-      username: "john",
-      nicknames: "Johnny",
-    };
-    const res = await request(app).post("/api/users").send(userData);
+  beforeAll(async () => {
+    const status = await thisDb.sync({ force: true });
+    expect(status.config.database).toEqual("quizzer_test");
+    let res = await request(app).post("/register").send(Sarah);
     expect(res.statusCode).toEqual(201);
+    res = await request(app).post("/login").send(Sarah);
+    session = res.header["set-cookie"];
+    console.log("Session:", session);
+    expect(res.statusCode).toEqual(200);
   });
 
   it("should show one user", async () => {
-    const res = await request(app).get("/api/users");
+    const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(1);
     expect(res.body[0].id).toEqual(1);
-    expect(res.body[0].username).toEqual("john");
-    expect(res.body[0].name).toEqual("John");
-    expect(res.body[0].nicknames).toContainEqual("Johnny");
+    expect(res.body[0].username).toEqual(Sarah.username);
+    expect(res.body[0].name).toEqual(Sarah.name);
   });
 
-  it("should create another user", async () => {
-    const userData = {
-      name: "Sarah",
-      email: "Sarah@example.com",
-      username: "sarah",
-    };
-    const res = await request(app).post("/api/users").send(userData);
+  it("should create a new user", async () => {
+    const res = await request(app).post("/api/users").send(John).set("Cookie", session);
     expect(res.statusCode).toEqual(201);
   });
 
   it("should show two users", async () => {
-    const res = await request(app).get("/api/users");
+    const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(2);
     expect(res.body[0].id).toEqual(1);
-    expect(res.body[0].username).toEqual("john");
-    expect(res.body[0].email).toEqual("john@example.com");
+    expect(res.body[0].username).toEqual(Sarah.username);
+    expect(res.body[0].email).toEqual(Sarah.email.toLowerCase());
+    expect(res.body[0].name).toEqual(Sarah.name);
     expect(res.body[1].id).toEqual(2);
-    expect(res.body[1].username).toEqual("sarah");
-    expect(res.body[1].email).toEqual("sarah@example.com");
+    expect(res.body[1].username).toEqual(John.username);
+    expect(res.body[1].email).toEqual(John.email);
+    expect(res.body[1].name).toEqual(John.name);
+    expect(res.body[1].nicknames).toContainEqual("Johnny");
   });
 
-  it("should show user with ID 2", async () => {
-    const res = await request(app).get("/api/users?id=2");
+  const updateSarah = {
+    name: "Sarah Dawn",
+    nickname: "Finer",
+  };
+
+  it("should update user with ID 1", async () => {
+    const res = await request(app).put("/api/users/1").send(updateSarah).set("Cookie", session);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("should show user with ID 1 (param)", async () => {
+    const res = await request(app).get("/api/users/1").set("Cookie", session);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body[0].id).toEqual(1);
+    expect(res.body[0].username).toEqual(Sarah.username);
+    expect(res.body[0].email).toEqual(Sarah.email.toLowerCase());
+    expect(res.body[0].name).toEqual(updateSarah.name);
+    expect(res.body[0].nicknames).toContainEqual(updateSarah.nickname);
+  });
+
+  it("should show user with ID 2 (query)", async () => {
+    const res = await request(app).get("/api/users?id=2").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
     expect(res.body[0].id).toEqual(2);
-    expect(res.body[0].username).toEqual("sarah");
-    expect(res.body[0].email).toEqual("sarah@example.com");
+    expect(res.body[0].username).toEqual(John.username);
+    expect(res.body[0].email).toEqual(John.email);
   });
 
   it("should show user with username john", async () => {
-    const res = await request(app).get("/api/users?username=john");
+    const res = await request(app).get("/api/users?username=john").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
-    expect(res.body[0].id).toEqual(1);
-    expect(res.body[0].name).toEqual("John");
-  });
-
-  it("should update user with ID 2", async () => {
-    const userData = {
-      name: "Sarah Dawn",
-      nickname: "Finer",
-    };
-    const res = await request(app).put("/api/users?id=2").send(userData);
-    expect(res.statusCode).toEqual(200);
+    expect(res.body[0].id).toEqual(2);
+    expect(res.body[0].name).toEqual(John.name);
+    expect(res.body[0].email).toEqual(John.email);
   });
 
   it("should delete user with ID 1", async () => {
-    const res = await request(app).delete("/api/users?id=1");
+    const res = await request(app).delete("/api/users/1").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
   });
 
   it("should show one users", async () => {
-    const res = await request(app).get("/api/users");
+    const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(1);
     expect(res.body[0].id).toEqual(2);
-    expect(res.body[0].username).toEqual("sarah");
-    expect(res.body[0].email).toEqual("sarah@example.com");
-    expect(res.body[0].name).toEqual("Sarah Dawn");
-    expect(res.body[0].nicknames).toContainEqual("Finer");
+    expect(res.body[0].username).toEqual(John.username);
+    expect(res.body[0].email).toEqual(John.email);
+    expect(res.body[0].name).toEqual(John.name);
+    expect(res.body[0].nicknames).toContainEqual(John.nicknames);
   });
 
   afterAll(async () => {
-    thisDb.close();
+    await thisDb.close();
   });
 });
