@@ -15,6 +15,21 @@ describe("Test database connection", () => {
 describe("User API", () => {
   beforeAll(async () => {
     await thisDb.sync({ force: true });
+    const userData = {
+      name: "Sarah",
+      email: "Sarah@example.com",
+      username: "sarah",
+      password: "sarah",
+    };
+    let res = await request(app).post("/register").send(userData);
+    expect(res.statusCode).toEqual(201);
+    const loginData = {
+      username: "sarah",
+      password: "sarah",
+    };
+    res = await request(app).post("/login").send(loginData);
+    console.log(res.text);
+    expect(res.statusCode).toEqual(200);
   });
 
   it("should create one user", async () => {

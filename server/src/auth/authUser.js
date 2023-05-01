@@ -47,15 +47,16 @@ export const deserializeUser = async (id, done) => {
 };
 
 export function checkAuthenticated(req, res, next) {
+  logger.info("Authenticated:", req.isAuthenticated());
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/error");
+  res.status(401).json({ error: "User not logged in" });
 }
 
 export function checkLoggedIn(req, res, next) {
-  if (!req.isAuthenticated()) {
-    return res.redirect("/success");
+  if (req.isAuthenticated()) {
+    return res.status(400).json({ error: "User already logged in" });
   }
   next();
 }

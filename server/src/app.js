@@ -64,28 +64,24 @@ app.use("/api", checkAuthenticated, apiRouter);
 app.use("/db", checkAuthenticated, dbRouter);
 app.post("/register", register);
 app.get("/login", checkLoggedIn, (req, res) => {
-  res.send("User already logged in...");
+  res.status(200).json({ success: "User already logged in..." });
 });
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/success",
-    failureRedirect: "/error",
-  }),
-);
+app.post("/login", passport.authenticate("local"), (req, res) => {
+  res.status(200).json({ success: `User ${req.user.username} logged in` });
+});
 //app.post("/login", login);
 app.post("/logout", (req, res, next) => {
-  req.logOut((error) => {
-    if (error) {
-      return next(error);
-    }
-    logger.info("Passport", req.session.passport);
-    logger.info("User:", req.user);
-    res.redirect("/login");
-    logger.info(`-------> User Logged out`);
-    logger.info("Passport", req.session.passport);
-    logger.info("User:", req.user);
-  });
+  if (req.user) {
+    const user = req.user.username;
+    req.logOut((error) => {
+      if (error) {
+        return next(error);
+      }
+      res.status(200).json({ success: `User ${user} logged out` });
+    });
+  } else {
+    res.status(404).json({ error: "User not logged in..." });
+  }
 });
 
 app.get("/", (req, res) => {
