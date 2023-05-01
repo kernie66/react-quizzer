@@ -20,7 +20,7 @@ export default async function dbCreateUser(userData) {
     ),
   );
 
-  logger.info("Existing user:", isEmpty(existingUser) ? "No data" : existingUser);
+  logger.debug("Existing user:", isEmpty(existingUser) ? "No data" : existingUser);
 
   if (isEmpty(existingUser)) {
     const lastSeen = new Date();
@@ -39,13 +39,13 @@ export default async function dbCreateUser(userData) {
           nicknames: nicknames,
         });
       }
-      logger.info("Successfully created user", userData.username);
+      logger.debug("Successfully created user", userData.username);
       return true;
     } catch (error) {
       logger.error("Failed to create user:", error);
     }
   } else {
-    logger.info("User with same info already exist:", existingUser[0].name);
+    logger.warn("User with same info already exist:", existingUser[0].name);
   }
   return false;
 }

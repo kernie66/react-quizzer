@@ -45,18 +45,18 @@ async function parseUser(req) {
 
 export const getUsers = async (req, res) => {
   const users = await parseUser(req);
-  logger.info("Number of users found:", isEmpty(users) ? "None" : users.length);
+  logger.debug("Number of users found:", isEmpty(users) ? "None" : users.length);
   if (!isEmpty(users)) {
     res.status(200).json(users);
   } else {
     res.status(404).json({ error: "No matching users found." });
-    logger.debug("No users found.");
+    logger.warn("No users found.");
   }
 };
 
 export const createUser = async (req, res) => {
   const userData = req.body;
-  logger.info("User", userData.name, userData.email, req.body);
+  logger.debug("User", userData.name, userData.email, req.body);
   const hashCost = 10;
 
   try {
@@ -92,10 +92,10 @@ export const updateUser = async (req, res) => {
             nicknames: fn("array_append", col("nicknames"), req.body.nickname),
           });
         } else {
-          logger.debug("Nickname already exist:", req.body.nickname);
+          logger.warn("Nickname already exist:", req.body.nickname);
         }
       }
-      logger.info(`User ${user.username} has been updated`);
+      logger.debug(`User ${user.username} has been updated`);
       res.status(200).json(updatedUser);
     } catch (error) {
       res.status(500).json(error);
@@ -103,7 +103,7 @@ export const updateUser = async (req, res) => {
     }
   } else {
     res.status(404).json({ error: "No matching user found." });
-    logger.debug("No user found.");
+    logger.warn("No user found.");
   }
 };
 
@@ -115,6 +115,6 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({ success: `User ${user.username} deleted.` });
   } else {
     res.status(404).json({ error: "No matching user found." });
-    logger.debug("No user found to delete.");
+    logger.warn("No user found to delete.");
   }
 };

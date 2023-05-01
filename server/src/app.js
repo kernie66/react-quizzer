@@ -69,8 +69,7 @@ app.get("/login", checkLoggedIn, (req, res) => {
 app.post("/login", passport.authenticate("local"), (req, res) => {
   res.status(200).json({ success: `User ${req.user.username} logged in` });
 });
-//app.post("/login", login);
-app.post("/logout", (req, res, next) => {
+app.delete("/logout", (req, res, next) => {
   if (req.user) {
     const user = req.user.username;
     req.logOut((error) => {
@@ -96,14 +95,6 @@ app.get("/sync", (req, res) => {
 
 app.get("/password", (req, res) => {
   res.send(zxcvbn("audi100"));
-});
-
-app.get("/success", (req, res) => {
-  res.send(req.user);
-});
-
-app.get("/error", (req, res) => {
-  res.send("Error page");
 });
 
 app.use(invalidPathHandler);

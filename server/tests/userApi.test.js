@@ -6,13 +6,6 @@ import { John, Sarah } from "./user.data.js";
 // const request = supertest();
 const thisDb = db;
 
-describe("Test database connection", () => {
-  it("should connect to the test database", async () => {
-    const res = await testDbConnection();
-    expect(res).toBe(true);
-  });
-});
-
 describe("User API", () => {
   let session;
 
@@ -23,7 +16,6 @@ describe("User API", () => {
     expect(res.statusCode).toEqual(201);
     res = await request(app).post("/login").send(Sarah);
     session = res.header["set-cookie"];
-    console.log("Session:", session);
     expect(res.statusCode).toEqual(200);
   });
 

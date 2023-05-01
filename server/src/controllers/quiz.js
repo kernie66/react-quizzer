@@ -3,24 +3,26 @@ import { User } from "../../models/user.model.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
 import dbCreateQuiz from "../db/db.createQuiz.js";
+import { Quiz } from "../../models/quiz.model.js";
 
-async function parseUser(req) {
-  let users;
+async function parseQuiz(req) {
+  let quizzes;
   // Use findAll for all to ensure that the result is an array
-  if (req.query.id) {
-    const userId = parseInt(req.query.id);
-    users = await User.findAll({
+  if (req.params.id || req.query.id) {
+    const quizId = parseInt(req.params.id ? req.params.id : req.query.id);
+    quizzes = await Quiz.findAll({
       where: {
-        id: userId,
+        id: quizId,
       },
     });
-  } else if (req.query.username) {
-    const username = req.query.username;
-    users = await User.findAll({
+  } else if (req.query.title) {
+    const quizTitle = req.query.title;
+    quizzes = await Quiz.findAll({
       where: {
-        username: username,
+        quizTitle: quizTitle,
       },
     });
+    /*
   } else if (req.query.name) {
     const name = req.query.name;
     users = await User.findAll({
@@ -28,20 +30,21 @@ async function parseUser(req) {
         name: name,
       },
     });
+    */
   } else {
-    users = await User.findAll();
+    quizzes = await Quiz.findAll();
   }
-  return users;
+  return quizzes;
 }
 
 export const getQuizzes = async (req, res) => {
-  const users = await parseUser(req);
-  logger.info("Number of users found:", isEmpty(users) ? "None" : users.length);
-  if (!isEmpty(users)) {
-    res.status(200).json(users);
+  const quizzes = await parseQuiz(req);
+  logger.info("Number of quizzes found:", isEmpty(quizzes) ? "None" : quizzes.length);
+  if (!isEmpty(quizzes)) {
+    res.status(200).json(quizzes);
   } else {
-    res.status(404).json({ error: "No matching users found." });
-    logger.debug("No users found.");
+    res.status(404).json({ error: "No quizzes found." });
+    logger.debug("No quizzes found.");
   }
 };
 
@@ -99,5 +102,16 @@ export const deleteQuiz = async (req, res) => {
   } else {
     res.status(404).json({ error: "No matching user found." });
     logger.debug("No user found to delete.");
+  }
+};
+
+export const addQuestion = async (req, res) => {
+  console.log("Quiz ID:", req.params.id);
+  const quiz = await Quiz.findByPk(req.params.id);
+  if (!isEmpty(quiz)) {
+    logger.info("Question:", req.body);
+    res.status(200).json(req.body);
+  } else {
+    res.status(404).json({ error: "Quiz not found" });
   }
 };

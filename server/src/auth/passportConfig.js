@@ -17,8 +17,8 @@ passport.use(
     async (username, password, done) => {
       try {
         const user = await User.findOne({ where: { username: username } });
-        logger.info("Username", username);
-        logger.info("User", user.dataValues.username);
+        logger.debug("Username", username);
+        logger.debug("User", user.dataValues.username);
         if (isEmpty(user.dataValues)) {
           return done("User not found");
         }
@@ -35,7 +35,6 @@ passport.use(
   ),
 );
 
-passport.
 /*
 passport.use(
   new JWTStrategy(

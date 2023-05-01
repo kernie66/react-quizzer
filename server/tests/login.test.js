@@ -10,7 +10,7 @@ describe("Test database connection", () => {
   it("should connect to the test database", async () => {
     const res = await testDbConnection();
     expect(res).toBe(true);
-  });
+  }, 10000);
 });
 
 describe("Register and login", () => {
@@ -29,7 +29,6 @@ describe("Register and login", () => {
   it("should login user Sarah", async () => {
     const res = await request(app).post("/login").send(Sarah);
     session = res.header["set-cookie"];
-    console.log("Session:", session);
     expect(res.statusCode).toEqual(200);
   }, 1000);
 
@@ -39,8 +38,7 @@ describe("Register and login", () => {
   });
 
   it("should log out user Sarah", async () => {
-    const res = await request(app).post("/logout").set("Cookie", session);
-    console.log(res.header);
+    const res = await request(app).delete("/logout").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
   });
 

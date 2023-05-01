@@ -6,19 +6,19 @@ import isEmpty from "../utils/isEmpty.js";
 export const authUser = async (username, password, done) => {
   try {
     const user = await User.findOne({ where: { username: username } });
-    logger.info("Search for username", username);
+    logger.debug("Search for username", username);
     if (isEmpty(user)) {
-      logger.info("User not found");
+      logger.warn("User not found");
       return done(null, false);
     }
-    logger.info("User info:", user.dataValues);
+    logger.debug("User info:", user.dataValues);
     if (user.dataValues.hashedPassword) {
       const passwordsMatch = await bcrypt.compare(password, user.dataValues.hashedPassword);
       if (passwordsMatch) {
         const authenticatedUser = { id: user.dataValues.id, username: user.dataValues.username };
         return done(null, authenticatedUser);
       } else {
-        logger.info("Incorrect username/password combination");
+        logger.warn("Incorrect username/password combination");
         return done(null, false);
       }
     } else {
@@ -30,15 +30,15 @@ export const authUser = async (username, password, done) => {
 };
 
 export const serializeUser = (user, done) => {
-  logger.info("Serialize:", user);
+  logger.debug("Serialize:", user);
   done(null, user.id);
 };
 
 export const deserializeUser = async (id, done) => {
   try {
-    logger.info("Deserialize:", id);
+    logger.debug("Deserialize:", id);
     const user = await User.findByPk(id);
-    logger.info("Found user:", user.dataValues);
+    logger.debug("Found user:", user.dataValues);
     done(null, user.dataValues);
   } catch (error) {
     logger.warn("Deserialize error, assuming database 'Users' needs to be synced");
@@ -47,7 +47,7 @@ export const deserializeUser = async (id, done) => {
 };
 
 export function checkAuthenticated(req, res, next) {
-  logger.info("Authenticated:", req.isAuthenticated());
+  logger.debug("Authenticated:", req.isAuthenticated());
   if (req.isAuthenticated()) {
     return next();
   }

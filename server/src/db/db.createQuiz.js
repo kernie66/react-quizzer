@@ -12,8 +12,6 @@ export default async function dbCreateQuiz(quizData, currentUser) {
     ),
   );
 
-  logger.info("Logger:", existingQuiz ? existingQuiz : "No data");
-
   if (existingQuiz.length === 0) {
     const lastUsed = new Date();
     try {
@@ -23,13 +21,13 @@ export default async function dbCreateQuiz(quizData, currentUser) {
         lastUsed: lastUsed,
         creator: currentUser || null,
       });
-      logger.info("Successfully created quiz", quizData.quizTitle);
+      logger.debug("Successfully created quiz", quizData.quizTitle);
       return true;
     } catch (error) {
       logger.error("Failed to create quiz:", error);
     }
   } else {
-    logger.info("Quiz with same title already exist:", existingQuiz[0].quizTitle);
+    logger.warn("Quiz with same title already exist:", existingQuiz[0].quizTitle);
   }
   return false;
 }
