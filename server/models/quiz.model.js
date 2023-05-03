@@ -1,5 +1,6 @@
 import { db } from "../src/db/db.config.js";
 import { DataTypes } from "sequelize";
+import { User } from "./user.model.js";
 
 export const Quiz = db.define("quiz", {
   quizTitle: {

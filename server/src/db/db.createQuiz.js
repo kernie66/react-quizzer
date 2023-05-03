@@ -12,6 +12,7 @@ export default async function dbCreateQuiz(quizData, currentUser) {
     ),
   );
 
+  logger.info("Current user:", currentUser);
   if (existingQuiz.length === 0) {
     const lastUsed = new Date();
     try {
@@ -21,6 +22,8 @@ export default async function dbCreateQuiz(quizData, currentUser) {
         lastUsed: lastUsed,
         creator: currentUser || null,
       });
+      newQuiz.setAuthor(currentUser);
+      newQuiz.save();
       logger.debug("Successfully created quiz", quizData.quizTitle);
       return true;
     } catch (error) {
