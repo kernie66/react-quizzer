@@ -1,9 +1,9 @@
 import { col, fn } from "sequelize";
-import { User } from "../../models/user.model.js";
+import { User } from "../../models/index.js";
+import { Quiz } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
 import dbCreateQuiz from "../db/db.createQuiz.js";
-import { Quiz } from "../../models/quiz.model.js";
 
 async function parseQuiz(req) {
   let quizzes;
@@ -22,15 +22,6 @@ async function parseQuiz(req) {
         quizTitle: quizTitle,
       },
     });
-    /*
-  } else if (req.query.name) {
-    const name = req.query.name;
-    users = await User.findAll({
-      where: {
-        name: name,
-      },
-    });
-    */
   } else {
     quizzes = await Quiz.findAll();
   }

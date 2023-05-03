@@ -27,7 +27,6 @@ import {
 } from "./auth/authUser.js";
 import { dbRouter } from "./routes/dbRouter.js";
 import setPath from "./utils/setPath.js";
-import dbAssociations from "./db/db.associations.js";
 
 const invalidPathHandler = (req, res) => {
   res.status(404).json({ error: "Invalid path" });
@@ -60,8 +59,6 @@ passport.use(new LocalStrategy(authUser));
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
 // app.use(printData);
-
-dbAssociations();
 
 app.use(morgan("dev"));
 app.use("/api", checkAuthenticated, apiRouter);

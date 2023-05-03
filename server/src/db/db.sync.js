@@ -1,5 +1,5 @@
-import { Question, Quiz } from "../../models/quiz.model.js";
-import { User } from "../../models/user.model.js";
+import { Question, Quiz } from "../../models/index.js";
+import { User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import { db } from "./db.config.js";
 

@@ -1,4 +1,4 @@
-import { Quiz } from "../../models/quiz.model.js";
+import { Quiz } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 
 export default async function dbCreateQuiz(quizData, currentUser) {

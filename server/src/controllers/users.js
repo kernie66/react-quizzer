@@ -1,5 +1,5 @@
 import { col, fn } from "sequelize";
-import { User } from "../../models/user.model.js";
+import { User } from "../../models/index.js";
 import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
