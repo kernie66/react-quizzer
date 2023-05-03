@@ -50,8 +50,8 @@ export const getQuizzes = async (req, res) => {
 
 export const createQuiz = async (req, res) => {
   const quizData = req.body;
-  logger.info("Quiz", quizData.quizTitle, req.body);
-  const status = await dbCreateQuiz(quizData);
+  logger.info("Quiz:", quizData.quizTitle);
+  const status = await dbCreateQuiz(quizData, req.user.id);
   if (status) {
     res.status(201).json({ success: `Quiz created: ${quizData.quizTitle}` });
   } else {
