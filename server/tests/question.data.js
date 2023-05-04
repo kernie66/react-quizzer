@@ -2,12 +2,13 @@ const segment = ["basic", "medium", "advanced"];
 
 export const questions = [
   {
-    question: "How can you access the state of a component from inside of a member function?",
+    questionNumber: 1,
+    questionText: "How can you access the state of a component from inside of a member function?",
     questionPic: "https://dummyimage.com/600x400/000/fff&text=X",
     questionType: "text",
     answerSelectionType: "single",
     answers: ["this.getState()", "this.prototype.stateValue", "this.state", "this.values"],
-    correctAnswer: "3",
+    correctAnswer: [3],
     messageForCorrectAnswer: "Correct answer. Good job.",
     messageForIncorrectAnswer: "Incorrect answer. Please try again.",
     explanation:
@@ -20,7 +21,7 @@ export const questions = [
     questionType: "text",
     answerSelectionType: "single",
     answers: ["Google Engineers", "Facebook Engineers"],
-    correctAnswer: "2",
+    correctAnswer: [2],
     messageForCorrectAnswer: "Correct answer. Good job.",
     messageForIncorrectAnswer: "Incorrect answer. Please try again.",
     explanation:
@@ -33,7 +34,7 @@ export const questions = [
     questionType: "text",
     answerSelectionType: "single",
     answers: ["True", "False"],
-    correctAnswer: "2",
+    correctAnswer: [2],
     messageForCorrectAnswer: "Correct answer. Good job.",
     messageForIncorrectAnswer: "Incorrect answer. Please try again.",
     explanation:
@@ -45,7 +46,7 @@ export const questions = [
     questionType: "text",
     answerSelectionType: "single",
     answers: ["Component-oriented design", "Event delegation model", "Both of the above"],
-    correctAnswer: "3",
+    correctAnswer: [3],
     messageForCorrectAnswer: "Correct answer. Good job.",
     messageForIncorrectAnswer: "Incorrect answer. Please try again.",
     explanation:
@@ -63,7 +64,7 @@ export const questions = [
       "https://dummyimage.com/600x400/000/fff&text=C",
       "https://dummyimage.com/600x400/000/fff&text=D",
     ],
-    correctAnswer: "1",
+    correctAnswer: [1],
     messageForCorrectAnswer: "Correct answer. Good job.",
     messageForIncorrectAnswer: "Incorrect answer. Please try again.",
     explanation:

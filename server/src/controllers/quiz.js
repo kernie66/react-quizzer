@@ -97,12 +97,25 @@ export const deleteQuiz = async (req, res) => {
 };
 
 export const addQuestion = async (req, res) => {
-  console.log("Quiz ID:", req.params.id);
-  const quiz = await Quiz.findByPk(req.params.id);
-  if (!isEmpty(quiz)) {
-    logger.info("Question:", req.body);
-    res.status(200).json(req.body);
-  } else {
-    res.status(404).json({ error: "Quiz not found" });
+  try {
+    const quiz = await Quiz.findByPk(req.params.id);
+    if (!isEmpty(quiz)) {
+      const exitingQuestion = await quiz.getQuestions({
+        where: { questionNumber: req.body.questionNumber },
+      });
+      if (isEmpty(exitingQuestion)) {
+        logger.info("Question:", req.body);
+        const done = await quiz.createQuestion(req.body);
+        logger.info("Created:", done.toJSON());
+        res.status(201).json(req.body);
+      } else {
+        res.status(400).json({ error: "Question already exist, did you mean to update it?" });
+      }
+    } else {
+      res.status(404).json({ error: "Quiz not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+    logger.warn("Error adding question", error);
   }
 };

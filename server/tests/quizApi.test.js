@@ -69,8 +69,18 @@ describe("Add questions to quiz", () => {
       .post("/api/quizzes/1/addQuestion")
       .send(questions[0])
       .set("Cookie", session);
+    expect(res.statusCode).toEqual(201);
     console.log("Question:", questions[0]);
-  });
+  }, 2000);
+
+  it("should not add the same question to a quiz", async () => {
+    const res = await request(app)
+      .post("/api/quizzes/1/addQuestion")
+      .send(questions[0])
+      .set("Cookie", session);
+    expect(res.statusCode).toEqual(400);
+    console.log("Question:", questions[0]);
+  }, 2000);
 
   afterAll(async () => {
     await thisDb.close();

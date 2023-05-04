@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 
 export const Quiz = db.define("quiz", {
   quizTitle: {
-    type: DataTypes.STRING(32),
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
@@ -26,12 +26,12 @@ export const Question = db.define("question", {
     allowNull: false,
   },
   questionText: {
-    type: DataTypes.STRING(256),
+    type: DataTypes.STRING,
     allowNull: false,
   },
   questionType: {
     type: DataTypes.STRING(8), // "text"/"photo"
-    allowNull: false,
+    allowNull: true,
     default: "text",
   },
   questionPic: {
@@ -40,32 +40,32 @@ export const Question = db.define("question", {
   },
   answerSelectionType: {
     type: DataTypes.STRING(8), // "single"/"multiple"
-    allowNull: false,
+    allowNull: true,
     default: "single",
   },
   answers: {
-    type: DataTypes.ARRAY(DataTypes.INTEGER),
-    allowNull: false,
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: true,
   },
   correctAnswer: {
     type: DataTypes.ARRAY(DataTypes.INTEGER), // To allow multiple answers
-    allowNull: false,
+    allowNull: true,
   },
   messageForCorrectAnswer: {
-    type: DataTypes.STRING(64),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   messageForIncorrectAnswer: {
-    type: DataTypes.STRING(64),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   explanation: {
-    type: DataTypes.STRING(128),
+    type: DataTypes.STRING(1023),
     allowNull: true,
   },
   point: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     default: 1000,
   },
 });
