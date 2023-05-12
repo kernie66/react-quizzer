@@ -44,6 +44,18 @@ describe("Create quizzes", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(2);
   });
+
+  it("should delete one quiz", async () => {
+    const res = await request(app).delete("/api/quizzes/1").set("Cookie", session);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("should list one quiz with ID 2", async () => {
+    const res = await request(app).get("/api/quizzes").set("Cookie", session);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(1);
+    expect(res.body[0].id).toEqual(2);
+  });
 });
 
 describe("Add questions to quiz", () => {
@@ -80,6 +92,15 @@ describe("Add questions to quiz", () => {
       .set("Cookie", session);
     expect(res.statusCode).toEqual(400);
     console.log("Question:", questions[0]);
+  }, 2000);
+
+  it("should add another question to a quiz", async () => {
+    const res = await request(app)
+      .post("/api/quizzes/1/addQuestion")
+      .send(questions[1])
+      .set("Cookie", session);
+    expect(res.statusCode).toEqual(201);
+    console.log("Question:", questions[1]);
   }, 2000);
 
   afterAll(async () => {

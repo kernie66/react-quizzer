@@ -38,10 +38,14 @@ export const deserializeUser = async (id, done) => {
   try {
     logger.debug("Deserialize:", id);
     const user = await User.findByPk(id);
+    if (isEmpty(user)) {
+      logger.warn("Deserialize: User not found");
+      return done(null, false);
+    }
     logger.debug("Found user:", user.dataValues);
-    done(null, user.dataValues);
+    return done(null, user.dataValues);
   } catch (error) {
-    logger.warn("Deserialize error, assuming database 'Users' needs to be synced");
+    logger.warn("Deserialize error, assuming database 'Users' needs to be synced", error);
     done(null, error);
   }
 };

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createUser, deleteUser, getUsers, updateUser } from "../controllers/users.js";
-import { addQuestion, createQuiz, getQuizzes } from "../controllers/quiz.js";
+import { addQuestion, createQuiz, deleteQuiz, getQuizzes } from "../controllers/quiz.js";
 
 export const apiRouter = Router();
 apiRouter.get("/", (req, res) => {
@@ -16,3 +16,4 @@ apiRouter.post("/quizzes", createQuiz);
 apiRouter.get("/quizzes", getQuizzes);
 apiRouter.get("/quizzes/:id", getQuizzes);
 apiRouter.post("/quizzes/:id/addQuestion", addQuestion);
+apiRouter.delete("/quizzes/:id", deleteQuiz);

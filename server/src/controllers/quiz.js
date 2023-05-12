@@ -85,14 +85,14 @@ export const updateQuiz = async (req, res) => {
 };
 
 export const deleteQuiz = async (req, res) => {
-  const id = parseInt(req.query.id);
-  const user = await User.findByPk(id);
-  if (!isEmpty(user)) {
-    const done = await user.destroy();
-    res.status(200).json({ success: `User ${user.username} deleted.` });
+  const id = parseInt(req.params.id);
+  const quiz = await Quiz.findByPk(id);
+  if (!isEmpty(quiz)) {
+    const done = await quiz.destroy();
+    res.status(200).json({ success: `Quiz ${quiz.quizTitle} deleted.` });
   } else {
-    res.status(404).json({ error: "No matching user found." });
-    logger.debug("No user found to delete.");
+    res.status(404).json({ error: "No matching quiz found." });
+    logger.debug("No quiz found to delete.");
   }
 };
 

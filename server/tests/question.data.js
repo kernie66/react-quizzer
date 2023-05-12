@@ -17,7 +17,8 @@ export const questions = [
     segment: segment.advanced,
   },
   {
-    question: "ReactJS is developed by _____?",
+    questionNumber: 3,
+    questionText: "ReactJS is developed by _____?",
     questionType: "text",
     answerSelectionType: "single",
     answers: ["Google Engineers", "Facebook Engineers"],
