@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createUser, deleteUser, getUsers, updateUser } from "../controllers/users.js";
-import { addQuestion, createQuiz, deleteQuiz, getQuizzes } from "../controllers/quiz.js";
+import { addQuestion, createQuiz, deleteQuiz, getQuizzes } from "../controllers/quizzes.js";
 
 export const apiRouter = Router();
 apiRouter.get("/", (req, res) => {

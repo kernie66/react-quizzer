@@ -39,7 +39,7 @@ export const deserializeUser = async (id, done) => {
     logger.debug("Deserialize:", id);
     const user = await User.findByPk(id);
     if (isEmpty(user)) {
-      logger.warn("Deserialize: User not found");
+      logger.warn(`Deserialize: User with ID ${id} not found`);
       return done(null, false);
     }
     logger.debug("Found user:", user.dataValues);

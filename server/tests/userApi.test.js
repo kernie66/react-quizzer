@@ -84,20 +84,20 @@ describe("User API", () => {
     expect(res.body[0].email).toEqual(John.email);
   });
 
-  it("should delete user with ID 1", async () => {
-    const res = await request(app).delete("/api/users/1").set("Cookie", session);
+  it("should delete user with ID 2", async () => {
+    const res = await request(app).delete("/api/users/2").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
   });
 
-  it("should show one users", async () => {
+  it("should show one user", async () => {
     const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(1);
-    expect(res.body[0].id).toEqual(2);
-    expect(res.body[0].username).toEqual(John.username);
-    expect(res.body[0].email).toEqual(John.email);
-    expect(res.body[0].name).toEqual(John.name);
-    expect(res.body[0].nicknames).toContainEqual(John.nicknames);
+    expect(res.body[0].id).toEqual(1);
+    expect(res.body[0].username).toEqual(Sarah.username);
+    expect(res.body[0].email).toEqual(Sarah.email.toLowerCase());
+    expect(res.body[0].name).toEqual(updateSarah.name);
+    expect(res.body[0].nicknames).toContainEqual(updateSarah.nickname);
   });
 
   afterAll(async () => {
