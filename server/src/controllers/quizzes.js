@@ -1,5 +1,5 @@
 import { col, fn } from "sequelize";
-import { User } from "../../models/index.js";
+import { Question, User } from "../../models/index.js";
 import { Quiz } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
@@ -14,6 +14,7 @@ async function parseQuiz(req) {
       where: {
         id: quizId,
       },
+      include: Question,
     });
   } else if (req.query.title) {
     const quizTitle = req.query.title;
@@ -104,9 +105,9 @@ export const addQuestion = async (req, res) => {
         where: { questionNumber: req.body.questionNumber },
       });
       if (isEmpty(exitingQuestion)) {
-        logger.info("Question:", req.body);
+        logger.debug("Question:", req.body);
         const done = await quiz.createQuestion(req.body);
-        logger.info("Created:", done.toJSON());
+        logger.debug("Created:", done.toJSON());
         res.status(201).json(req.body);
       } else {
         res.status(400).json({ error: "Question already exist, did you mean to update it?" });

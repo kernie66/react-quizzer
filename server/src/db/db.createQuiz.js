@@ -22,8 +22,8 @@ export default async function dbCreateQuiz(quizData, currentUser) {
         lastUsed: lastUsed,
         creator: currentUser || null,
       });
-      newQuiz.setAuthor(currentUser);
-      newQuiz.save();
+      await newQuiz.setAuthor(currentUser);
+      await newQuiz.save();
       logger.debug("Successfully created quiz", quizData.quizTitle);
       return true;
     } catch (error) {

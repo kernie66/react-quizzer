@@ -31,8 +31,8 @@ export const Question = db.define("question", {
   },
   questionType: {
     type: DataTypes.STRING(8), // "text"/"photo"
-    allowNull: true,
-    default: "text",
+    allowNull: false,
+    defaultValue: "text",
   },
   questionPic: {
     type: DataTypes.STRING(128),
@@ -40,8 +40,8 @@ export const Question = db.define("question", {
   },
   answerSelectionType: {
     type: DataTypes.STRING(8), // "single"/"multiple"
-    allowNull: true,
-    default: "single",
+    allowNull: false,
+    defaultValue: "single",
   },
   answers: {
     type: DataTypes.ARRAY(DataTypes.STRING),
@@ -66,6 +66,6 @@ export const Question = db.define("question", {
   point: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    default: 1000,
+    defaultValue: 1000,
   },
 });

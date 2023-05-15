@@ -100,6 +100,16 @@ describe("User API", () => {
     expect(res.body[0].nicknames).toContainEqual(updateSarah.nickname);
   });
 
+  it("should delete user with ID 1, which is the logged in user", async () => {
+    const res = await request(app).delete("/api/users/1").set("Cookie", session);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("should not allow access to show users", async () => {
+    const res = await request(app).get("/api/users").set("Cookie", session);
+    expect(res.statusCode).toEqual(401);
+  });
+
   afterAll(async () => {
     await thisDb.close();
   });

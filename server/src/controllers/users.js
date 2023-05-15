@@ -109,6 +109,14 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   const id = parseInt(req.params.id);
+  if (req.user.id === id) {
+    logger.warn("This is the current logged in used, logging out");
+    req.logOut((error) => {
+      if (error) {
+        logger.error("Error logging out", error);
+      }
+    });
+  }
   const user = await User.findByPk(id);
   if (!isEmpty(user)) {
     const done = await user.destroy();
@@ -118,3 +126,17 @@ export const deleteUser = async (req, res) => {
     logger.warn("No user found to delete.");
   }
 };
+
+/*
+  if (req.user) {
+    const user = req.user.username;
+    req.logOut((error) => {
+      if (error) {
+        return next(error);
+      }
+      res.status(200).json({ success: `User ${user} logged out` });
+    });
+  } else {
+    res.status(404).json({ error: "User not logged in..." });
+  }
+*/
