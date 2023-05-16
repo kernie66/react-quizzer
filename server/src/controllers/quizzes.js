@@ -40,6 +40,18 @@ export const getQuizzes = async (req, res) => {
   }
 };
 
+export const getQuizAuthor = async (req, res) => {
+  const quizId = req.params.id;
+  const quiz = await Quiz.findByPk(quizId);
+  if (!isEmpty(quiz)) {
+    const quizAuthor = await quiz.getAuthor();
+    res.status(200).json(quizAuthor);
+  } else {
+    res.status(404).json({ error: `Quiz with ID ${quizId} not found.` });
+    logger.debug("Quiz not found.");
+  }
+};
+
 export const createQuiz = async (req, res) => {
   const quizData = req.body;
   logger.info("Quiz:", quizData.quizTitle);

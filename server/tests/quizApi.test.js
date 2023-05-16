@@ -34,6 +34,12 @@ describe("Create quizzes", () => {
     expect(res.body.length).toEqual(1);
   });
 
+  it("should get the author of the quiz", async () => {
+    const res = await request(app).get("/api/quizzes/1/author").set("Cookie", session);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.name).toEqual(Sarah.name);
+  });
+
   it("should create another quiz", async () => {
     const res = await request(app).post("/api/quizzes").send(quiz2).set("Cookie", session);
     expect(res.statusCode).toEqual(201);

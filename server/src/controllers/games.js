@@ -17,7 +17,7 @@ export const getGames = async (req, res) => {
 export const getOneGame = async (req, res) => {
   const gameId = req.params.id;
   const game = await Game.findByPk(gameId, {
-    include: ["quizMaster", Quiz],
+    include: Quiz,
   });
   if (!isEmpty(game)) {
     res.status(200).json(game);
@@ -26,16 +26,55 @@ export const getOneGame = async (req, res) => {
   }
 };
 
+export const getQuestions = async (req, res) => {
+  const gameId = req.params.id;
+  const game = await Game.findByPk(gameId);
+  if (!isEmpty(game)) {
+    const quiz = await game.getQuiz();
+    if (!isEmpty(quiz)) {
+      const questions = await quiz.getQuestions();
+      res.status(200).json(questions);
+    } else {
+      res.status(404).json({ error: `No quiz found for game with ID ${gameId}` });
+    }
+  } else {
+    res.status(404).json({ error: `No game with ID ${gameId} found` });
+  }
+};
+
+export const getGameMaster = async (req, res) => {
+  const gameId = req.params.id;
+  const game = await Game.findByPk(gameId);
+  if (!isEmpty(game)) {
+    const quizMaster = await game.getQuizMaster();
+    res.status(200).json(quizMaster);
+  } else {
+    res.status(404).json({ error: `No game with ID ${gameId} found` });
+  }
+};
+
 export const createGame = async (req, res) => {
   const quizData = req.body;
-  logger.info("Quiz:", quizData.id);
-  logger.info("User:", req.user.id);
   const status = await dbCreateGame(quizData.id, req.user.id);
   if (status) {
     res.status(201).json({ success: `Game created: ${quizData.quizTitle}` });
   } else {
     res.status(400).json({ error: `Game couldn't be created: ${quizData.quizTitle}` });
     logger.info("Wrong game info.", status);
+  }
+};
+
+export const endGame = async (req, res) => {
+  const gameId = req.params.id;
+  const podiumData = req.body;
+  const game = await Game.findByPk(gameId);
+  if (!isEmpty(game)) {
+    game.set(podiumData);
+    game.completed = true;
+    await game.save();
+    res.status(200).json({ success: `Game with ID ${gameId} completed` });
+  } else {
+    res.status(404).json({ error: `No game with ID ${gameId} found` });
   }
 };
 /*

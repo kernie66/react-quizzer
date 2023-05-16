@@ -22,6 +22,9 @@ export const User = db.define("user", {
   hashedPassword: {
     type: DataTypes.STRING(64),
     allowNull: false,
+    get() {
+      return "******";
+    },
   },
   nicknames: {
     type: DataTypes.ARRAY(DataTypes.STRING(32)),

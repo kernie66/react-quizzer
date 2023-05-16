@@ -6,7 +6,7 @@ import { User } from "./user.model.js";
 Quiz.hasMany(Question);
 Question.belongsTo(Quiz);
 
-User.hasMany(Quiz, { as: "author" });
+User.hasMany(Quiz);
 Quiz.belongsTo(User, { as: "author" });
 
 Game.hasOne(Quiz);

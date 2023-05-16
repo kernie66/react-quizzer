@@ -20,7 +20,6 @@ export default async function dbCreateQuiz(quizData, currentUser) {
         quizTitle: quizData.quizTitle,
         quizSynopsis: quizData.quizSynopsis,
         lastUsed: lastUsed,
-        creator: currentUser || null,
       });
       await newQuiz.setAuthor(currentUser);
       await newQuiz.save();

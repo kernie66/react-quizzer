@@ -13,3 +13,9 @@ export const quiz2 = {
   // nrOfQuestions: "6",
   // lastUsed: new Date(year: 2022, monthIndex: 9, date: 22, hours: 12, minutes: 0)
 };
+
+export const podium = {
+  winner: 1,
+  second: 2,
+  third: 3,
+};
