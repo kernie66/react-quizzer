@@ -9,6 +9,7 @@ import {
 } from "../controllers/quizzes.js";
 import {
   createGame,
+  startGame,
   endGame,
   getGameMaster,
   getGames,
@@ -39,4 +40,5 @@ apiRouter.get("/games", getGames);
 apiRouter.get("/games/:id", getOneGame);
 apiRouter.get("/games/:id/gameMaster", getGameMaster);
 apiRouter.get("/games/:id/questions", getQuestions);
+apiRouter.put("/games/:id/start", startGame);
 apiRouter.put("/games/:id/end", endGame);

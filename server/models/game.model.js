@@ -27,9 +27,9 @@ export const Game = db.define("game", {
     type: DataTypes.ARRAY(DataTypes.INTEGER),
     allowNull: true,
   },
-  completed: {
-    type: DataTypes.BOOLEAN,
+  status: {
+    type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: false,
+    defaultValue: "prepared",
   },
 });

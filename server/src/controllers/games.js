@@ -64,15 +64,46 @@ export const createGame = async (req, res) => {
   }
 };
 
+export const startGame = async (req, res) => {
+  let quizMaster = req.user;
+  const gameId = req.params.id;
+  if (req.body.quizMaster) {
+    const quizMasterCheck = await User.findByPk(req.body.quizMaster);
+    if (!isEmpty(quizMasterCheck)) {
+      quizMaster = quizMasterCheck;
+    }
+  }
+  logger.info("QuizMaster:", quizMaster.toJSON());
+
+  const game = await Game.findByPk(gameId);
+  if (!isEmpty(game)) {
+    if (game.status === "prepared") {
+      await game.setQuizMaster(quizMaster);
+      game.status = "started";
+      game.quizDate = Date.now();
+      await game.save();
+      res.status(200).json({ success: `Game with ID ${gameId} started` });
+    } else {
+      res.status(400).json({ error: `Game with ID ${gameId} is not ready to start` });
+    }
+  } else {
+    res.status(404).json({ error: `No game with ID ${gameId} found` });
+  }
+};
+
 export const endGame = async (req, res) => {
   const gameId = req.params.id;
   const podiumData = req.body;
   const game = await Game.findByPk(gameId);
   if (!isEmpty(game)) {
-    game.set(podiumData);
-    game.completed = true;
-    await game.save();
-    res.status(200).json({ success: `Game with ID ${gameId} completed` });
+    if (game.status === "started") {
+      await game.set(podiumData);
+      game.status = "completed";
+      await game.save();
+      res.status(200).json({ success: `Game with ID ${gameId} completed` });
+    } else {
+      res.status(400).json({ error: `Game with ID ${gameId} is not started` });
+    }
   } else {
     res.status(404).json({ error: `No game with ID ${gameId} found` });
   }
