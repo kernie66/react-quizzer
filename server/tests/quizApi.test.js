@@ -8,6 +8,10 @@ import { questions } from "./question.data.js";
 // const request = supertest();
 const thisDb = db;
 
+afterAll(async () => {
+  await thisDb.close();
+});
+
 describe("Create quizzes", () => {
   let session;
 
@@ -105,8 +109,4 @@ describe("Add questions to quiz", () => {
       .set("Cookie", session);
     expect(res.statusCode).toEqual(201);
   }, 2000);
-
-  afterAll(async () => {
-    await thisDb.close();
-  });
 });

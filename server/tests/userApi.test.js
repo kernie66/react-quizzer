@@ -5,20 +5,23 @@ import { John, Sarah } from "./user.data.js";
 
 // const request = supertest();
 const thisDb = db;
+let session;
+
+beforeAll(async () => {
+  const status = await thisDb.sync({ force: true });
+  expect(status.config.database).toEqual("quizzer_test");
+  let res = await request(app).post("/register").send(Sarah);
+  expect(res.statusCode).toEqual(201);
+  res = await request(app).post("/login").send(Sarah);
+  session = res.header["set-cookie"];
+  expect(res.statusCode).toEqual(200);
+});
+
+afterAll(async () => {
+  await thisDb.close();
+});
 
 describe("User API", () => {
-  let session;
-
-  beforeAll(async () => {
-    const status = await thisDb.sync({ force: true });
-    expect(status.config.database).toEqual("quizzer_test");
-    let res = await request(app).post("/register").send(Sarah);
-    expect(res.statusCode).toEqual(201);
-    res = await request(app).post("/login").send(Sarah);
-    session = res.header["set-cookie"];
-    expect(res.statusCode).toEqual(200);
-  });
-
   it("should show one user", async () => {
     const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
@@ -108,9 +111,5 @@ describe("User API", () => {
   it("should not allow access to show users", async () => {
     const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(401);
-  });
-
-  afterAll(async () => {
-    await thisDb.close();
   });
 });

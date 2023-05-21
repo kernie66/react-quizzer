@@ -77,7 +77,7 @@ export const startGame = async (req, res) => {
 
   const game = await Game.findByPk(gameId);
   if (!isEmpty(game)) {
-    if (game.status === "prepared") {
+    if (game.status === "prepared" || req.body.restart) {
       await game.setQuizMaster(quizMaster);
       game.status = "started";
       game.quizDate = Date.now();
