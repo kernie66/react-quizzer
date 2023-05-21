@@ -108,6 +108,18 @@ export const endGame = async (req, res) => {
     res.status(404).json({ error: `No game with ID ${gameId} found` });
   }
 };
+
+export const findGame = async (req, res) => {
+  const game = await Game.findOne({
+    where: { status: "started" },
+    include: [Quiz],
+  });
+  if (!isEmpty(game)) {
+    res.status(200).json(game);
+  } else {
+    res.status(404).json({ error: "No active game found" });
+  }
+};
 /*
 export const updateQuiz = async (req, res) => {
   const userData = await parseUser(req);

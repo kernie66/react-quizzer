@@ -15,6 +15,7 @@ import {
   getGames,
   getOneGame,
   getQuestions,
+  findGame,
 } from "../controllers/games.js";
 
 export const apiRouter = Router();
@@ -42,3 +43,5 @@ apiRouter.get("/games/:id/gameMaster", getGameMaster);
 apiRouter.get("/games/:id/questions", getQuestions);
 apiRouter.put("/games/:id/start", startGame);
 apiRouter.put("/games/:id/end", endGame);
+
+apiRouter.get("/play", findGame);

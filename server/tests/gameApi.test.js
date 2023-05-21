@@ -34,15 +34,21 @@ beforeAll(async () => {
     .send(questions[1])
     .set("Cookie", session);
   expect(res.statusCode).toEqual(201);
-}, 8000);
+}, 5000);
 
 afterAll(async () => {
   await thisDb.close();
 });
 
 describe("Create a game", () => {
+  let quiz;
+
+  beforeAll(async () => {
+    quiz = await request(app).get("/api/quizzes/1").set("Cookie", session);
+    expect(quiz.statusCode).toEqual(200);
+  });
+
   it("should create one game", async () => {
-    const quiz = await request(app).get("/api/quizzes/1").set("Cookie", session);
     const res = await request(app).post("/api/games").send(quiz.body[0]).set("Cookie", session);
     expect(res.statusCode).toEqual(201);
   });
