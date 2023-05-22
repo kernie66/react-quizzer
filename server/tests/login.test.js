@@ -5,6 +5,11 @@ import { Sarah } from "./user.data.js";
 
 // const request = supertest();
 const thisDb = db;
+let session;
+
+afterAll(async () => {
+  await thisDb.close();
+});
 
 describe("Test database connection", () => {
   it("should connect to the test database", async () => {
@@ -23,8 +28,6 @@ describe("Register and login", () => {
     const res = await request(app).post("/register").send(Sarah);
     expect(res.statusCode).toEqual(201);
   }, 1000);
-
-  let session;
 
   it("should login user Sarah", async () => {
     const res = await request(app).post("/login").send(Sarah);
@@ -45,9 +48,5 @@ describe("Register and login", () => {
   it("should not be allowed access to API root", async () => {
     const res = await request(app).get("/api/").set("Cookie", session);
     expect(res.statusCode).toEqual(401);
-  });
-
-  afterAll(async () => {
-    await thisDb.close();
   });
 });
