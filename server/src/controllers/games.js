@@ -112,7 +112,7 @@ export const endGame = async (req, res) => {
 export const findGame = async (req, res) => {
   const game = await Game.findOne({
     where: { status: "started" },
-    include: [Quiz],
+    include: [Quiz, { model: User, as: "players" }],
   });
   if (!isEmpty(game)) {
     res.status(200).json(game);
@@ -120,6 +120,21 @@ export const findGame = async (req, res) => {
     res.status(404).json({ error: "No active game found" });
   }
 };
+
+export const connectGame = async (req, res) => {
+  const player = await User.findByPk(req.user.id);
+  const game = await Game.findOne({
+    where: { status: "started" },
+    include: [Quiz],
+  });
+  if (!isEmpty(game)) {
+    await game.addPlayer(player);
+    res.status(200).json(game);
+  } else {
+    res.status(404).json({ error: "No active game found" });
+  }
+};
+
 /*
 export const updateQuiz = async (req, res) => {
   const userData = await parseUser(req);

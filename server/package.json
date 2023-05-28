@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest --runInBand --testTimeout=10000",
+    "test": "NODE_ENV=test node --experimental-vm-modules node_modules/.bin/jest --runInBand --testTimeout=10000 --detectOpenHandles",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
     "server": "nodemon ./src/index.js"
   },

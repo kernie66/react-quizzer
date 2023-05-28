@@ -12,7 +12,7 @@ Quiz.belongsTo(User, { as: "author" });
 Game.hasOne(Quiz);
 Quiz.belongsTo(Game);
 Game.hasOne(User, { as: "quizMaster" });
-Game.belongsToMany(User, { through: "scoreboard", as: "player" });
+Game.belongsToMany(User, { through: "scoreboard", as: "players" });
 User.belongsToMany(Game, { through: "scoreboard" });
 
 export { Quiz, Question, User, Game };

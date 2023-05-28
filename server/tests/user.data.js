@@ -12,3 +12,11 @@ export const John = {
   password: "buildSnowmanSummer",
   nicknames: "Johnny",
 };
+
+export const Carl = {
+  name: "Carl Cole",
+  email: "carl.cole@example.com",
+  username: "carl",
+  password: "happySocksRocksWeekend",
+  nicknames: "Calle",
+};
