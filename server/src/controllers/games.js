@@ -135,6 +135,30 @@ export const connectGame = async (req, res) => {
   }
 };
 
+export const disconnectGame = async (req, res) => {
+  const player = await User.findByPk(req.user.id);
+  const game = await Game.findOne({
+    where: { status: "started" },
+  });
+  if (!isEmpty(game)) {
+    await game.removePlayer(player);
+    res.status(200).json({ success: `Player ${player.name} disconnected from game` });
+  } else {
+    res.status(404).json({ error: "No active game found" });
+  }
+};
+
+export const getPlayers = async (req, res) => {
+  const game = await Game.findOne({
+    where: { status: "started" },
+  });
+  if (!isEmpty(game)) {
+    const players = await game.getPlayers();
+    res.status(200).json(players);
+  } else {
+    res.status(404).json({ error: "No active game found" });
+  }
+};
 /*
 export const updateQuiz = async (req, res) => {
   const userData = await parseUser(req);

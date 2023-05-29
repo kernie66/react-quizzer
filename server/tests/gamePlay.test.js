@@ -83,7 +83,6 @@ describe("Play a game", () => {
     const res = await request(app).get("/api/play").set("Cookie", johnSession);
     expect(res.statusCode).toEqual(200);
     expect(res.body.quiz.quizTitle).toEqual("Test Quiz 1");
-    console.log("Game:", res.body);
   });
 
   it("John should connect to the active game", async () => {
@@ -96,13 +95,33 @@ describe("Play a game", () => {
     const res = await request(app).get("/api/play").set("Cookie", carlSession);
     expect(res.statusCode).toEqual(200);
     expect(res.body.quiz.quizTitle).toEqual("Test Quiz 1");
-    console.log("Game:", res.body);
+    expect(res.body.players.length).toEqual(1);
   });
 
   it("Carl should connect to the active game", async () => {
     const res = await request(app).get("/api/play/connect").set("Cookie", carlSession);
     expect(res.statusCode).toEqual(200);
     expect(res.body.quiz.quizTitle).toEqual("Test Quiz 1");
+  });
+
+  it("Carl should disconnect from the active game", async () => {
+    const res = await request(app).get("/api/play/disconnect").set("Cookie", carlSession);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.success).toEqual("Player Carl Cole disconnected from game");
+  });
+
+  it("Carl should connect to the active game again", async () => {
+    const res = await request(app).get("/api/play/connect").set("Cookie", carlSession);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.quiz.quizTitle).toEqual("Test Quiz 1");
+  });
+
+  it("should get the connected players", async () => {
+    const res = await request(app).get("/api/play/players").set("Cookie", sarahSession);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toEqual(2);
+    expect(res.body[0].name).toEqual(John.name);
+    expect(res.body[1].name).toEqual(Carl.name);
   });
 
   it("should set the game to completed", async () => {
