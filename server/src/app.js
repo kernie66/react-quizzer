@@ -85,8 +85,14 @@ app.delete("/logout", (req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Initializing database...");
-  testDbConnection();
+  const dbStatus = testDbConnection();
+  let statusString;
+  if (dbStatus) {
+    statusString = "Connection to database established";
+  } else {
+    statusString = "Couldn't connect to the database";
+  }
+  res.send("<h3>Welcome to the Quizzer API server...</h3>" + statusString);
 });
 
 app.get("/sync", (req, res) => {
