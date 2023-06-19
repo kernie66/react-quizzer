@@ -1,3 +1,4 @@
+import md5 from "blueimp-md5";
 import { db } from "../src/db/db.config.js";
 import { DataTypes } from "sequelize";
 
@@ -28,6 +29,13 @@ export const User = db.define("user", {
   },
   nicknames: {
     type: DataTypes.ARRAY(DataTypes.STRING(32)),
+  },
+  avatar_url: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      const hash = md5(this.email);
+      return `https://www.gravatar.com/avatar/${hash}?d=wavatar`;
+    },
   },
   numberOfWins: {
     type: DataTypes.INTEGER,

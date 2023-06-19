@@ -34,9 +34,15 @@ const invalidPathHandler = (req, res) => {
 
 export const app = express();
 
-app.use(express.static(setPath("../public")));
+logger.debug("Source location:", new URL(import.meta.url).pathname);
+const publicPath = setPath("../public");
+const localesPath = setPath("../locales");
+logger.debug("Path to public files:", publicPath);
+logger.debug("Path to locales files:", localesPath);
+app.use(express.static(publicPath));
+// app.use("/locales", express.static(localesPath));
+app.use(cors({ credentials: true, origin: "http://localhost:3002" }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 app.use(bodyParser.json());
 
 const SequelizeStore = storeBuilder(session.Store);
@@ -48,8 +54,9 @@ app.use(
   session({
     secret: process.env.SECRET,
     store: myStore,
-    resave: false,
-    saveUninitialized: true,
+    resave: true,
+    saveUninitialized: false,
+    cookie: { expires: 30 * 24 * 60 * 60 * 1000 },
   }),
 );
 myStore.sync();
@@ -65,10 +72,10 @@ app.use("/api", checkAuthenticated, apiRouter);
 app.use("/db", checkAuthenticated, dbRouter);
 app.post("/register", register);
 app.get("/login", checkLoggedIn, (req, res) => {
-  res.status(200).json({ success: "User already logged in..." });
+  res.status(200).json({ success: `User ${req.user.username} already logged in...` });
 });
 app.post("/login", passport.authenticate("local"), (req, res) => {
-  res.status(200).json({ success: `User ${req.user.username} logged in` });
+  res.status(200).json(req.user); // { success: `User ${req.user.username} logged in` });
 });
 app.delete("/logout", (req, res, next) => {
   if (req.user) {
@@ -104,4 +111,4 @@ app.get("/password", (req, res) => {
   res.send(zxcvbn("audi100"));
 });
 
-app.use(invalidPathHandler);
+// app.use(invalidPathHandler);

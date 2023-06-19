@@ -5,8 +5,8 @@ import isEmpty from "../utils/isEmpty.js";
 
 export const authUser = async (username, password, done) => {
   try {
-    const user = await User.findOne({ where: { username: username } });
     logger.debug("Search for username", username);
+    const user = await User.findOne({ where: { username: username } });
     if (isEmpty(user)) {
       logger.warn("User not found");
       return done(null, false);
@@ -59,8 +59,8 @@ export function checkAuthenticated(req, res, next) {
 }
 
 export function checkLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.status(400).json({ error: "User already logged in" });
+  if (!req.isAuthenticated()) {
+    return res.status(400).json({ error: "No user logged in" });
   }
   next();
 }

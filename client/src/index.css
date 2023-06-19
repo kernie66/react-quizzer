@@ -1,0 +1,117 @@
+.App {
+  padding: 0;
+}
+/*
+.Header {
+  border-bottom: 2px solid #ddd;
+}
+*/
+.Body {
+  padding-top: 10px;
+}
+
+.MainBody {
+  margin-top: 40px;
+  background-color: skyblue;
+}
+
+.Avatar48 {
+  width: 48px;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+.Avatar64 {
+  width: 64px;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+.Avatar128 {
+  width: 128px;
+  padding: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.Sidebar {
+/*  width: 120px; 
+  position: sticky;
+  margin: 5px; */
+  top: 50px;
+  min-height: 95vh;
+  align-self: flex-start;
+  align-items: start;
+}
+
+.Sidebar .nav-item {
+  margin-bottom: 2px;
+}
+/*
+.Sidebar a {
+  color: #444;
+}
+
+.Sidebar a:hover {
+  background-color: #eee;
+}
+
+.Sidebar a:visited {
+  color: #444;
+}
+*/
+.Content {
+  padding-top: 10px;
+}
+
+.Post {
+  align-items: start;
+  padding-top: 5px;
+}
+
+.Post:hover {
+  background-color: rgba(248, 248, 248, 0.2);
+}
+/*
+.Post a {
+  color: #14c;
+  text-decoration: none;
+}
+
+.Post a:visited {
+  color: #14c;
+}
+*/
+
+.Top {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.More {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.InputField {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.FlashMessage {
+  position: sticky;
+  top: 50px;
+}
+
+.NoScroll {
+  height: 90vh;
+  overflow-y: hidden;
+}
+
+.modal-dialog {
+  top: 6rem !important;
+}
+
+.Dropdown {
+  width: 150px;
+}

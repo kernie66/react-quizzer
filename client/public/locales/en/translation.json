@@ -1,0 +1,15 @@
+{
+  "app-name": "V&DS Friday Quiz",
+  "Profile": "",
+  "Change password": "",
+  "Logout": "",
+  "an-unexpected-error-occurred-with-the-api-please-try-again": "An unexpected error occurred with the API. Please try again.",
+  "username-or-email-is-missing": "Username or email is missing",
+  "password-is-missing": "Password is missing",
+  "logging-in-username": "Logging in {{ username }}",
+  "username-or-email-address": "Username or email address",
+  "password": "Password",
+  "invalid-username-or-password": "Invalid username or password",
+  "login": "Login",
+  "server-error-when-logging-in": "Server error when logging in"
+}

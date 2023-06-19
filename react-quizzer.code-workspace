@@ -1,0 +1,60 @@
+{
+	"folders": [
+    {
+      "path": "."
+    },
+    {
+      "name": "client",
+      "path": "client"
+    },
+    {
+      "name": "server",
+      "path": "server"
+    },
+    {
+      "name": "express-test",
+      "path": "express-test"
+    }
+  ],
+  "settings": {
+    "launch": {
+      "configurations": [
+        {
+          "type": "node",
+          "name": "vscode-jest-tests.v2",
+          "request": "launch",
+          "args": [
+            "test",
+            "--",
+            "--runInBand",
+            "--watchAll=false",
+            "--testNamePattern",
+            "${jest.testNamePattern}",
+            "--runTestsByPath",
+            "${jest.testFile}"
+          ],
+          "cwd": "/Users/kernie/Workspace/react-quizzer/server",
+          "console": "integratedTerminal",
+          "internalConsoleOptions": "neverOpen",
+          "disableOptimisticBPs": true,
+          "runtimeExecutable": "npm"
+        }
+      ],
+      "compounds": []
+    },
+    "jest.disabledWorkspaceFolders": [
+      "react-quizzer",
+      "express-test"
+    ],
+    "i18n-ally.localesPaths": [
+      "locales",
+      "client/locales",
+      "public/locales",
+      "client/public/locales",
+      "server/src/public/locales"
+    ],
+    "i18n-ally.sourceLanguage": "en",
+    "i18next.i18nPaths": "/Users/kernie/Workspace/react-quizzer/client/build/locales,/Users/kernie/Workspace/react-quizzer/client/public/locales,/Users/kernie/Workspace/react-quizzer/server/src/public/locales",
+    "i18n-ally.keystyle": "nested"
+  }
+}

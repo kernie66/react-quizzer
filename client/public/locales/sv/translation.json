@@ -1,0 +1,17 @@
+{
+  "app-name": "V&DS Fredags-Quiz",
+  "Profile": "Profil",
+  "Change password": "Ändra lösenord",
+  "Logout": "Logga ut",
+  "Play quiz": "Spela quiz",
+  "Create quiz": "Skapa quiz",
+  "an-unexpected-error-occurred-with-the-api-please-try-again": "Ett oväntat fel inträffade med API:et. Försök igen.",
+  "username-or-email-is-missing": "Användarnamn eller e-postadress saknas",
+  "password-is-missing": "Lösenord saknas",
+  "logging-in-username": "Loggar in {{ username }}",
+  "username-or-email-address": "Användarnamn eller e-mailadress",
+  "password": "Lösenord",
+  "invalid-username-or-password": "Ogiltigt användarnamn eller lösenord",
+  "login": "Logga in",
+  "server-error-when-logging-in": "Serverfel vid inloggning"
+}
