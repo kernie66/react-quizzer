@@ -3,5 +3,12 @@
   "launch": {
     "configurations": [],
     "compounds": []
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "public/locales",
+    "server/src/public/locales"
+  ],
+  "i18next.i18nPaths": "/Users/kernie/Workspace/react-quizzer/public/locales,/Users/kernie/Workspace/react-quizzer/server/src/public/locales",
+  "i18n-ally.keystyle": "flat",
+  "i18n-ally.sourceLanguage": "en"
 }

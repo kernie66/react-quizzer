@@ -89,7 +89,7 @@ export default function LoginPage() {
           </Form>
           <hr />
           <p>
-            Don't have an account? <Link to="/register">Register here!</Link>
+            {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
           </p>
           <p>
             Forgot your password? Request a <Link to="/reset-request">new password here</Link>.

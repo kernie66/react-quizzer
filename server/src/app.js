@@ -36,9 +36,10 @@ export const app = express();
 
 logger.debug("Source location:", new URL(import.meta.url).pathname);
 const publicPath = setPath("../public");
-const localesPath = setPath("../locales");
+const buildPath = setPath("../build");
 logger.debug("Path to public files:", publicPath);
-logger.debug("Path to locales files:", localesPath);
+logger.debug("Path to build files:", buildPath);
+app.use(express.static(buildPath));
 app.use(express.static(publicPath));
 // app.use("/locales", express.static(localesPath));
 app.use(cors({ credentials: true, origin: "http://localhost:3002" }));
@@ -111,4 +112,4 @@ app.get("/password", (req, res) => {
   res.send(zxcvbn("audi100"));
 });
 
-// app.use(invalidPathHandler);
+app.use(invalidPathHandler);

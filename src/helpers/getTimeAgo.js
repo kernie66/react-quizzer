@@ -2,12 +2,12 @@
 /* date relative to now. The update interval returned is in seconds */
 
 const secondsTable = [
-  ['year', 60 * 60 * 24 * 365],
-  ['month', 60 * 60 * 24 * 30],
-  ['week', 60 * 60 * 24 * 7],
-  ['day', 60 * 60 * 24],
-  ['hour', 60 * 60],
-  ['minute', 60],
+  ["year", 60 * 60 * 24 * 365],
+  ["month", 60 * 60 * 24 * 30],
+  ["week", 60 * 60 * 24 * 7],
+  ["day", 60 * 60 * 24],
+  ["hour", 60 * 60],
+  ["minute", 60],
 ];
 
 export default function getTimeAgo(date) {
@@ -21,9 +21,9 @@ export default function getTimeAgo(date) {
       bestInterval = unitSeconds / 2;
       break;
     }
-  };
+  }
   if (!bestUnit) {
-    bestUnit = 'second';
+    bestUnit = "second";
     bestTime = parseInt(seconds / 10) * 10;
     bestInterval = 10;
   }

@@ -13,5 +13,7 @@
   "password": "Lösenord",
   "invalid-username-or-password": "Ogiltigt användarnamn eller lösenord",
   "login": "Logga in",
-  "server-error-when-logging-in": "Serverfel vid inloggning"
+  "server-error-when-logging-in": "Serverfel vid inloggning",
+  "dont-have-an-account": "Har du inget konto?",
+  "register-here": "Registrera här!"
 }

@@ -1,36 +1,25 @@
 {
-  "env": {
-    "node": true,
-    "browser": true,
-    "es2021": true,
-    "es6": true,
-    "jest/globals": true
-  },
-  "overrides": [
-  ],
-  "parserOptions": {
-    "ecmaVersion": 2020, // Use the latest ecmascript standard
-    "sourceType": "module", // Allows using import/export statements
-    "ecmaFeatures": {
-      "jsx": true // Enable JSX since we're using React
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-uses-react": "off",
+        "react/prop-types": "off"
     }
-  },
-  "extends": [
-    "eslint:recommended",
-    "airbnb",
-    "prettier",
-    "plugin:testing-library/react",
-    "plugin:jest/all"
-  ],
-  "plugins": ["prettier", "react", "react-hooks", "testing-library", "jest"],
-  "rules": {
-    "prettier/prettier": ["warn", {}, { "usePrettierrc": true }], // Use .prettierrc file as source
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }], // To allow importing .jsx files
-    "no-console": 1,
-    "no-unused-vars": 1,
-    "import/no-unresolved": 2,
-    "no-undefined": 2,
-    "react/jsx-uses-vars": 2
-    // add more rules here...
-  }
 }

@@ -11,5 +11,7 @@
   "password": "Password",
   "invalid-username-or-password": "Invalid username or password",
   "login": "Login",
-  "server-error-when-logging-in": "Server error when logging in"
+  "server-error-when-logging-in": "Server error when logging in",
+  "dont-have-an-account": "Don't have an account?",
+  "register-here": "Register here!"
 }
