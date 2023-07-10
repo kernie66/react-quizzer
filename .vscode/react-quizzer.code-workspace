@@ -39,6 +39,7 @@
       ],
       "compounds": []
     },
+    "jest.autoEnable": false,
     "jest.disabledWorkspaceFolders": [],
     "i18n-ally.localesPaths": [
       "locales",

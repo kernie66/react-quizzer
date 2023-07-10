@@ -113,3 +113,7 @@ app.get("/password", (req, res) => {
 });
 
 app.use(invalidPathHandler);
+
+const dbStatus = dbSync(true);
+
+logger.info("App initialisation completed");

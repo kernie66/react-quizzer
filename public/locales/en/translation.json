@@ -14,7 +14,7 @@
   "dont-have-an-account": "Don't have an account?",
   "register-here": "Register here!",
   "quizzer-since": "Quizzer since:",
-  "last-played": "Last played:",
+  "last-login": "Last login:",
   "user-not-found": "User not found",
   "forgot-your-password": "Forgot your password? Request a <Link to=\"/reset-request\">new password here</Link>.",
   "forgot-password": "Forgot your password? Request a <1>new password here</1>.",

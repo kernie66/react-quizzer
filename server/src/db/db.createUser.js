@@ -33,6 +33,7 @@ export default async function dbCreateUser(userData) {
         username: userData.username,
         hashedPassword: userData.hashedPassword,
         lastSeen: lastSeen,
+        isAdmin: firstUser,
       });
       if (userData.nicknames) {
         let nicknames = [];

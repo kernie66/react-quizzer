@@ -106,7 +106,7 @@ export default function UserPage() {
                         {t("quizzer-since")} <TimeAgo isoDate={user.createdAt} />
                       </li>
                       <li>
-                        {t("last-played")} <TimeAgo isoDate={user.lastSeen} />
+                        {t("last-login")} <TimeAgo isoDate={user.lastSeen} />
                       </li>
                     </ul>
                     {isFollower === null && (
