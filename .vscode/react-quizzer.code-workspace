@@ -2,14 +2,18 @@
 	"folders": [
     {
       "name": "client",
-      "path": "."
+      "path": "../"
     },
     {
       "name": "server",
-      "path": "server"
+      "path": "../server"
     },
   ],
   "settings": {
+    "files.exclude": {
+      "node_modules/": true,
+      "server/": true
+    },
     "launch": {
       "configurations": [
         {
@@ -35,8 +39,7 @@
       ],
       "compounds": []
     },
-    "jest.disabledWorkspaceFolders": [
-    ],
+    "jest.disabledWorkspaceFolders": [],
     "i18n-ally.localesPaths": [
       "locales",
       "client/locales",
