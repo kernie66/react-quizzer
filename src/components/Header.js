@@ -34,6 +34,11 @@ export default function Header() {
                   <DropdownItem tag={NavLink} to={"/user/" + user.username}>
                     {t("profile")}
                   </DropdownItem>
+                  {user.isAdmin && (
+                    <DropdownItem tag={NavLink} to={"/admin"}>
+                      {t("administer")}
+                    </DropdownItem>
+                  )}
                   <DropdownItem divider className="bg-light" />
                   <DropdownItem tag={NavLink} to={"/password"}>
                     {t("change-password")}

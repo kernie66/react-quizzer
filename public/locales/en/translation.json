@@ -39,5 +39,6 @@
   "strong": "Strong",
   "very-weak": "Very weak",
   "the-password-is-too-weak": "The password is too weak",
-  "change-password": "Change password"
+  "change-password": "Change password",
+  "administer": "Administer"
 }
