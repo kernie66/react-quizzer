@@ -37,10 +37,21 @@ export const User = db.define("user", {
       return `https://www.gravatar.com/avatar/${hash}?d=wavatar`;
     },
   },
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
   numberOfWins: {
     type: DataTypes.INTEGER,
   },
   lastSeen: {
+    type: DataTypes.DATE,
+  },
+  lastPlayed: {
+    type: DataTypes.DATE,
+  },
+  lastHosted: {
     type: DataTypes.DATE,
   },
 });

@@ -5,6 +5,8 @@ import isEmpty from "../utils/isEmpty.js";
 
 export default async function dbCreateUser(userData) {
   const lowerCaseEmail = userData.email.trim().toLowerCase();
+  const allUsers = await User.findAll();
+  const firstUser = isEmpty(allUsers);
   const existingUser = JSON.parse(
     JSON.stringify(
       await User.findAll({
@@ -45,7 +47,7 @@ export default async function dbCreateUser(userData) {
       logger.error("Failed to create user:", error);
     }
   } else {
-    logger.warn("User with same info already exist:", existingUser[0].name);
+    logger.warn("User with same info already exist:", existingUser[0].username);
   }
   return false;
 }

@@ -1,20 +1,13 @@
 {
 	"folders": [
     {
-      "path": "."
-    },
-    {
       "name": "client",
-      "path": "client"
+      "path": "."
     },
     {
       "name": "server",
       "path": "server"
     },
-    {
-      "name": "express-test",
-      "path": "express-test"
-    }
   ],
   "settings": {
     "launch": {
@@ -43,8 +36,6 @@
       "compounds": []
     },
     "jest.disabledWorkspaceFolders": [
-      "react-quizzer",
-      "express-test"
     ],
     "i18n-ally.localesPaths": [
       "locales",

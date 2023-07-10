@@ -68,23 +68,29 @@ export default class AxiosApiClient {
     return this.request({ method: "DELETE", url, ...options });
   }
 
+  async register(data) {
+    const response = await this.post("/auth/register", data);
+    console.log("Register:", response);
+    return response;
+  }
+
   async login(username, password) {
-    const response = await this.post("/login", { username, password }, { baseURL: BASE_API_URL });
+    const response = await this.post("/auth/login", { username, password });
     console.log("Login:", response);
     if (response.ok) {
-      localStorage.setItem("userData", response.data.id);
+      this.setUserId(response.data.id);
     }
     return response;
   }
 
   async checkLoggedIn() {
-    const response = await this.get("/login", {}, { baseURL: BASE_API_URL });
+    const response = await this.get("/auth/login", {});
     console.log("Check login:", response);
     return response;
   }
 
   async logout() {
-    const response = await this.delete("/logout", { baseURL: BASE_API_URL });
+    const response = await this.delete("/auth/logout");
     console.log("Logout:", response);
     if (response.ok) {
       this.removeUserId();
@@ -94,6 +100,10 @@ export default class AxiosApiClient {
 
   isAuthenticated() {
     return localStorage.getItem("userData") !== null;
+  }
+
+  setUserId(userId) {
+    localStorage.setItem("userData", userId);
   }
 
   getUserId() {

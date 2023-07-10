@@ -5,7 +5,7 @@ import Body from "../components/Body";
 import InputField from "../components/InputField";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 export default function LoginPage() {
   const [formErrors, setFormErrors] = useState({});
@@ -71,14 +71,14 @@ export default function LoginPage() {
             <InputField
               label={t("username-or-email-address")}
               name="username"
-              autocomplete="username"
+              autoComplete="username"
               fieldRef={usernameField}
               error={formErrors.username}
             />
             <InputField
               label={t("password")}
               name="password"
-              autocomplete="current-password"
+              autoComplete="current-password"
               type="password"
               fieldRef={passwordField}
               error={formErrors.password}
@@ -92,7 +92,9 @@ export default function LoginPage() {
             {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
           </p>
           <p>
-            Forgot your password? Request a <Link to="/reset-request">new password here</Link>.
+            <Trans i18nKey="forgot-password">
+              Forgot your password? Request a <Link to="/reset-request">new password here</Link>.
+            </Trans>
           </p>
         </ModalBody>
       </Modal>

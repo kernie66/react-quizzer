@@ -8,6 +8,7 @@ import TimeAgo from "../components/TimeAgo";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
+import { useTranslation } from "react-i18next";
 
 export default function UserPage() {
   const { username } = useParams();
@@ -16,6 +17,7 @@ export default function UserPage() {
   const [modal, setModal] = useState(false);
   const api = useApi();
   const flash = useFlash();
+  const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
 
   useEffect(() => {
@@ -86,7 +88,7 @@ export default function UserPage() {
       ) : (
         <>
           {user === null ? (
-            <p>User not found</p>
+            <p>{t("user-not-found")}</p>
           ) : (
             <>
               <EditUser modal={modal} closeModal={closeModal} />
@@ -101,10 +103,10 @@ export default function UserPage() {
                     {user.about_me && <h5>{user.about_me}</h5>}
                     <ul>
                       <li>
-                        Member since: <TimeAgo isoDate={user.createdAt} />
+                        {t("quizzer-since")} <TimeAgo isoDate={user.createdAt} />
                       </li>
                       <li>
-                        Last seen: <TimeAgo isoDate={user.lastSeen} />
+                        {t("last-played")} <TimeAgo isoDate={user.lastSeen} />
                       </li>
                     </ul>
                     {isFollower === null && (

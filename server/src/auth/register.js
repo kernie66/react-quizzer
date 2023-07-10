@@ -15,10 +15,11 @@ export const register = async (req, res) => {
     userData.name = name;
     userData.email = email;
     const statusOk = await dbCreateUser(userData);
+    logger.debug("Register status:", statusOk);
     if (statusOk) {
       res.status(201).json({ success: username });
     } else {
-      res.status(400).json({ error: "Invalid request data" });
+      res.status(400).json({ errors: "Invalid request data" });
     }
   } catch (error) {
     logger.error("Error creating user:", error);

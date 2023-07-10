@@ -127,16 +127,12 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-/*
-  if (req.user) {
-    const user = req.user.username;
-    req.logOut((error) => {
-      if (error) {
-        return next(error);
-      }
-      res.status(200).json({ success: `User ${user} logged out` });
-    });
+export const checkUser = async (req, res) => {
+  const users = await parseUser(req);
+  logger.debug("Number of users found:", isEmpty(users) ? "None" : users.length);
+  if (!isEmpty(users)) {
+    res.status(200).json({ success: "User exists" });
   } else {
-    res.status(404).json({ error: "User not logged in..." });
+    res.status(404).json({ error: "No matching users found." });
   }
-*/
+};

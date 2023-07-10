@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Form, Row } from "reactstrap";
+import { Button, Col, Form, PopoverHeader, Row, UncontrolledPopover } from "reactstrap";
 import Body from "../components/Body";
 import InputField from "../components/InputField";
-import { useApi } from "../contexts/ApiProvider"
+import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
+import { useTranslation } from "react-i18next";
+import getNameFromEmail from "../helpers/getNameFromEmail.js";
+import PasswordStrengthBar from "react-password-strength-bar";
 
 export default function RegistrationPage() {
   const [formErrors, setFormErrors] = useState({});
+  const [passwordValue, setPasswordValue] = useState(0);
+  const [passwordScore, setPasswordScore] = useState(0);
   const usernameField = useRef();
   const emailField = useRef();
   const passwordField = useRef();
@@ -15,6 +20,43 @@ export default function RegistrationPage() {
   const navigate = useNavigate();
   const api = useApi();
   const flash = useFlash();
+  const { t } = useTranslation();
+
+  const short = (
+    <Button id="popoverButton" outline size="sm" color="secondary" onClick={null}>
+      {t("too-short")}
+    </Button>
+  );
+
+  const veryWeak = (
+    <Button id="popoverButton" outline size="sm" color="danger">
+      {t("very-weak")}
+    </Button>
+  );
+
+  const weak = (
+    <Button id="popoverButton" outline size="sm" color="danger">
+      {t("weak")}
+    </Button>
+  );
+
+  const okay = (
+    <Button id="popoverButton" outline size="sm" color="warning">
+      {t("okay")}
+    </Button>
+  );
+
+  const good = (
+    <Button id="popoverButton" outline size="sm" color="primary">
+      {t("good")}
+    </Button>
+  );
+
+  const strong = (
+    <Button id="popoverButton" outline size="sm" color="success">
+      {t("strong")}
+    </Button>
+  );
 
   useEffect(() => {
     usernameField.current.focus();
@@ -29,20 +71,33 @@ export default function RegistrationPage() {
 
     const errors = {};
     if (!username) {
-      errors.username = 'Please select a username';
+      errors.username = t("please-select-a-username");
+    } else {
+      const existingUser = await api.get("/auth/check", { username });
+      if (existingUser.status === 200) {
+        errors.username = t("username-already-registered");
+      }
     }
     if (!email) {
-      errors.email = "Please enter a valid email address";
+      errors.email = t("please-enter-a-valid-email-address");
+    } else {
+      const existingEmail = await api.get("/auth/check", { email });
+      if (existingEmail.status === 200) {
+        errors.email = t("email-address-already-registered-did-you-forget-your-password");
+      }
     }
     if (!password) {
-      errors.password = 'Please select a password';
+      errors.password = t("please-select-a-password");
+    } else {
+      if (passwordScore < 2) {
+        errors.password = t("the-password-is-too-weak");
+      }
     }
     if (!password2) {
-      errors.password2 = 'Please repeat the password';
-    }
-    else {
+      errors.password2 = t("please-repeat-the-password");
+    } else {
       if (password !== password2) {
-        errors.password2 = "The passwords doesn't match";
+        errors.password2 = t("the-passwords-doesnt-match");
       }
     }
     setFormErrors(errors);
@@ -50,45 +105,101 @@ export default function RegistrationPage() {
       return;
     }
 
-    const data = await api.post('/users', {
+    const name = getNameFromEmail(email);
+    const data = await api.register({
       username: username,
+      name: name,
       email: email,
       password: password,
     });
     if (!data.ok) {
-      setFormErrors(data.body.errors.json)
-    }
-    else {
+      setFormErrors(data.errors.json);
+    } else {
       setFormErrors({});
-      flash('You have successfully registered!', 'success');
-      navigate('/login');
+      flash(t("you-have-successfully-registered"), "success");
+      navigate("/login");
     }
   };
 
+  const checkUsername = (username) => {
+    return username === "kenta" ? "The user is the best" : "";
+  };
+
+  const checkPasswordStrength = (password) => {
+    //    const strength = await api.get(password);
+    console.log(password);
+    setPasswordValue(password);
+    setFormErrors({});
+  };
+
   const cancel = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
     <Body>
       <Row className="justify-content-center">
         <Col xs="12" md="8" lg="7" xl="6">
-          <h1>User Registration</h1>
+          <h1>{t("user-registration")}</h1>
           <Form onSubmit={onSubmit}>
-            <InputField label="Username" name="username"
-              fieldRef={usernameField} error={formErrors.username} />
-            <InputField label="Email address" name="username" type="email"
-              fieldRef={emailField} error={formErrors.email} />
-            <InputField label="Password" name="password" type="password"
-              fieldRef={passwordField} error={formErrors.password} />
-            <InputField label="Repeat password" name="password2" type="password"
-              fieldRef={password2Field} error={formErrors.password2} />
+            <InputField
+              label={t("username")}
+              name="username"
+              fieldRef={usernameField}
+              error={formErrors.username}
+              onBlur={checkUsername}
+            />
+            <InputField
+              label={t("email-address")}
+              name="username"
+              type="email"
+              fieldRef={emailField}
+              error={formErrors.email}
+            />
+            <InputField
+              label={t("password")}
+              name="password"
+              type="password"
+              fieldRef={passwordField}
+              error={formErrors.password}
+              autoComplete="new-password"
+              onChange={checkPasswordStrength}
+            />
+            <PasswordStrengthBar
+              password={passwordValue}
+              minLength={5}
+              shortScoreWord={short}
+              scoreWords={[veryWeak, weak, okay, good, strong]}
+              onChangeScore={(score, feedback) => {
+                console.log(score, feedback);
+                setPasswordScore(score);
+              }}
+            />
+            <InputField
+              label={t("repeat-password")}
+              name="password2"
+              type="password"
+              fieldRef={password2Field}
+              error={formErrors.password2}
+            />
+            <UncontrolledPopover
+              target="popoverButton"
+              placement="top"
+              trigger="legacy"
+              onClick={checkPasswordStrength}
+            >
+              <PopoverHeader>Password strength</PopoverHeader>
+            </UncontrolledPopover>
             <Row className="justify-content-between mb-2">
               <Col>
-              <Button color="primary" className="submit me-auto">Register</Button>
+                <Button color="primary" className="submit me-auto">
+                  {t("register")}
+                </Button>
               </Col>
               <Col>
-              <Button color="secondary" onClick={cancel} className="float-end">Cancel</Button>
+                <Button color="secondary" onClick={cancel} className="float-end">
+                  {t("cancel")}
+                </Button>
               </Col>
             </Row>
           </Form>

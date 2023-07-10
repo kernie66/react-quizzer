@@ -1,4 +1,3 @@
-import { logger } from "../src/logger/logger.js";
 import { Game } from "./game.model.js";
 import { Question, Quiz } from "./quiz.model.js";
 import { User } from "./user.model.js";

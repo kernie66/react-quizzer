@@ -32,13 +32,13 @@ export default function Header() {
                 </DropdownToggle>
                 <DropdownMenu className="Dropdown">
                   <DropdownItem tag={NavLink} to={"/user/" + user.username}>
-                    {t("Profile")}
+                    {t("profile")}
                   </DropdownItem>
                   <DropdownItem divider className="bg-light" />
                   <DropdownItem tag={NavLink} to={"/password"}>
-                    {t("Change password")}
+                    {t("change-password")}
                   </DropdownItem>
-                  <DropdownItem onClick={logout}>{t("Logout")}</DropdownItem>
+                  <DropdownItem onClick={logout}>{t("logout")}</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             )}

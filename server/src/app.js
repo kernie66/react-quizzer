@@ -11,8 +11,6 @@ import morgan from "morgan";
 import zxcvbn from "zxcvbn";
 import { apiRouter } from "./routes/apiRouter.js";
 import { register } from "./auth/register.js";
-import { login } from "./auth/login.js";
-//import "./auth/passportConfig.js";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
@@ -27,6 +25,7 @@ import {
 } from "./auth/authUser.js";
 import { dbRouter } from "./routes/dbRouter.js";
 import setPath from "./utils/setPath.js";
+import { authRouter } from "./routes/authRouter.js";
 
 const invalidPathHandler = (req, res) => {
   res.status(404).json({ error: "Invalid path" });
@@ -69,8 +68,9 @@ passport.deserializeUser(deserializeUser);
 // app.use(printData);
 
 app.use(morgan("dev"));
+app.use("/api/auth", authRouter);
+app.use("/api/db", dbRouter);
 app.use("/api", checkAuthenticated, apiRouter);
-app.use("/db", checkAuthenticated, dbRouter);
 app.post("/register", register);
 app.get("/login", checkLoggedIn, (req, res) => {
   res.status(200).json({ success: `User ${req.user.username} already logged in...` });

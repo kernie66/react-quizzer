@@ -5,10 +5,18 @@
     "compounds": []
   },
   "i18n-ally.localesPaths": [
-    "public/locales",
-    "server/src/public/locales"
+    "public/locales"
   ],
-  "i18next.i18nPaths": "/Users/kernie/Workspace/react-quizzer/public/locales,/Users/kernie/Workspace/react-quizzer/server/src/public/locales",
+  "i18next.i18nPaths": "/Users/kernie/Workspace/react-quizzer/public/locales",
   "i18n-ally.keystyle": "flat",
-  "i18n-ally.sourceLanguage": "en"
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.extract.ignoredByFiles": {
+    "src/pages/LoginPage.js": [
+      "\n              Forgot your password? Request a "
+    ]
+  },
+  "cSpell.words": [
+    "doesnt",
+    "Popover"
+  ]
 }
