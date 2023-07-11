@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Form, PopoverHeader, Row, UncontrolledPopover } from "reactstrap";
+import {
+  Button,
+  Col,
+  Form,
+  PopoverBody,
+  PopoverHeader,
+  Row,
+  UncontrolledPopover,
+  UncontrolledTooltip,
+} from "reactstrap";
 import Body from "../components/Body";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
@@ -125,12 +134,12 @@ export default function RegistrationPage() {
     return username === "kenta" ? "The user is the best" : "";
   };
 
-  const checkPasswordStrength = (password) => {
-    //    const strength = await api.get(password);
-    console.log(password);
+  const setPassword = (password) => {
     setPasswordValue(password);
     setFormErrors({});
   };
+
+  const checkPasswordStrength = async () => {};
 
   const cancel = () => {
     navigate("/login");
@@ -163,7 +172,7 @@ export default function RegistrationPage() {
               fieldRef={passwordField}
               error={formErrors.password}
               autoComplete="new-password"
-              onChange={checkPasswordStrength}
+              onChange={setPassword}
             />
             <PasswordStrengthBar
               password={passwordValue}
@@ -189,7 +198,11 @@ export default function RegistrationPage() {
               onClick={checkPasswordStrength}
             >
               <PopoverHeader>Password strength</PopoverHeader>
+              <PopoverBody>Password strength info</PopoverBody>
             </UncontrolledPopover>
+            <UncontrolledTooltip target={passwordField} color="secondary">
+              Tooltip for the weak of heart
+            </UncontrolledTooltip>
             <Row className="justify-content-between mb-2">
               <Col>
                 <Button color="primary" className="submit me-auto">
