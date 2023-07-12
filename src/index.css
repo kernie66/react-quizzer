@@ -35,7 +35,7 @@
 }
 
 .Sidebar {
-/*  width: 120px; 
+/*  width: 120px;
   position: sticky;
   margin: 5px; */
   top: 50px;
@@ -114,4 +114,14 @@
 
 .Dropdown {
   width: 150px;
+}
+
+.tooltip-inner {
+  color: white !important;
+  background-color: lightslategrey !important;
+  max-width: 500px !important;
+}
+
+.tooltip-arrow {
+  border-top-color: lightslategrey !important;
 }

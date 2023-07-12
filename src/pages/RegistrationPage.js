@@ -20,8 +20,10 @@ import PasswordStrengthBar from "react-password-strength-bar";
 
 export default function RegistrationPage() {
   const [formErrors, setFormErrors] = useState({});
-  const [passwordValue, setPasswordValue] = useState(0);
+  const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
+  const [passwordWarning, setPasswordWarning] = useState();
+  const [passwordSuggestion, setPasswordSuggestion] = useState("");
   const usernameField = useRef();
   const emailField = useRef();
   const passwordField = useRef();
@@ -139,6 +141,24 @@ export default function RegistrationPage() {
     setFormErrors({});
   };
 
+  const checkScore = (score, feedback) => {
+    let tooltipText = "Enter 5 characters for hints";
+    console.log(score, feedback, passwordValue.length);
+    setPasswordScore(score);
+    if (passwordValue.length >= 5) {
+      tooltipText = "";
+      if (feedback.warning) {
+        tooltipText = "Warning: " + feedback.warning;
+      }
+    }
+    setPasswordWarning(tooltipText);
+    if (feedback.suggestions) {
+      setPasswordSuggestion(feedback.suggestions[0]);
+    } else {
+      setPasswordSuggestion("");
+    }
+  };
+
   const checkPasswordStrength = async () => {};
 
   const cancel = () => {
@@ -179,10 +199,7 @@ export default function RegistrationPage() {
               minLength={5}
               shortScoreWord={short}
               scoreWords={[veryWeak, weak, okay, good, strong]}
-              onChangeScore={(score, feedback) => {
-                console.log(score, feedback);
-                setPasswordScore(score);
-              }}
+              onChangeScore={checkScore}
             />
             <InputField
               label={t("repeat-password")}
@@ -200,8 +217,9 @@ export default function RegistrationPage() {
               <PopoverHeader>Password strength</PopoverHeader>
               <PopoverBody>Password strength info</PopoverBody>
             </UncontrolledPopover>
-            <UncontrolledTooltip target={passwordField} color="secondary">
-              Tooltip for the weak of heart
+            <UncontrolledTooltip target={passwordField} autohide={false}>
+              {passwordWarning !== "" && <div>{passwordWarning}</div>}
+              {passwordSuggestion && <div>Suggestion: {passwordSuggestion}</div>}
             </UncontrolledTooltip>
             <Row className="justify-content-between mb-2">
               <Col>
