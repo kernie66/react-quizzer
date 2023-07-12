@@ -23,6 +23,7 @@ export default function RegistrationPage() {
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [passwordWarning, setPasswordWarning] = useState();
+  const [passwordWarningColor, setPasswordWarningColor] = useState();
   const [passwordSuggestion, setPasswordSuggestion] = useState("");
   const usernameField = useRef();
   const emailField = useRef();
@@ -143,12 +144,14 @@ export default function RegistrationPage() {
 
   const checkScore = (score, feedback) => {
     let tooltipText = "Enter 5 characters for hints";
+    setPasswordWarningColor("text-primary");
     console.log(score, feedback, passwordValue.length);
     setPasswordScore(score);
     if (passwordValue.length >= 5) {
       tooltipText = "";
       if (feedback.warning) {
         tooltipText = "Warning: " + feedback.warning;
+        setPasswordWarningColor("text-warning");
       }
     }
     setPasswordWarning(tooltipText);
@@ -218,8 +221,12 @@ export default function RegistrationPage() {
               <PopoverBody>Password strength info</PopoverBody>
             </UncontrolledPopover>
             <UncontrolledTooltip target={passwordField} autohide={false}>
-              {passwordWarning !== "" && <div>{passwordWarning}</div>}
-              {passwordSuggestion && <div>Suggestion: {passwordSuggestion}</div>}
+              {passwordWarning !== "" && (
+                <div className={passwordWarningColor}>{passwordWarning}</div>
+              )}
+              {passwordSuggestion && (
+                <div className="text-body">Suggestion: {passwordSuggestion}</div>
+              )}
             </UncontrolledTooltip>
             <Row className="justify-content-between mb-2">
               <Col>

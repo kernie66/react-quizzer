@@ -1,3 +1,6 @@
+import "./App.scss";
+// import "bootswatch/dist/quartz/bootstrap.min.css";
+
 // import Container from 'reactstrap/Container';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";

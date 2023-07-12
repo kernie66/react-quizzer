@@ -1,0 +1,11 @@
+//.tooltip-inner {
+//  background-color: lightslategrey !important;
+//  max-width: 500px !important;
+//}
+
+$tooltip-max-width: 500px;
+$tooltip-bg: lightslategrey;
+
+@import "~bootswatch/dist/quartz/variables";
+@import "~bootstrap/scss/bootstrap";
+@import "~bootswatch/dist/quartz/bootswatch";
