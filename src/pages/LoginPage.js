@@ -64,7 +64,7 @@ export default function LoginPage() {
 
   return (
     <Body>
-      <Modal isOpen={modal} onOpened={onOpened}>
+      <Modal isOpen={modal} onOpened={onOpened} className="mt-0">
         <ModalHeader>{t("login")}</ModalHeader>
         <ModalBody className="pt-0">
           <Form onSubmit={onSubmit}>

@@ -3,8 +3,9 @@
 //  max-width: 500px !important;
 //}
 
+$input-padding-x: 1rem;
 $tooltip-max-width: 500px;
-$tooltip-bg: lightslategrey;
+// $tooltip-bg: lightslategrey;
 
 @import "~bootswatch/dist/quartz/variables";
 @import "~bootstrap/scss/bootstrap";
