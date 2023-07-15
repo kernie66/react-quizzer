@@ -10,8 +10,8 @@ import {
   PopoverBody,
   PopoverHeader,
   Row,
-  Tooltip,
   UncontrolledPopover,
+  UncontrolledTooltip,
 } from "reactstrap";
 import Body from "../components/Body";
 import InputField from "../components/InputField";
@@ -20,10 +20,10 @@ import { useFlash } from "../contexts/FlashProvider";
 import { useTranslation } from "react-i18next";
 import getNameFromEmail from "../helpers/getNameFromEmail.js";
 import PasswordStrengthBar from "react-password-strength-bar";
+import zxcvbn from "zxcvbn";
 
 export default function RegistrationPage() {
   const [modal, setModal] = useState(true);
-  const [tooltipOpen, setTooltipOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
@@ -38,50 +38,6 @@ export default function RegistrationPage() {
   const api = useApi();
   const flash = useFlash();
   const { t } = useTranslation();
-
-  const short = (
-    <Button id="popoverButton" outline size="sm" color="secondary" onClick={null}>
-      {t("too-short")}
-    </Button>
-  );
-
-  const veryWeak = (
-    <Button id="popoverButton" outline size="sm" color="danger">
-      {t("very-weak")}
-    </Button>
-  );
-
-  const weak = (
-    <Button id="popoverButton" outline size="sm" color="danger">
-      {t("weak")}
-    </Button>
-  );
-
-  const okay = (
-    <Button id="popoverButton" outline size="sm" color="warning">
-      {t("okay")}
-    </Button>
-  );
-
-  const good = (
-    <Button id="popoverButton" outline size="sm" color="primary">
-      {t("good")}
-    </Button>
-  );
-
-  const strong = (
-    <Button id="popoverButton" outline size="sm" color="success">
-      {t("strong")}
-    </Button>
-  );
-
-  /*
-  useEffect(() => {
-    usernameField.current.focus();
-  }, []);
-*/
-
-  const toggleTooltip = () => setTooltipOpen(!tooltipOpen);
 
   const onOpened = () => {
     usernameField.current.focus();
@@ -165,17 +121,17 @@ export default function RegistrationPage() {
   };
 
   const checkScore = (score, feedback) => {
-    let tooltipText = "Enter 5 characters for hints";
+    let tooltipText = t("enter-5-characters-for-hints");
     setPasswordWarningColor("text-white");
     console.log(score, feedback, passwordValue.length);
     setPasswordScore(score);
     if (passwordValue.length >= 5) {
-      tooltipText = "Password strength is very good";
+      tooltipText = t("password-strength-is-very-good");
       if (feedback.warning) {
         tooltipText = "Warning: " + feedback.warning;
         setPasswordWarningColor("text-warning");
       } else if (score < 4) {
-        tooltipText = "Password strength is sufficient";
+        tooltipText = t("password-strength-is-sufficient");
       }
     }
     setPasswordWarning(tooltipText);
@@ -184,14 +140,55 @@ export default function RegistrationPage() {
     } else {
       setPasswordSuggestion("");
     }
-    setTooltipOpen(true);
   };
 
-  const checkPasswordStrength = async () => {};
+  const checkPasswordStrength = () => {
+    const username = usernameField.current.value;
+    const email = emailField.current.value;
+
+    const strength = zxcvbn(passwordValue, [username, email, "Saab"]);
+    console.log("Strength:", strength);
+  };
 
   const cancel = () => {
     navigate("/login");
   };
+
+  const short = (
+    <Button id="popoverButton" outline size="sm" color="secondary" onClick={checkPasswordStrength}>
+      {t("too-short")}
+    </Button>
+  );
+
+  const veryWeak = (
+    <Button id="popoverButton" outline size="sm" color="danger" onClick={checkPasswordStrength}>
+      {t("very-weak")}
+    </Button>
+  );
+
+  const weak = (
+    <Button id="popoverButton" outline size="sm" color="danger" onClick={checkPasswordStrength}>
+      {t("weak")}
+    </Button>
+  );
+
+  const okay = (
+    <Button id="popoverButton" outline size="sm" color="warning" onClick={checkPasswordStrength}>
+      {t("okay")}
+    </Button>
+  );
+
+  const good = (
+    <Button id="popoverButton" outline size="sm" color="info" onClick={checkPasswordStrength}>
+      {t("good")}
+    </Button>
+  );
+
+  const strong = (
+    <Button id="popoverButton" outline size="sm" color="success" onClick={checkPasswordStrength}>
+      {t("strong")}
+    </Button>
+  );
 
   return (
     <Body>
@@ -237,21 +234,11 @@ export default function RegistrationPage() {
               fieldRef={password2Field}
               error={formErrors.password2}
             />
-            <UncontrolledPopover
-              target="popoverButton"
-              placement="top"
-              trigger="legacy"
-              onClick={checkPasswordStrength}
-            >
+            <UncontrolledPopover target="popoverButton" placement="top" trigger="legacy">
               <PopoverHeader>Password strength</PopoverHeader>
               <PopoverBody>Password strength info</PopoverBody>
             </UncontrolledPopover>
-            <Tooltip
-              isOpen={tooltipOpen}
-              target={passwordField}
-              autohide={false}
-              toggle={toggleTooltip}
-            >
+            <UncontrolledTooltip target={passwordField} autohide={false}>
               {passwordWarning !== "" && (
                 <div className={passwordWarningColor}>{passwordWarning}</div>
               )}
@@ -262,7 +249,7 @@ export default function RegistrationPage() {
                   ))}
                 </div>
               )}
-            </Tooltip>
+            </UncontrolledTooltip>
             <Row className="justify-content-between mb-2">
               <Col>
                 <Button color="primary" className="submit me-auto">

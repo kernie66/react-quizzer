@@ -40,5 +40,8 @@
   "very-weak": "Very weak",
   "the-password-is-too-weak": "The password is too weak",
   "change-password": "Change password",
-  "administer": "Administer"
+  "administer": "Administer",
+  "enter-5-characters-for-hints": "Enter 5 characters for hints",
+  "password-strength-is-very-good": "Password strength is very good",
+  "password-strength-is-sufficient": "Password strength is sufficient"
 }

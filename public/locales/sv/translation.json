@@ -41,5 +41,8 @@
   "very-weak": "Väldigt svagt",
   "the-password-is-too-weak": "Lösenordet är för svagt",
   "change-password": "Ändra lösenord",
-  "administer": "Administrera"
+  "administer": "Administrera",
+  "enter-5-characters-for-hints": "Ange 5 tecken för lösenordstips",
+  "password-strength-is-very-good": "Lösenordsstyrkan är mycket bra",
+  "password-strength-is-sufficient": "Lösenordsstyrkan är tillräcklig"
 }
