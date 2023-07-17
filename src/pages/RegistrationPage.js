@@ -10,7 +10,7 @@ import {
   PopoverBody,
   PopoverHeader,
   Row,
-  UncontrolledPopover,
+  Popover,
   UncontrolledTooltip,
 } from "reactstrap";
 import Body from "../components/Body";
@@ -24,12 +24,14 @@ import zxcvbn from "zxcvbn";
 
 export default function RegistrationPage() {
   const [modal, setModal] = useState(true);
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [passwordWarning, setPasswordWarning] = useState();
   const [passwordWarningColor, setPasswordWarningColor] = useState();
   const [passwordSuggestion, setPasswordSuggestion] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState([]);
   const usernameField = useRef();
   const emailField = useRef();
   const passwordField = useRef();
@@ -126,12 +128,14 @@ export default function RegistrationPage() {
     console.log(score, feedback, passwordValue.length);
     setPasswordScore(score);
     if (passwordValue.length >= 5) {
-      tooltipText = t("password-strength-is-very-good");
+      tooltipText = t("password-is-not-good-enough");
       if (feedback.warning) {
         tooltipText = "Warning: " + feedback.warning;
         setPasswordWarningColor("text-warning");
-      } else if (score < 4) {
+      } else if (score === 3) {
         tooltipText = t("password-strength-is-sufficient");
+      } else if (score === 4) {
+        tooltipText = t("password-strength-is-very-good");
       }
     }
     setPasswordWarning(tooltipText);
@@ -142,12 +146,16 @@ export default function RegistrationPage() {
     }
   };
 
+  const togglePopover = () => {
+    setPopoverOpen(!popoverOpen);
+  };
   const checkPasswordStrength = () => {
     const username = usernameField.current.value;
     const email = emailField.current.value;
-
-    const strength = zxcvbn(passwordValue, [username, email, "Saab"]);
-    console.log("Strength:", strength);
+    const strengthData = zxcvbn(passwordValue, [username, email, "Saab"]);
+    console.log("Strength:", strengthData);
+    console.log("Guesses:", new Intl.NumberFormat().format(strengthData.guesses));
+    setPasswordStrength(strengthData);
   };
 
   const cancel = () => {
@@ -234,10 +242,69 @@ export default function RegistrationPage() {
               fieldRef={password2Field}
               error={formErrors.password2}
             />
-            <UncontrolledPopover target="popoverButton" placement="top" trigger="legacy">
-              <PopoverHeader>Password strength</PopoverHeader>
-              <PopoverBody>Password strength info</PopoverBody>
-            </UncontrolledPopover>
+            <Popover
+              target="popoverButton"
+              placement="top"
+              trigger="legacy"
+              isOpen={popoverOpen}
+              toggle={togglePopover}
+            >
+              <PopoverHeader>Password strength info</PopoverHeader>
+              <PopoverBody className="pt-1 px-1">
+                <div>
+                  <div className="mb-1">
+                    <strong>Score: </strong>
+                    {passwordStrength.score} (of 4)
+                    <br />
+                    <strong>Number of guesses: </strong>
+                    {new Intl.NumberFormat().format(passwordStrength.guesses)}
+                    <br />
+                    <strong>Crack times:</strong>
+                    <li>
+                      Online throttling:{" "}
+                      {passwordStrength.crack_times_display &&
+                        passwordStrength.crack_times_display.online_throttling_100_per_hour}
+                    </li>
+                    <li>
+                      Online no throttling:{" "}
+                      {passwordStrength.crack_times_display &&
+                        passwordStrength.crack_times_display.online_no_throttling_10_per_second}
+                    </li>
+                    <li>
+                      Offline slow:{" "}
+                      {passwordStrength.crack_times_display &&
+                        passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second}
+                    </li>
+                    <li>
+                      Offline fast:{" "}
+                      {passwordStrength.crack_times_display &&
+                        passwordStrength.crack_times_display.offline_fast_hashing_1e10_per_second}
+                    </li>
+                    <strong>Patterns:</strong>
+                    {passwordStrength.sequence &&
+                      passwordStrength.sequence.map((sequence) => (
+                        <li key={sequence.id}>
+                          <em>{sequence.pattern}</em>
+                        </li>
+                      ))}
+                  </div>
+                  <div className="border-top border-info">
+                    <small>
+                      Information provided by{" "}
+                      <em>
+                        <a
+                          href="https://github.com/dropbox/zxcvbn"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          zxcvbn
+                        </a>
+                      </em>
+                    </small>
+                  </div>
+                </div>
+              </PopoverBody>
+            </Popover>
             <UncontrolledTooltip target={passwordField} autohide={false}>
               {passwordWarning !== "" && (
                 <div className={passwordWarningColor}>{passwordWarning}</div>
