@@ -45,5 +45,7 @@
   "enter-5-characters-for-hints": "Ange 5 tecken för lösenordstips",
   "password-strength-is-very-good": "Lösenordsstyrkan är mycket bra",
   "password-strength-is-sufficient": "Lösenordsstyrkan är tillräcklig",
-  "password-is-not-good-enough": "Lösenordet är inte tillräckligt bra"
+  "password-is-not-good-enough": "Lösenordet är inte tillräckligt bra",
+  "password-strength-info": "Information om lösenordsstyrka",
+  "information-provided-by": "Information tillhandahållen av"
 }

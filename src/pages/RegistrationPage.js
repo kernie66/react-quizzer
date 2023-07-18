@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -22,16 +22,20 @@ import getNameFromEmail from "../helpers/getNameFromEmail.js";
 import PasswordStrengthBar from "react-password-strength-bar";
 import zxcvbn from "zxcvbn";
 
+const initialPasswordStrength = zxcvbn("");
+
 export default function RegistrationPage() {
   const [modal, setModal] = useState(true);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
+  const [usernameValue, setUsernameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [passwordWarning, setPasswordWarning] = useState();
   const [passwordWarningColor, setPasswordWarningColor] = useState();
   const [passwordSuggestion, setPasswordSuggestion] = useState("");
-  const [passwordStrength, setPasswordStrength] = useState([]);
+  const [passwordStrength, setPasswordStrength] = useState(initialPasswordStrength);
   const usernameField = useRef();
   const emailField = useRef();
   const passwordField = useRef();
@@ -105,8 +109,20 @@ export default function RegistrationPage() {
     }
   };
 
+  /*
   const checkUsername = (username) => {
     return username === "kenta" ? "The user is the best" : "";
+  };
+  */
+
+  const setUsername = (username) => {
+    setUsernameValue(username);
+    setFormErrors({});
+  };
+
+  const setEmail = (email) => {
+    setEmailValue(email);
+    setFormErrors({});
   };
 
   const setPassword = (password) => {
@@ -149,51 +165,55 @@ export default function RegistrationPage() {
   const togglePopover = () => {
     setPopoverOpen(!popoverOpen);
   };
-  const checkPasswordStrength = () => {
-    const username = usernameField.current.value;
-    const email = emailField.current.value;
-    const strengthData = zxcvbn(passwordValue, [username, email, "Saab"]);
+
+  useEffect(() => {
+    const strengthData = zxcvbn(passwordValue, [usernameValue, emailValue, "Saab"]);
     console.log("Strength:", strengthData);
     console.log("Guesses:", new Intl.NumberFormat().format(strengthData.guesses));
     setPasswordStrength(strengthData);
-  };
+  }, [usernameValue, emailValue, passwordValue]);
 
   const cancel = () => {
     navigate("/login");
   };
 
+  const noAction = (event) => {
+    event.preventDefault();
+    setFormErrors({});
+  };
+
   const short = (
-    <Button id="popoverButton" outline size="sm" color="secondary" onClick={checkPasswordStrength}>
+    <Button id="popoverButton" outline size="sm" color="secondary" onClick={noAction}>
       {t("too-short")}
     </Button>
   );
 
   const veryWeak = (
-    <Button id="popoverButton" outline size="sm" color="danger" onClick={checkPasswordStrength}>
+    <Button id="popoverButton" outline size="sm" color="danger" onClick={noAction}>
       {t("very-weak")}
     </Button>
   );
 
   const weak = (
-    <Button id="popoverButton" outline size="sm" color="danger" onClick={checkPasswordStrength}>
+    <Button id="popoverButton" outline size="sm" color="danger" onClick={noAction}>
       {t("weak")}
     </Button>
   );
 
   const okay = (
-    <Button id="popoverButton" outline size="sm" color="warning" onClick={checkPasswordStrength}>
+    <Button id="popoverButton" outline size="sm" color="warning" onClick={noAction}>
       {t("okay")}
     </Button>
   );
 
   const good = (
-    <Button id="popoverButton" outline size="sm" color="info" onClick={checkPasswordStrength}>
+    <Button id="popoverButton" outline size="sm" color="info" onClick={noAction}>
       {t("good")}
     </Button>
   );
 
   const strong = (
-    <Button id="popoverButton" outline size="sm" color="success" onClick={checkPasswordStrength}>
+    <Button id="popoverButton" outline size="sm" color="success" onClick={noAction}>
       {t("strong")}
     </Button>
   );
@@ -209,7 +229,7 @@ export default function RegistrationPage() {
               name="username"
               fieldRef={usernameField}
               error={formErrors.username}
-              onBlur={checkUsername}
+              onBlur={setUsername}
             />
             <InputField
               label={t("email-address")}
@@ -217,6 +237,7 @@ export default function RegistrationPage() {
               type="email"
               fieldRef={emailField}
               error={formErrors.email}
+              onBlur={setEmail}
             />
             <InputField
               label={t("password")}
@@ -249,7 +270,7 @@ export default function RegistrationPage() {
               isOpen={popoverOpen}
               toggle={togglePopover}
             >
-              <PopoverHeader>Password strength info</PopoverHeader>
+              <PopoverHeader>{t("password-strength-info")}</PopoverHeader>
               <PopoverBody className="pt-1 px-1">
                 <div>
                   <div className="mb-1">
@@ -259,38 +280,44 @@ export default function RegistrationPage() {
                     <strong>Number of guesses: </strong>
                     {new Intl.NumberFormat().format(passwordStrength.guesses)}
                     <br />
-                    <strong>Crack times:</strong>
-                    <li>
-                      Online throttling:{" "}
-                      {passwordStrength.crack_times_display &&
-                        passwordStrength.crack_times_display.online_throttling_100_per_hour}
-                    </li>
-                    <li>
-                      Online no throttling:{" "}
-                      {passwordStrength.crack_times_display &&
-                        passwordStrength.crack_times_display.online_no_throttling_10_per_second}
-                    </li>
-                    <li>
-                      Offline slow:{" "}
-                      {passwordStrength.crack_times_display &&
-                        passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second}
-                    </li>
-                    <li>
-                      Offline fast:{" "}
-                      {passwordStrength.crack_times_display &&
-                        passwordStrength.crack_times_display.offline_fast_hashing_1e10_per_second}
-                    </li>
-                    <strong>Patterns:</strong>
-                    {passwordStrength.sequence &&
-                      passwordStrength.sequence.map((sequence) => (
-                        <li key={sequence.id}>
-                          <em>{sequence.pattern}</em>
+                    {passwordStrength.crack_times_display && (
+                      <div>
+                        <strong>Crack times:</strong>
+                        <li>
+                          Online throttling:{" "}
+                          {passwordStrength.crack_times_display.online_throttling_100_per_hour}
                         </li>
-                      ))}
+                        <li>
+                          Online no throttling:{" "}
+                          {passwordStrength.crack_times_display.online_no_throttling_10_per_second}
+                        </li>
+                        <li>
+                          Offline slow:{" "}
+                          {passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second}
+                        </li>
+                        <li>
+                          Offline fast:{" "}
+                          {
+                            passwordStrength.crack_times_display
+                              .offline_fast_hashing_1e10_per_second
+                          }
+                        </li>
+                      </div>
+                    )}
+                    {passwordStrength.sequence.length !== 0 && (
+                      <div>
+                        <strong>Patterns:</strong>
+                        {passwordStrength.sequence.map((sequence) => (
+                          <li key={sequence.id}>
+                            <em>{sequence.pattern}</em> ({sequence.token})
+                          </li>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="border-top border-info">
+                  <div className="border-top border-info text-info">
                     <small>
-                      Information provided by{" "}
+                      {t("information-provided-by")}{" "}
                       <em>
                         <a
                           href="https://github.com/dropbox/zxcvbn"
