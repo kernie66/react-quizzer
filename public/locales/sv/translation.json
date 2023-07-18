@@ -47,5 +47,6 @@
   "password-strength-is-sufficient": "Lösenordsstyrkan är tillräcklig",
   "password-is-not-good-enough": "Lösenordet är inte tillräckligt bra",
   "password-strength-info": "Information om lösenordsstyrka",
-  "information-provided-by": "Information tillhandahållen av"
+  "information-provided-by": "Information tillhandahållen av",
+  "username-must-be-at-least-3-characters": "Användarnamnet måste bestå av minst 3 tecken"
 }

@@ -59,6 +59,8 @@ export default function RegistrationPage() {
     const errors = {};
     if (!username) {
       errors.username = t("please-select-a-username");
+    } else if (username.length < 3) {
+      errors.username = t("username-must-be-at-least-3-characters");
     } else {
       const existingUser = await api.get("/auth/check", { username });
       if (existingUser.status === 200) {
@@ -116,8 +118,14 @@ export default function RegistrationPage() {
   */
 
   const setUsername = (username) => {
+    const errors = {};
     setUsernameValue(username);
-    setFormErrors({});
+    if (username.length < 3) {
+      errors.username = t("username-must-be-at-least-3-characters");
+      setFormErrors(errors);
+    } else {
+      setFormErrors({});
+    }
   };
 
   const setEmail = (email) => {
@@ -128,14 +136,12 @@ export default function RegistrationPage() {
   const setPassword = (password) => {
     setPasswordValue(password);
     setFormErrors({});
-    return "";
   };
 
   const checkPassword = () => {
-    if (passwordScore < 2) {
-      return "";
+    if (passwordScore >= 2) {
+      return true;
     }
-    return " ";
   };
 
   const checkScore = (score, feedback) => {
@@ -283,19 +289,19 @@ export default function RegistrationPage() {
                     {passwordStrength.crack_times_display && (
                       <div>
                         <strong>Crack times:</strong>
-                        <li>
+                        <li key="online_throttling">
                           Online throttling:{" "}
                           {passwordStrength.crack_times_display.online_throttling_100_per_hour}
                         </li>
-                        <li>
+                        <li key="online_no_throttling">
                           Online no throttling:{" "}
                           {passwordStrength.crack_times_display.online_no_throttling_10_per_second}
                         </li>
-                        <li>
+                        <li key="offline_slow">
                           Offline slow:{" "}
                           {passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second}
                         </li>
-                        <li>
+                        <li key="offline_fast">
                           Offline fast:{" "}
                           {
                             passwordStrength.crack_times_display
