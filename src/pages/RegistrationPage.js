@@ -22,6 +22,8 @@ import getNameFromEmail from "../helpers/getNameFromEmail.js";
 import PasswordStrengthBar from "react-password-strength-bar";
 import zxcvbn from "zxcvbn";
 import SetUsername from "../components/SetUsername.js";
+import SetEmailAddress from "../components/SetEmailAddress.js";
+import { sift } from "radash";
 
 const initialPasswordStrength = zxcvbn("");
 
@@ -31,7 +33,8 @@ export default function RegistrationPage() {
   const [formErrors, setFormErrors] = useState({});
   const [usernameValue, setUsernameValue] = useState();
   const [usernameError, setUsernameError] = useState();
-  const [emailValue, setEmailValue] = useState("");
+  const [emailAddressValue, setEmailAddressValue] = useState();
+  const [emailAddressError, setEmailAddressError] = useState();
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [passwordWarning, setPasswordWarning] = useState();
@@ -53,23 +56,22 @@ export default function RegistrationPage() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const email = emailField.current.value;
     const password = passwordField.current.value;
-    const password2 = password2Field.current.value;
+    //    const password2 = password2Field.current.value;
 
-    const errors = {};
+    const currentErrors = [usernameError, emailAddressError];
+    console.log("Sift:", sift(currentErrors), currentErrors);
+    let errors = sift(currentErrors).length !== 0;
+    console.log("Errors:", errors);
     if (!usernameValue) {
       setUsernameError(t("please-select-a-username"));
+      errors = true;
     }
-    if (!email) {
-      errors.email = t("please-enter-a-valid-email-address");
-    } else {
-      const existingEmail = await api.get("/auth/check", { email });
-      if (existingEmail.status === 200) {
-        errors.email = t("email-address-already-registered-did-you-forget-your-password");
-      }
+    if (!emailAddressValue) {
+      setEmailAddressError(t("please-enter-a-valid-email-address"));
+      errors = true;
     }
-    if (!password) {
+    /*    if (!password) {
       errors.password = t("please-select-a-password");
     } else {
       if (passwordScore < 2) {
@@ -83,16 +85,17 @@ export default function RegistrationPage() {
         errors.password2 = t("the-passwords-doesnt-match");
       }
     }
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) {
+*/
+    //    setFormErrors(errors);
+    if (errors) {
       return;
     }
 
-    const name = getNameFromEmail(email);
+    const name = getNameFromEmail(emailAddressValue);
     const data = await api.register({
       username: usernameValue,
       name: name,
-      email: email,
+      email: emailAddressValue,
       password: password,
     });
     if (!data.ok) {
@@ -104,12 +107,6 @@ export default function RegistrationPage() {
       navigate("/login");
     }
   };
-
-  /*
-  const checkUsername = (username) => {
-    return username === "kenta" ? "The user is the best" : "";
-  };
-  */
 
   const setPassword = (password) => {
     setPasswordValue(password);
@@ -150,46 +147,13 @@ export default function RegistrationPage() {
     setPopoverOpen(!popoverOpen);
   };
 
-  // Check username
-  useEffect(() => {
-    let isActive = true;
-    const checkUser = async (username) => {
-      let errors = {};
-      if (username.length < 3) {
-        errors.username = t("username-must-be-at-least-3-characters");
-      } else {
-        const existingUser = await api.get("/auth/check", { username });
-        if (existingUser.status === 200) {
-          errors.username = t("username-already-registered");
-        }
-      }
-      if (isActive) {
-        console.log(errors);
-        setFormErrors(errors);
-      }
-    };
-
-    if (usernameValue !== undefined) {
-      try {
-        checkUser(usernameValue);
-        console.log("Form errors:", formErrors);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    return () => {
-      isActive = false;
-    };
-  }, [usernameValue]);
-
   // Check password strength
   useEffect(() => {
-    const strengthData = zxcvbn(passwordValue, [usernameValue, emailValue, "Saab"]);
+    const strengthData = zxcvbn(passwordValue, [usernameValue, emailAddressValue, "Saab"]);
     console.log("Strength:", strengthData);
     console.log("Guesses:", new Intl.NumberFormat().format(strengthData.guesses));
     setPasswordStrength(strengthData);
-  }, [usernameValue, emailValue, passwordValue]);
+  }, [usernameValue, emailAddressValue, passwordValue]);
 
   const cancel = () => {
     navigate("/login");
@@ -249,13 +213,12 @@ export default function RegistrationPage() {
               setUsernameError={setUsernameError}
               usernameField={usernameField}
             />
-            <InputField
-              label={t("email-address")}
-              name="username"
-              type="email"
-              fieldRef={emailField}
-              error={formErrors.email}
-              onBlur={(email) => setEmailValue(email.toLowerCase())}
+            <SetEmailAddress
+              emailAddressValue={emailAddressValue}
+              setEmailAddressValue={setEmailAddressValue}
+              emailAddressError={emailAddressError}
+              setEmailAddressError={setEmailAddressError}
+              emailAddressField={emailField}
             />
             <InputField
               label={t("password")}

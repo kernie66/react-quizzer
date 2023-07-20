@@ -19,7 +19,7 @@
   "forgot-your-password": "Forgot your password? Request a <Link to=\"/reset-request\">new password here</Link>.",
   "forgot-password": "Forgot your password? Request a <1>new password here</1>.",
   "please-select-a-username": "Please select a username",
-  "please-enter-a-valid-email-address": "Please enter a valid email address",
+  "please-enter-a-valid-email-address": "Enter a valid email address",
   "please-select-a-password": "Please select a password",
   "please-repeat-the-password": "Please repeat the password",
   "the-passwords-doesnt-match": "The passwords doesn't match",
@@ -49,5 +49,7 @@
   "information-provided-by": "Information provided by",
   "username-must-be-at-least-3-characters": "Username must be at least 3 characters",
   "username-is-available": "Username is available",
-  "cannot-validate-the-username-server-not-responding": "Cannot validate the username, server not responding"
+  "cannot-validate-the-username-server-not-responding": "Cannot validate the username, server not responding",
+  "email-address-is-available": "Email address is available",
+  "cannot-validate-the-email-address-server-not-responding": "Cannot validate the email address, server not responding"
 }

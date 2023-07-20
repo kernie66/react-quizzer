@@ -37,6 +37,15 @@ async function parseUser(req) {
         name: name,
       },
     });
+  } else if (req.query.email) {
+    const email = req.query.email;
+    users = await User.findAll({
+      where: {
+        email: email,
+      },
+    });
+  } else if (req.query) {
+    logger.warn("Unknown query:", req.query);
   } else {
     users = await User.findAll();
   }
@@ -119,7 +128,7 @@ export const deleteUser = async (req, res) => {
   }
   const user = await User.findByPk(id);
   if (!isEmpty(user)) {
-    const done = await user.destroy();
+    await user.destroy();
     res.status(200).json({ success: `User ${user.username} deleted.` });
   } else {
     res.status(404).json({ error: "No matching user found." });

@@ -39,6 +39,8 @@ export default function SetUsername({
         setUsernameError(userError);
         if (!userError) {
           setIsValid(userValid);
+        } else {
+          setIsValid("");
         }
       }
     };
