@@ -12,13 +12,16 @@ export default function SetPassword({
   setPasswordValue,
   passwordError,
   setPasswordError,
+  password2Value,
+  setPassword2Value,
+  password2Error,
+  setPassword2Error,
   passwordField,
   password2Field,
   passwordUserInputs,
 }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [password2Value, setPassword2Value] = useState();
-  const [password2Error, setPassword2Error] = useState();
+  const [passwordValid, setPasswordValid] = useState("");
   const [matchingPasswords, setMatchingPasswords] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [passwordWarning, setPasswordWarning] = useState();
@@ -29,7 +32,6 @@ export default function SetPassword({
 
   const setPassword = (password) => {
     setPasswordValue(password);
-    //    setFormErrors({});
   };
 
   const setPassword2 = (password2) => {
@@ -37,11 +39,19 @@ export default function SetPassword({
   };
 
   const checkPassword = () => {
-    if (passwordScore >= 2) {
-      return true;
-    } else {
-      setPasswordError("Bad password");
+    let hasError,
+      isValid = "";
+    if (passwordValue) {
+      if (passwordScore <= 2) {
+        hasError = t("the-password-is-too-weak");
+      } else if (passwordScore === 3) {
+        isValid = t("password-strength-is-sufficient");
+      } else if (passwordScore === 4) {
+        isValid = t("password-strength-is-very-good");
+      }
     }
+    setPasswordError(hasError);
+    setPasswordValid(isValid);
   };
 
   const checkScore = (score, feedback) => {
@@ -82,14 +92,16 @@ export default function SetPassword({
 
   // Check password 2
   useEffect(() => {
-    let passwordsMatch = "";
+    let passwordsError,
+      passwordsMatch = "";
     if (password2Value) {
       if (password2Value === passwordValue) {
         passwordsMatch = "Passwords match";
       } else {
-        setPassword2Error(t("the-passwords-doesnt-match"));
+        passwordsError = t("the-passwords-doesnt-match");
       }
     }
+    setPassword2Error(passwordsError);
     setMatchingPasswords(passwordsMatch);
   }, [passwordValue, password2Value]);
 
@@ -140,6 +152,7 @@ export default function SetPassword({
         name="password"
         type="password"
         fieldRef={passwordField}
+        isValid={passwordValid}
         error={passwordError}
         autoComplete="new-password"
         onChange={setPassword}

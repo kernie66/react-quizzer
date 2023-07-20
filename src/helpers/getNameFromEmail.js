@@ -1,7 +1,8 @@
+import { title } from "radash";
+
 export default function getNameFromEmail(email) {
   const namePart = email.split("@")[0];
-  const firstName = namePart.split(".")[0];
-  const name = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+  const name = title(namePart);
   console.log(name);
   return name;
 }

@@ -42,7 +42,7 @@ export default function InputField({
         placeholder={placeholder}
         innerRef={fieldRef}
         invalid={error !== undefined}
-        valid={isValid !== ""}
+        valid={isValid && isValid !== ""}
         onChange={changeHandler}
         onBlur={blurHandler}
       />
