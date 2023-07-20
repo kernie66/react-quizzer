@@ -24,6 +24,7 @@ import zxcvbn from "zxcvbn";
 import SetUsername from "../components/SetUsername.js";
 import SetEmailAddress from "../components/SetEmailAddress.js";
 import { sift } from "radash";
+import SetPassword from "../components/SetPassword.js";
 
 const initialPasswordStrength = zxcvbn("");
 
@@ -35,7 +36,8 @@ export default function RegistrationPage() {
   const [usernameError, setUsernameError] = useState();
   const [emailAddressValue, setEmailAddressValue] = useState();
   const [emailAddressError, setEmailAddressError] = useState();
-  const [passwordValue, setPasswordValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState();
+  const [passwordError, setPasswordError] = useState();
   const [passwordScore, setPasswordScore] = useState(0);
   const [passwordWarning, setPasswordWarning] = useState();
   const [passwordWarningColor, setPasswordWarningColor] = useState();
@@ -56,7 +58,7 @@ export default function RegistrationPage() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const password = passwordField.current.value;
+    //const password = passwordField.current.value;
     //    const password2 = password2Field.current.value;
 
     const currentErrors = [usernameError, emailAddressError];
@@ -96,7 +98,7 @@ export default function RegistrationPage() {
       username: usernameValue,
       name: name,
       email: emailAddressValue,
-      password: password,
+      password: passwordValue,
     });
     if (!data.ok) {
       setFormErrors(data.errors.json);
@@ -219,6 +221,15 @@ export default function RegistrationPage() {
               emailAddressError={emailAddressError}
               setEmailAddressError={setEmailAddressError}
               emailAddressField={emailField}
+            />
+            <SetPassword
+              passwordValue={passwordValue}
+              setPasswordValue={setPasswordValue}
+              passwordError={passwordError}
+              setPasswordError={setPasswordError}
+              passwordField={passwordField}
+              password2Field={password2Field}
+              passwordUserInputs={[usernameValue, emailAddressValue, "Saab"]}
             />
             <InputField
               label={t("password")}
