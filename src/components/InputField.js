@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId } from "react";
 import { FormFeedback, FormGroup, Input, Label } from "reactstrap";
 
 export default function InputField({
@@ -9,16 +9,16 @@ export default function InputField({
   placeholder,
   fieldRef,
   error,
+  isValid,
   onChange,
   onBlur,
 }) {
   const id = useId();
-  const [isValid, setIsValid] = useState("");
 
   const changeHandler = (ev) => {
     ev.preventDefault();
     if (onChange) {
-      setIsValid(onChange(ev.target.value));
+      onChange(ev.target.value);
       console.log("On change:", ev.target.value, "Result:", onChange(ev.target.value));
     }
   };
@@ -26,7 +26,7 @@ export default function InputField({
   const blurHandler = (ev) => {
     ev.preventDefault();
     if (onBlur) {
-      setIsValid(onBlur(ev.target.value));
+      onBlur(ev.target.value);
       console.log("On blur:", ev.target.value, "Result:", onBlur(ev.target.value));
     }
   };
@@ -42,7 +42,7 @@ export default function InputField({
         placeholder={placeholder}
         innerRef={fieldRef}
         invalid={error !== undefined}
-        valid={isValid !== undefined}
+        valid={isValid !== ""}
         onChange={changeHandler}
         onBlur={blurHandler}
       />

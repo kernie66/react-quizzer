@@ -47,5 +47,7 @@
   "password-is-not-good-enough": "Password is not good enough",
   "password-strength-info": "Password strength info",
   "information-provided-by": "Information provided by",
-  "username-must-be-at-least-3-characters": "Username must be at least 3 characters"
+  "username-must-be-at-least-3-characters": "Username must be at least 3 characters",
+  "username-is-available": "Username is available",
+  "cannot-validate-the-username-server-not-responding": "Cannot validate the username, server not responding"
 }

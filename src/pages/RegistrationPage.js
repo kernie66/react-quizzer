@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import getNameFromEmail from "../helpers/getNameFromEmail.js";
 import PasswordStrengthBar from "react-password-strength-bar";
 import zxcvbn from "zxcvbn";
+import SetUsername from "../components/SetUsername.js";
 
 const initialPasswordStrength = zxcvbn("");
 
@@ -28,7 +29,8 @@ export default function RegistrationPage() {
   const [modal, setModal] = useState(true);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-  const [usernameValue, setUsernameValue] = useState("");
+  const [usernameValue, setUsernameValue] = useState();
+  const [usernameError, setUsernameError] = useState();
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
@@ -51,21 +53,13 @@ export default function RegistrationPage() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const username = usernameField.current.value;
     const email = emailField.current.value;
     const password = passwordField.current.value;
     const password2 = password2Field.current.value;
 
     const errors = {};
-    if (!username) {
-      errors.username = t("please-select-a-username");
-    } else if (username.length < 3) {
-      errors.username = t("username-must-be-at-least-3-characters");
-    } else {
-      const existingUser = await api.get("/auth/check", { username });
-      if (existingUser.status === 200) {
-        errors.username = t("username-already-registered");
-      }
+    if (!usernameValue) {
+      setUsernameError(t("please-select-a-username"));
     }
     if (!email) {
       errors.email = t("please-enter-a-valid-email-address");
@@ -96,7 +90,7 @@ export default function RegistrationPage() {
 
     const name = getNameFromEmail(email);
     const data = await api.register({
-      username: username,
+      username: usernameValue,
       name: name,
       email: email,
       password: password,
@@ -117,25 +111,9 @@ export default function RegistrationPage() {
   };
   */
 
-  const setUsername = (username) => {
-    const errors = {};
-    setUsernameValue(username);
-    if (username.length < 3) {
-      errors.username = t("username-must-be-at-least-3-characters");
-      setFormErrors(errors);
-    } else {
-      setFormErrors({});
-    }
-  };
-
-  const setEmail = (email) => {
-    setEmailValue(email);
-    setFormErrors({});
-  };
-
   const setPassword = (password) => {
     setPasswordValue(password);
-    setFormErrors({});
+    //    setFormErrors({});
   };
 
   const checkPassword = () => {
@@ -172,6 +150,40 @@ export default function RegistrationPage() {
     setPopoverOpen(!popoverOpen);
   };
 
+  // Check username
+  useEffect(() => {
+    let isActive = true;
+    const checkUser = async (username) => {
+      let errors = {};
+      if (username.length < 3) {
+        errors.username = t("username-must-be-at-least-3-characters");
+      } else {
+        const existingUser = await api.get("/auth/check", { username });
+        if (existingUser.status === 200) {
+          errors.username = t("username-already-registered");
+        }
+      }
+      if (isActive) {
+        console.log(errors);
+        setFormErrors(errors);
+      }
+    };
+
+    if (usernameValue !== undefined) {
+      try {
+        checkUser(usernameValue);
+        console.log("Form errors:", formErrors);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    return () => {
+      isActive = false;
+    };
+  }, [usernameValue]);
+
+  // Check password strength
   useEffect(() => {
     const strengthData = zxcvbn(passwordValue, [usernameValue, emailValue, "Saab"]);
     console.log("Strength:", strengthData);
@@ -230,12 +242,12 @@ export default function RegistrationPage() {
         <ModalHeader className="py-2">{t("user-registration")}</ModalHeader>
         <ModalBody className="pt-0">
           <Form onSubmit={onSubmit}>
-            <InputField
-              label={t("username")}
-              name="username"
-              fieldRef={usernameField}
-              error={formErrors.username}
-              onBlur={setUsername}
+            <SetUsername
+              usernameValue={usernameValue}
+              setUsernameValue={setUsernameValue}
+              usernameError={usernameError}
+              setUsernameError={setUsernameError}
+              usernameField={usernameField}
             />
             <InputField
               label={t("email-address")}
@@ -243,7 +255,7 @@ export default function RegistrationPage() {
               type="email"
               fieldRef={emailField}
               error={formErrors.email}
-              onBlur={setEmail}
+              onBlur={(email) => setEmailValue(email.toLowerCase())}
             />
             <InputField
               label={t("password")}
