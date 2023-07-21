@@ -1,11 +1,13 @@
 import PasswordStrengthBar from "react-password-strength-bar";
 import InputField from "./InputField.js";
 import { useTranslation } from "react-i18next";
-import { Button, Popover, PopoverBody, PopoverHeader, UncontrolledTooltip } from "reactstrap";
+import { Popover, PopoverBody, PopoverHeader, UncontrolledTooltip } from "reactstrap";
 import zxcvbn from "zxcvbn";
 import { useEffect, useState } from "react";
+import getPasswordPopoverButtons from "../helpers/getPasswordPopoverButtons.js";
 
 const initialPasswordStrength = zxcvbn("");
+const [shortScoreWord, scoreWords] = getPasswordPopoverButtons();
 
 export default function SetPassword({
   passwordValue,
@@ -21,9 +23,9 @@ export default function SetPassword({
   passwordUserInputs,
 }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [passwordValid, setPasswordValid] = useState("");
   const [matchingPasswords, setMatchingPasswords] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
+  const [passwordFeedback, setPasswordFeedback] = useState({});
   const [passwordWarning, setPasswordWarning] = useState();
   const [passwordWarningColor, setPasswordWarningColor] = useState();
   const [passwordSuggestion, setPasswordSuggestion] = useState("");
@@ -40,49 +42,38 @@ export default function SetPassword({
     setPassword2Error("");
   };
 
-  const checkPassword = () => {
-    let hasError,
-      isValid = "";
-    if (passwordValue) {
-      if (passwordScore <= 2) {
-        hasError = t("the-password-is-too-weak");
-      } else if (passwordScore === 3) {
-        isValid = t("password-strength-is-sufficient");
-      } else if (passwordScore === 4) {
-        isValid = t("password-strength-is-very-good");
-      }
-    }
-    setPasswordError(hasError);
-    setPasswordValid(isValid);
-  };
-
-  const checkScore = (score, feedback) => {
-    let tooltipText = t("enter-5-characters-for-hints");
-    setPasswordWarningColor("text-white");
-    console.log(score, feedback, passwordValue.length);
+  const setScore = (score, feedback) => {
     setPasswordScore(score);
-    if (passwordValue.length >= 5) {
-      tooltipText = t("password-is-not-good-enough");
-      if (feedback.warning) {
-        tooltipText = "Warning: " + feedback.warning;
-        setPasswordWarningColor("text-warning");
-      } else if (score === 3) {
-        tooltipText = t("password-strength-is-sufficient");
-      } else if (score === 4) {
-        tooltipText = t("password-strength-is-very-good");
-      }
-    }
-    setPasswordWarning(tooltipText);
-    if (feedback.suggestions) {
-      setPasswordSuggestion(feedback.suggestions);
-    } else {
-      setPasswordSuggestion("");
-    }
+    setPasswordFeedback(feedback);
   };
 
   const togglePopover = () => {
     setPopoverOpen(!popoverOpen);
   };
+
+  // Check password score
+  useEffect(() => {
+    let tooltipText = t("enter-5-characters-for-hints");
+    setPasswordWarningColor("text-white");
+    if (passwordValue.length >= 5) {
+      tooltipText = t("password-is-not-good-enough");
+      if (passwordFeedback.warning) {
+        tooltipText = "Warning: " + passwordFeedback.warning;
+        setPasswordWarningColor("text-warning");
+      } else if (passwordScore === 3) {
+        tooltipText = t("password-strength-is-sufficient");
+      } else if (passwordScore === 4) {
+        tooltipText = t("password-strength-is-very-good");
+      }
+    }
+    setPasswordWarning(tooltipText);
+    if (passwordFeedback.suggestions) {
+      setPasswordSuggestion(passwordFeedback.suggestions);
+    } else {
+      setPasswordSuggestion("");
+    }
+  }),
+    [passwordScore, passwordFeedback];
 
   // Check password strength
   useEffect(() => {
@@ -107,46 +98,6 @@ export default function SetPassword({
     setMatchingPasswords(passwordsMatch);
   }, [passwordValue, password2Value]);
 
-  const noAction = (event) => {
-    event.preventDefault();
-  };
-
-  const short = (
-    <Button id="popoverButton" outline size="sm" color="secondary" onClick={noAction}>
-      {t("too-short")}
-    </Button>
-  );
-
-  const veryWeak = (
-    <Button id="popoverButton" outline size="sm" color="danger" onClick={noAction}>
-      {t("very-weak")}
-    </Button>
-  );
-
-  const weak = (
-    <Button id="popoverButton" outline size="sm" color="danger" onClick={noAction}>
-      {t("weak")}
-    </Button>
-  );
-
-  const okay = (
-    <Button id="popoverButton" outline size="sm" color="warning" onClick={noAction}>
-      {t("almost")}
-    </Button>
-  );
-
-  const good = (
-    <Button id="popoverButton" outline size="sm" color="info" onClick={noAction}>
-      {t("good")}
-    </Button>
-  );
-
-  const strong = (
-    <Button id="popoverButton" outline size="sm" color="success" onClick={noAction}>
-      {t("strong")}
-    </Button>
-  );
-
   return (
     <div>
       <InputField
@@ -154,18 +105,16 @@ export default function SetPassword({
         name="password"
         type="password"
         fieldRef={passwordField}
-        isValid={passwordValid}
-        error={passwordError}
         autoComplete="new-password"
+        error={passwordError}
         onChange={setPassword}
-        onBlur={checkPassword}
       />
       <PasswordStrengthBar
         password={passwordValue}
         minLength={5}
-        shortScoreWord={short}
-        scoreWords={[veryWeak, weak, okay, good, strong]}
-        onChangeScore={checkScore}
+        shortScoreWord={shortScoreWord}
+        scoreWords={scoreWords}
+        onChangeScore={setScore}
       />
       <InputField
         label={t("repeat-password")}
