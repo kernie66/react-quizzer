@@ -2,8 +2,8 @@ import { col, fn } from "sequelize";
 import { User } from "../../models/index.js";
 import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
-import isEmpty from "../utils/isEmpty.js";
 import bcrypt from "bcrypt";
+import { isEmpty } from "radash";
 
 /* ==========================================================
 This function looks for one or more matching users. The users
@@ -12,6 +12,7 @@ can be given in the following ways:
   As a query id, e.g. /users?id=1
   As a query username, e.g. /users?username=john
   As a query name, e.g. /users?name=John
+  As a query email, e.g. /users?email=john@doe.com
 ===========================================================*/
 async function parseUser(req) {
   let users;
@@ -44,7 +45,7 @@ async function parseUser(req) {
         email: email,
       },
     });
-  } else if (req.query) {
+  } else if (!isEmpty(req.query)) {
     logger.warn("Unknown query:", req.query);
   } else {
     users = await User.findAll();

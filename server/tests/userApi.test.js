@@ -1,6 +1,6 @@
 import request from "supertest";
 import { app } from "../src/app.js";
-import { db, testDbConnection } from "../src/db/db.config.js";
+import { db } from "../src/db/db.config.js";
 import { John, Sarah } from "./user.data.js";
 
 // const request = supertest();
