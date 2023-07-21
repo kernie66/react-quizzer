@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import InputField from "./InputField.js";
 import { useTranslation } from "react-i18next";
 import { useApi } from "../contexts/ApiProvider.js";
+import isValidEmail from "../helpers/isValidEmail.js";
 
 export default function SetUsername({
   usernameValue,
@@ -24,6 +25,8 @@ export default function SetUsername({
 
       if (username.length < 3) {
         userError = t("username-must-be-at-least-3-characters");
+      } else if (isValidEmail(username)) {
+        userError = t("username-cannot-be-an-email-address");
       } else {
         const existingUser = await api.get("/auth/check", { username });
         if (existingUser.status === 200) {
