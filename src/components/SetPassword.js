@@ -32,10 +32,12 @@ export default function SetPassword({
 
   const setPassword = (password) => {
     setPasswordValue(password);
+    setPasswordError("");
   };
 
   const setPassword2 = (password2) => {
     setPassword2Value(password2);
+    setPassword2Error("");
   };
 
   const checkPassword = () => {
@@ -129,7 +131,7 @@ export default function SetPassword({
 
   const okay = (
     <Button id="popoverButton" outline size="sm" color="warning" onClick={noAction}>
-      {t("okay")}
+      {t("almost")}
     </Button>
   );
 

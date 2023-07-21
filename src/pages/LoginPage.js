@@ -28,7 +28,7 @@ export default function LoginPage() {
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    const username = usernameField.current.value;
+    const username = usernameField.current.value.toLowerCase();
     const password = passwordField.current.value;
 
     const errors = {};
