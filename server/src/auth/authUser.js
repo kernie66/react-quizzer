@@ -2,11 +2,18 @@ import bcrypt from "bcrypt";
 import { User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
+import isValidEmail from "../utils/isValidEmail.js";
 
 export const authUser = async (username, password, done) => {
   try {
-    logger.debug("Search for username", username);
-    const user = await User.findOne({ where: { username: username } });
+    let user;
+    if (isValidEmail(username)) {
+      logger.debug("Search for email", username);
+      user = await User.findOne({ where: { email: username } });
+    } else {
+      logger.debug("Search for username", username);
+      user = await User.findOne({ where: { username: username } });
+    }
     if (isEmpty(user)) {
       logger.warn("User not found");
       return done(null, false);

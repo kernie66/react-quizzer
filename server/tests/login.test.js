@@ -49,4 +49,12 @@ describe("Register and login", () => {
     const res = await request(app).get("/api/").set("Cookie", session);
     expect(res.statusCode).toEqual(401);
   });
+
+  it("should login user Sarah with email", async () => {
+    const res = await request(app)
+      .post("/login")
+      .send({ username: Sarah.email.toLowerCase(), password: Sarah.password });
+    session = res.header["set-cookie"];
+    expect(res.statusCode).toEqual(200);
+  }, 1000);
 });
