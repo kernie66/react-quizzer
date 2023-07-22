@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import getPasswordPopoverButtons from "../helpers/getPasswordPopoverButtons.js";
 
 const initialPasswordStrength = zxcvbn("");
-const [shortScoreWord, scoreWords] = getPasswordPopoverButtons();
 
 export default function SetPassword({
   passwordValue,
@@ -30,6 +29,7 @@ export default function SetPassword({
   const [passwordWarningColor, setPasswordWarningColor] = useState();
   const [passwordSuggestion, setPasswordSuggestion] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(initialPasswordStrength);
+  const [shortScoreWord, scoreWords] = getPasswordPopoverButtons();
   const { t } = useTranslation();
 
   const setPassword = (password) => {
