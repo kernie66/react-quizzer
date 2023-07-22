@@ -93,7 +93,7 @@ describe("User API", () => {
     expect(res.statusCode).toEqual(200);
   });
 
-  it("should show one user", async () => {
+  it("should show one user again", async () => {
     const res = await request(app).get("/api/users").set("Cookie", session);
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(1);
