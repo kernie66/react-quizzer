@@ -18,5 +18,6 @@
   "cSpell.words": [
     "doesnt",
     "Popover"
-  ]
+  ],
+  "eslint.workingDirectories": ["./", "./server"]
 }
