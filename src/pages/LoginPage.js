@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Button, Form, FormGroup, Modal, ModalBody, ModalHeader } from "reactstrap";
 import Body from "../components/Body";
 import InputField from "../components/InputField";
 import { useFlash } from "../contexts/FlashProvider";
@@ -65,38 +65,41 @@ export default function LoginPage() {
   return (
     <Body>
       <Modal isOpen={modal} onOpened={onOpened} className="mt-0">
-        <ModalHeader>{t("login")}</ModalHeader>
-        <ModalBody className="pt-0">
-          <Form onSubmit={onSubmit}>
-            <InputField
-              label={t("username-or-email-address")}
-              name="username"
-              autoComplete="username"
-              fieldRef={usernameField}
-              error={formErrors.username}
-            />
-            <InputField
-              label={t("password")}
-              name="password"
-              autoComplete="current-password"
-              type="password"
-              fieldRef={passwordField}
-              error={formErrors.password}
-            />
-            <Button color="primary" type="submit" className="mb-2">
-              {t("login")}
-            </Button>
-          </Form>
-          <hr />
-          <p>
-            {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
-          </p>
-          <p>
-            <Trans i18nKey="forgot-password">
-              Forgot your password? Request a <Link to="/reset-request">new password here</Link>.
-            </Trans>
-          </p>
-        </ModalBody>
+        <Form onSubmit={onSubmit}>
+          <ModalHeader>{t("login")}</ModalHeader>
+          <ModalBody className="pt-0">
+            <FormGroup>
+              <InputField
+                label={t("username-or-email-address")}
+                name="username"
+                autoComplete="username"
+                fieldRef={usernameField}
+                error={formErrors.username}
+              />
+              <InputField
+                label={t("password")}
+                name="password"
+                autoComplete="current-password"
+                type="password"
+                fieldRef={passwordField}
+                error={formErrors.password}
+              />
+              <Button color="primary" className="mb-2">
+                {t("login")}
+              </Button>
+              <hr />
+              <p>
+                {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
+              </p>
+              <p>
+                <Trans i18nKey="forgot-password">
+                  Forgot your password? Request a <Link to="/reset-request">new password here</Link>
+                  .
+                </Trans>
+              </p>
+            </FormGroup>
+          </ModalBody>
+        </Form>
       </Modal>
     </Body>
   );

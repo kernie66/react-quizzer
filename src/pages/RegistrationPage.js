@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Form, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
+import { Button, Col, Form, FormGroup, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
 import Body from "../components/Body";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
@@ -81,50 +81,52 @@ export default function RegistrationPage() {
   return (
     <Body>
       <Modal isOpen={modal} onOpened={onOpened} className="mt-0">
-        <ModalHeader className="py-2">{t("user-registration")}</ModalHeader>
-        <ModalBody className="pt-0">
-          <Form onSubmit={onSubmit}>
-            <SetUsername
-              usernameValue={usernameValue}
-              setUsernameValue={setUsernameValue}
-              usernameError={usernameError}
-              setUsernameError={setUsernameError}
-              usernameField={usernameField}
-            />
-            <SetEmailAddress
-              emailAddressValue={emailAddressValue}
-              setEmailAddressValue={setEmailAddressValue}
-              emailAddressError={emailAddressError}
-              setEmailAddressError={setEmailAddressError}
-              emailAddressField={emailField}
-            />
-            <SetPassword
-              passwordValue={passwordValue}
-              setPasswordValue={setPasswordValue}
-              passwordError={passwordError}
-              setPasswordError={setPasswordError}
-              password2Value={password2Value}
-              setPassword2Value={setPassword2Value}
-              password2Error={password2Error}
-              setPassword2Error={setPassword2Error}
-              passwordField={passwordField}
-              password2Field={password2Field}
-              passwordUserInputs={[usernameValue, emailAddressValue, "Saab"]}
-            />
-            <Row className="justify-content-between mb-2">
-              <Col>
-                <Button color="primary" className="submit me-auto">
-                  {t("register")}
-                </Button>
-              </Col>
-              <Col>
-                <Button color="secondary" onClick={cancel} className="float-end">
-                  {t("cancel")}
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </ModalBody>
+        <Form onSubmit={onSubmit}>
+          <ModalHeader className="py-2">{t("user-registration")}</ModalHeader>
+          <ModalBody className="pt-0">
+            <FormGroup>
+              <SetUsername
+                usernameValue={usernameValue}
+                setUsernameValue={setUsernameValue}
+                usernameError={usernameError}
+                setUsernameError={setUsernameError}
+                usernameField={usernameField}
+              />
+              <SetEmailAddress
+                emailAddressValue={emailAddressValue}
+                setEmailAddressValue={setEmailAddressValue}
+                emailAddressError={emailAddressError}
+                setEmailAddressError={setEmailAddressError}
+                emailAddressField={emailField}
+              />
+              <SetPassword
+                passwordValue={passwordValue}
+                setPasswordValue={setPasswordValue}
+                passwordError={passwordError}
+                setPasswordError={setPasswordError}
+                password2Value={password2Value}
+                setPassword2Value={setPassword2Value}
+                password2Error={password2Error}
+                setPassword2Error={setPassword2Error}
+                passwordField={passwordField}
+                password2Field={password2Field}
+                passwordUserInputs={[usernameValue, emailAddressValue, "Saab"]}
+              />
+              <Row className="justify-content-between mb-2">
+                <Col>
+                  <Button color="primary" className="submit me-auto">
+                    {t("register")}
+                  </Button>
+                </Col>
+                <Col>
+                  <Button color="secondary" onClick={cancel} className="float-end">
+                    {t("cancel")}
+                  </Button>
+                </Col>
+              </Row>
+            </FormGroup>
+          </ModalBody>
+        </Form>
       </Modal>
     </Body>
   );
