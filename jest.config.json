@@ -1,8 +1,0 @@
-{
-  "testEnvironment": "jsdom",
-  "testEnvironmentOptions": {
-    "html": "<html lang='sv_SE'></html>",
-    "url": "https://jestjs.io/",
-    "userAgent": "Agent/007"
-  }
-}

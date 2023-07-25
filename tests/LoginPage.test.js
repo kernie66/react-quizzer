@@ -1,11 +1,15 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import renderer from "react-test-renderer";
-import LoginPage from "../pages/LoginPage.js";
+import LoginPage from "../src/pages/LoginPage.js";
+import UserProvider from "../src/contexts/UserProvider.js";
 
 describe("<LoginPage />", () => {
   it("should render login modal", () => {
-    render(<LoginPage />);
+    render(
+      <UserProvider>
+        <LoginPage />
+      </UserProvider>,
+    );
     expect(screen.getByText(/login/)).toBeInTheDocument();
   });
 });
