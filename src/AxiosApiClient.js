@@ -99,7 +99,7 @@ export default class AxiosApiClient {
   }
 
   isAuthenticated() {
-    return localStorage.getItem("userData") !== null;
+    return localStorage.getItem("userData") !== undefined;
   }
 
   setUserId(userId) {
