@@ -1,15 +1,4 @@
-import axios from "axios";
-
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
-
-const myAxios = axios.create({
-  baseURL: BASE_API_URL + "/api",
-  timeout: 2000,
-  withCredentials: true,
-  validateStatus: function (status) {
-    return status >= 200 && status < 500; // default
-  },
-});
+import myAxios from "./myAxios.instance.js";
 
 export default class AxiosApiClient {
   constructor(onError) {
@@ -99,7 +88,12 @@ export default class AxiosApiClient {
   }
 
   isAuthenticated() {
-    return localStorage.getItem("userData") !== undefined;
+    const userId = localStorage.getItem("userData");
+    if (userId) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   setUserId(userId) {
@@ -107,11 +101,10 @@ export default class AxiosApiClient {
   }
 
   getUserId() {
-    console.log("UserData:", localStorage.getItem("userData"));
     return localStorage.getItem("userData");
   }
 
   removeUserId() {
-    return localStorage.removeItem("userData");
+    return localStorage.clear();
   }
 }
