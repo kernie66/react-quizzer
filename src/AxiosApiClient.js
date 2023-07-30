@@ -7,7 +7,6 @@ export default class AxiosApiClient {
 
   async request(options) {
     let response;
-    console.log("Options:", options);
     try {
       response = await myAxios.request(options.url, {
         params: options.query,
@@ -15,7 +14,6 @@ export default class AxiosApiClient {
         data: options.data,
         baseURL: options.baseURL,
       });
-      console.log("Response:", response);
     } catch (error) {
       console.log("Error:", error);
       response = {
@@ -65,7 +63,6 @@ export default class AxiosApiClient {
 
   async login(username, password) {
     const response = await this.post("/auth/login", { username, password });
-    console.log("Login:", response);
     if (response.ok) {
       this.setUserId(response.data.id);
     }
@@ -80,7 +77,6 @@ export default class AxiosApiClient {
 
   async logout() {
     const response = await this.delete("/auth/logout");
-    console.log("Logout:", response);
     if (response.ok) {
       this.removeUserId();
     }

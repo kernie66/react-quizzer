@@ -50,17 +50,19 @@ test("checks that no user is authenticated", () => {
 });
 
 test("checks that the user is authenticated", async () => {
-  renderTestAuthComponent(3);
+  const userId = 3;
+  renderTestAuthComponent(userId);
 
-  expect(screen.getByRole("heading").className).toEqual("3");
+  expect(screen.getByRole("heading").className).toEqual(String(userId));
   expect(screen.getByText(/^User ID set to 3/)).toBeDefined();
 });
 
 test("checks that the authenticated user is removed", async () => {
   const { user } = setup();
-  renderTestAuthComponent(5);
+  const userId = 5;
+  renderTestAuthComponent(userId);
 
-  expect(screen.getByRole("heading").className).toEqual("5");
+  expect(screen.getByRole("heading").className).toEqual(String(userId));
   await user.click(screen.getByRole("button"));
   expect(screen.getByRole("heading").className).toEqual("");
   expect(screen.getByText(/^No user ID set/)).toBeDefined();
@@ -68,7 +70,8 @@ test("checks that the authenticated user is removed", async () => {
 
 test("checks if the user is logged in", async () => {
   const { user } = setup();
-  mockAxios.onPost("/auth/login").reply(200, { id: 2, username: "john" });
+  const responseData = { id: 2, username: "john" };
+  mockAxios.onPost("/auth/login").reply(200, responseData);
   renderTestLoginComponent();
 
   expect(screen.getByText(/^Not logged in/)).toBeDefined();
@@ -78,5 +81,5 @@ test("checks if the user is logged in", async () => {
 
   const loggedIn = await screen.findByText(/^User logged in/);
   expect(loggedIn).toBeDefined();
-  expect(screen.getByRole("heading").className).toEqual("2");
+  expect(screen.getByRole("heading").className).toEqual(String(responseData.id));
 });
