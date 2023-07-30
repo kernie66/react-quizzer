@@ -3,8 +3,8 @@ import FlashProvider from "../src/contexts/FlashProvider.js";
 import ApiProvider from "../src/contexts/ApiProvider.js";
 // eslint-disable-next-line
 import i18n from "./i18nForTest.js";
-import TestAuthComponent from "./components/TestAuthComponent.js";
-import TestLoginComponent from "./components/TestLoginComponent.js";
+import TestAuthComponent from "./components/ApiProvider.test/TestAuthComponent.js";
+import TestLoginComponent from "./components/ApiProvider.test/TestLoginComponent.js";
 import userEvent from "@testing-library/user-event";
 import myAxios from "../src/myAxios.instance.js";
 import MockAdapter from "axios-mock-adapter";
@@ -68,18 +68,26 @@ test("checks that the authenticated user is removed", async () => {
   expect(screen.getByText(/^No user ID set/)).toBeDefined();
 });
 
-test("checks if the user is logged in", async () => {
+test("checks login and logout API", async () => {
   const { user } = setup();
   const responseData = { id: 2, username: "john" };
   mockAxios.onPost("/auth/login").reply(200, responseData);
+  mockAxios.onDelete("/auth/logout").reply(200);
   renderTestLoginComponent();
 
   expect(screen.getByText(/^Not logged in/)).toBeDefined();
   expect(screen.getByRole("heading").className).toEqual("");
-  await user.click(screen.getByRole("button"));
-  expect(mockAxios.history.post.length).toBe(1);
 
+  // Click button to log in
+  await user.click(screen.getByRole("button"));
   const loggedIn = await screen.findByText(/^User logged in/);
   expect(loggedIn).toBeDefined();
   expect(screen.getByRole("heading").className).toEqual(String(responseData.id));
+  await user.click(screen.getByRole("button"));
+  const loggedOut = await screen.findByText(/^Not logged in/);
+  expect(loggedOut).toBeDefined();
+  expect(screen.getByRole("heading").className).toEqual("");
+
+  expect(mockAxios.history.post.length).toBe(1);
+  expect(mockAxios.history.delete.length).toBe(1);
 });

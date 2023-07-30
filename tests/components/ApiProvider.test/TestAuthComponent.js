@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useApi } from "../../src/contexts/ApiProvider.js";
+import { useApi } from "../../../src/contexts/ApiProvider.js";
 import { Button, Container } from "reactstrap";
 
 export default function TestAuthComponent({ userId }) {

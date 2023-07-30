@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
-import { useApi } from "../../src/contexts/ApiProvider.js";
+import { useApi } from "../../../src/contexts/ApiProvider.js";
 import { Button, Container } from "reactstrap";
 
+const notLoggedInString = "Not logged in";
 export default function TestLoginComponent() {
   const api = useApi();
   const user = { username: "john", password: "doe" };
-  const [loggedIn, setLoggedIn] = useState("Not logged in");
+  const [loggedIn, setLoggedIn] = useState(notLoggedInString);
   const [userId, setUserId] = useState();
   const [doLogin, setDoLogin] = useState(false);
 
   function loginUser() {
-    console.log("Logging in");
-    setDoLogin(true);
+    if (loggedIn === notLoggedInString) {
+      console.log("Logging in");
+      setDoLogin(true);
+    } else {
+      console.log("Logging out");
+      setDoLogin(false);
+    }
   }
 
   useEffect(() => {
@@ -26,8 +32,19 @@ export default function TestLoginComponent() {
       }
     }
 
+    async function callLogout() {
+      response = await api.logout();
+      if (isActive) {
+        if (response.ok) {
+          setLoggedIn(notLoggedInString);
+        }
+      }
+    }
+
     if (doLogin) {
       callLogin();
+    } else if (loggedIn !== notLoggedInString) {
+      callLogout();
     }
 
     return () => {
