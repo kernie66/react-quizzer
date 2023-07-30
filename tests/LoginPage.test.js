@@ -8,6 +8,7 @@ import "./i18nForTest";
 import PublicRoute from "../src/components/PublicRoute.js";
 import { Container } from "reactstrap";
 import mockAxios from "jest-mock-axios";
+import ApiProvider from "../src/contexts/ApiProvider.js";
 
 afterEach(() => {
   // cleaning up the mess left behind the previous test
@@ -20,17 +21,19 @@ describe("<LoginPage />", () => {
       <Container>
         <BrowserRouter>
           <FlashProvider>
-            <UserProvider>
-              <PublicRoute>
-                <LoginPage />
-              </PublicRoute>
-            </UserProvider>
+            <ApiProvider>
+              <UserProvider>
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              </UserProvider>
+            </ApiProvider>
           </FlashProvider>
         </BrowserRouter>
       </Container>,
     );
-    expect(screen.getByText(/log/)).toBeInTheDocument();
-    expect(mockAxios.get).toHaveBeenCalled();
+    expect(screen.getAllByText(/login/)).toBeDefined();
+    expect(mockAxios.get).not.toHaveBeenCalled();
   });
 });
 
@@ -39,11 +42,13 @@ describe("<LoginPage snapshot />", () => {
     const component = renderer.create(
       <BrowserRouter>
         <FlashProvider>
-          <UserProvider>
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          </UserProvider>
+          <ApiProvider>
+            <UserProvider>
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            </UserProvider>
+          </ApiProvider>
         </FlashProvider>
       </BrowserRouter>,
     );

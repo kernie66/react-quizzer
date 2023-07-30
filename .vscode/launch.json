@@ -1,12 +1,14 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
       "type": "node",
       "name": "vscode-jest-tests.v2",
       "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/react-scripts",
       "args": [
         "test",
-        "--",
+        "--env=jsdom",
         "--runInBand",
         "--watchAll=false",
         "--testNamePattern",
@@ -14,11 +16,32 @@
         "--runTestsByPath",
         "${jest.testFile}"
       ],
-      "cwd": "/Users/kernie/Workspace/react-quizzer/server",
+      "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
+      "protocol": "inspector",
       "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
-      "runtimeExecutable": "npm"
+      "disableOptimisticBPs": true
+    },
+    {
+      "name": "Debug Client Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "args": [
+        "test",
+        "--",
+        "--runInBand",
+        "--no-cache",
+        "--watchAll=false",
+        "--env=jsdom",
+        "--testNamePattern",
+        "${jest.testNamePattern}",
+        "--runTestsByPath",
+        "${jest.testFile}"
+      ],
+      "cwd": "/Users/kernie/Workspace/react-quizzer",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }
