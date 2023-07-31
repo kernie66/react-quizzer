@@ -42,52 +42,58 @@ const renderTestLoginComponent = () => {
   );
 };
 
-test("checks that no user is authenticated", () => {
-  renderTestAuthComponent();
+describe("should test the direct methods of the API", () => {
+  test("checks that no user is authenticated", () => {
+    renderTestAuthComponent();
 
-  expect(screen.getByRole("heading").className).toEqual("");
-  expect(screen.getByText(/^No user ID set/)).toBeDefined();
+    expect(screen.getByRole("heading").className).toEqual("");
+    expect(screen.getByText(/^No user ID set/)).toBeDefined();
+  });
+
+  test("checks that the user is authenticated", async () => {
+    const userId = 3;
+    renderTestAuthComponent(userId);
+
+    expect(screen.getByRole("heading").className).toEqual(String(userId));
+    expect(screen.getByText(/^User ID set to 3/)).toBeDefined();
+  });
+
+  test("checks that the authenticated user is removed", async () => {
+    const { user } = setup();
+    const userId = 5;
+    renderTestAuthComponent(userId);
+
+    expect(screen.getByRole("heading").className).toEqual(String(userId));
+    await user.click(screen.getByRole("button"));
+    expect(screen.getByRole("heading").className).toEqual("");
+    expect(screen.getByText(/^No user ID set/)).toBeDefined();
+  });
 });
 
-test("checks that the user is authenticated", async () => {
-  const userId = 3;
-  renderTestAuthComponent(userId);
+describe("should test the login and logout server methods of the API", () => {
+  test("checks login and logout calls to server", async () => {
+    const { user } = setup();
+    const responseData = { id: 2, username: "john" };
+    mockAxios.onPost("/auth/login").reply(200, responseData);
+    mockAxios.onDelete("/auth/logout").reply(200);
+    renderTestLoginComponent();
 
-  expect(screen.getByRole("heading").className).toEqual(String(userId));
-  expect(screen.getByText(/^User ID set to 3/)).toBeDefined();
-});
+    expect(screen.getByText(/^Not logged in/)).toBeDefined();
+    expect(screen.getByRole("heading").className).toEqual("");
 
-test("checks that the authenticated user is removed", async () => {
-  const { user } = setup();
-  const userId = 5;
-  renderTestAuthComponent(userId);
+    // Click test button to log in
+    await user.click(screen.getByRole("button"));
+    const loggedIn = await screen.findByText(/^User logged in/);
+    expect(loggedIn).toBeDefined();
+    expect(screen.getByRole("heading").className).toEqual(String(responseData.id));
 
-  expect(screen.getByRole("heading").className).toEqual(String(userId));
-  await user.click(screen.getByRole("button"));
-  expect(screen.getByRole("heading").className).toEqual("");
-  expect(screen.getByText(/^No user ID set/)).toBeDefined();
-});
+    // Click test button again to log out
+    await user.click(screen.getByRole("button"));
+    const loggedOut = await screen.findByText(/^Not logged in/);
+    expect(loggedOut).toBeDefined();
+    expect(screen.getByRole("heading").className).toEqual("");
 
-test("checks login and logout API", async () => {
-  const { user } = setup();
-  const responseData = { id: 2, username: "john" };
-  mockAxios.onPost("/auth/login").reply(200, responseData);
-  mockAxios.onDelete("/auth/logout").reply(200);
-  renderTestLoginComponent();
-
-  expect(screen.getByText(/^Not logged in/)).toBeDefined();
-  expect(screen.getByRole("heading").className).toEqual("");
-
-  // Click button to log in
-  await user.click(screen.getByRole("button"));
-  const loggedIn = await screen.findByText(/^User logged in/);
-  expect(loggedIn).toBeDefined();
-  expect(screen.getByRole("heading").className).toEqual(String(responseData.id));
-  await user.click(screen.getByRole("button"));
-  const loggedOut = await screen.findByText(/^Not logged in/);
-  expect(loggedOut).toBeDefined();
-  expect(screen.getByRole("heading").className).toEqual("");
-
-  expect(mockAxios.history.post.length).toBe(1);
-  expect(mockAxios.history.delete.length).toBe(1);
+    expect(mockAxios.history.post.length).toBe(1);
+    expect(mockAxios.history.delete.length).toBe(1);
+  });
 });
