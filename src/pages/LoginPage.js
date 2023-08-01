@@ -5,7 +5,9 @@ import Body from "../components/Body";
 import InputField from "../components/InputField";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
+import { useApi } from "../contexts/ApiProvider.js";
 import { Trans, useTranslation } from "react-i18next";
+import isValidEmail from "../helpers/isValidEmail.js";
 
 export default function LoginPage() {
   const [formErrors, setFormErrors] = useState({});
@@ -13,15 +15,12 @@ export default function LoginPage() {
   const usernameField = useRef();
   const passwordField = useRef();
   const { login } = useUser();
+  const api = useApi();
   const { t } = useTranslation();
   const flash = useFlash();
   const navigate = useNavigate();
   const location = useLocation();
-  /*
-    useEffect(() => {
-      usernameField.current.focus();
-    }, []);
-  */
+
   const onOpened = () => {
     usernameField.current.focus();
   };
@@ -32,34 +31,43 @@ export default function LoginPage() {
     const password = passwordField.current.value;
 
     const errors = {};
+    let userCheck = {};
     if (!username) {
       errors.username = t("username-or-email-is-missing");
+    } else {
+      if (isValidEmail(username)) {
+        userCheck.email = username;
+      } else {
+        userCheck.username = username;
+      }
+      const existingUser = await api.get("/auth/check", userCheck);
+      if (existingUser.status !== 200) {
+        errors.username = t("user-not-found");
+      }
     }
     if (!password) {
       errors.password = t("password-is-missing");
     }
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) {
-      return;
-    }
-
-    setModal(false);
-    flash(t("logging-in-username", { username }), "info", 2);
-    const result = await login(username, password);
-    if (!result.ok) {
-      if (result.status === 401) {
-        flash(t("invalid-username-or-password"), "danger");
-        setModal(true);
+    if (Object.keys(errors).length === 0) {
+      flash(t("logging-in-username", { username }), "info", 2);
+      const result = await login(username, password);
+      console.log("Login result:", result);
+      if (!result.ok) {
+        if (result.status === 401) {
+          errors.password = t("invalid-password");
+        } else {
+          flash(t("server-error-when-logging-in"), "danger");
+        }
       } else {
-        flash(t("server-error-when-logging-in"), "danger");
+        setModal(false);
+        let next = "/";
+        if (location.state && location.state.next) {
+          next = location.state.next;
+        }
+        navigate(next);
       }
-    } else {
-      let next = "/";
-      if (location.state && location.state.next) {
-        next = location.state.next;
-      }
-      navigate(next);
     }
+    setFormErrors(errors);
   };
 
   return (

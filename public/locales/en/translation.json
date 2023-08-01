@@ -53,5 +53,6 @@
   "email-address-is-available": "Email address is available",
   "cannot-validate-the-email-address-server-not-responding": "Cannot validate the email address, server not responding",
   "username-cannot-be-an-email-address": "Username cannot be an email address",
-  "old-password": "Old password"
+  "old-password": "Old password",
+  "invalid-password": "Invalid password"
 }
