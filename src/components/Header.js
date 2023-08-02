@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import {
+  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -7,18 +8,21 @@ import {
   Navbar,
   NavbarBrand,
   Spinner,
-  UncontrolledDropdown,
 } from "reactstrap";
 import { Container } from "reactstrap";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 export default function Header() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useUser();
   const { t } = useTranslation();
 
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+
   return (
-    <Navbar color="light" light fixed="top" className="Header border-bottom py-1">
+    <Navbar color="light" light fixed="top" className="Header d-flex border-bottom py-1">
       <Container>
         <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
         {user === undefined ? (
@@ -26,15 +30,17 @@ export default function Header() {
         ) : (
           <>
             {user !== null && (
-              <UncontrolledDropdown
+              <Dropdown
+                isOpen={dropdownOpen}
+                toggle={toggle}
                 inNavbar
-                className="Dropdown float-end text-end"
-                style={{ width: 400 }}
+                className="float-end text-end"
+                style={{ width: 48 }}
               >
-                <DropdownToggle nav caret data-bs-display="static">
+                <DropdownToggle nav caret>
                   <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
                 </DropdownToggle>
-                <DropdownMenu end>
+                <DropdownMenu style={{ right: 0 }}>
                   <DropdownItem tag={NavLink} to={"/user/" + user.username}>
                     {t("profile")}
                   </DropdownItem>
@@ -60,7 +66,7 @@ export default function Header() {
                   </DropdownItem>
                   <DropdownItem onClick={logout}>{t("logout")}</DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </Dropdown>
             )}
           </>
         )}
