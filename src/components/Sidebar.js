@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export default function Sidebar() {
   const { t } = useTranslation();
   return (
-    <Navbar sticky="top" color="secondary" light className="Sidebar">
+    <Navbar sticky="top" color="info" light className="Sidebar">
       <Container fluid className="p-0">
         <Nav vertical pills className="Navigation">
           <NavItem>

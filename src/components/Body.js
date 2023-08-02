@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 
 export default function Body({ sidebar, children }) {
   return (
-    <Container className="bg-dark p-0">
+    <Container className="p-0">
       <Row className="gx-2 Body">
         {sidebar && (
           <Col xs="auto">

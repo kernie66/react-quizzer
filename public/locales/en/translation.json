@@ -54,5 +54,6 @@
   "cannot-validate-the-email-address-server-not-responding": "Cannot validate the email address, server not responding",
   "username-cannot-be-an-email-address": "Username cannot be an email address",
   "old-password": "Old password",
-  "invalid-password": "Invalid password"
+  "invalid-password": "Invalid password",
+  "report-a-problem": "Report a problem"
 }

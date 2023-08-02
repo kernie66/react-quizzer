@@ -55,5 +55,6 @@
   "cannot-validate-the-email-address-server-not-responding": "Kan inte validera e-postadressen, servern svarar inte",
   "username-cannot-be-an-email-address": "Användarnamnet kan inte vara en e-postadress",
   "old-password": "Nuvarande lösenord",
-  "invalid-password": "Felaktigt lösenord"
+  "invalid-password": "Felaktigt lösenord",
+  "report-a-problem": "Rapportera ett problem"
 }

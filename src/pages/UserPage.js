@@ -99,7 +99,7 @@ export default function UserPage() {
                     <Media src="/test.jpeg" />
                   </Col>
                   <Col>
-                    <h1 className="text-info">{user.name}</h1>
+                    <h3 className="text-light">{user.name}</h3>
                     {user.about_me && <h5>{user.about_me}</h5>}
                     <ul>
                       <li>

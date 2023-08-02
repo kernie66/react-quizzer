@@ -18,7 +18,7 @@ export default function Header() {
   const { t } = useTranslation();
 
   return (
-    <Navbar color="light" light fixed="top" className="Header border-bottom">
+    <Navbar color="light" light fixed="top" className="Header border-bottom py-1">
       <Container>
         <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
         {user === undefined ? (
@@ -26,11 +26,15 @@ export default function Header() {
         ) : (
           <>
             {user !== null && (
-              <UncontrolledDropdown inNavbar className="Dropdown float-end text-end">
-                <DropdownToggle nav caret>
+              <UncontrolledDropdown
+                inNavbar
+                className="Dropdown float-end text-end"
+                style={{ width: 400 }}
+              >
+                <DropdownToggle nav caret data-bs-display="static">
                   <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
                 </DropdownToggle>
-                <DropdownMenu className="Dropdown">
+                <DropdownMenu end>
                   <DropdownItem tag={NavLink} to={"/user/" + user.username}>
                     {t("profile")}
                   </DropdownItem>
@@ -39,7 +43,18 @@ export default function Header() {
                       {t("administer")}
                     </DropdownItem>
                   )}
-                  <DropdownItem divider className="bg-light" />
+                  <DropdownItem divider className="bg-light m-0" />
+                  <DropdownItem>
+                    <a
+                      href="https://github.com/kernie66/react-quizzer/issues"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-decoration-none"
+                    >
+                      {t("report-a-problem")}
+                    </a>
+                  </DropdownItem>
+                  <DropdownItem divider className="bg-light m-0" />
                   <DropdownItem tag={NavLink} to={"/password"}>
                     {t("change-password")}
                   </DropdownItem>
