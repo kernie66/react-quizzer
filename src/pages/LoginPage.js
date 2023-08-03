@@ -8,6 +8,7 @@ import { useUser } from "../contexts/UserProvider";
 import { useApi } from "../contexts/ApiProvider.js";
 import { Trans, useTranslation } from "react-i18next";
 import isValidEmail from "../helpers/isValidEmail.js";
+import { trim } from "radash";
 
 export default function LoginPage() {
   const [formErrors, setFormErrors] = useState({});
@@ -27,7 +28,7 @@ export default function LoginPage() {
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    const username = usernameField.current.value.toLowerCase();
+    const username = trim(usernameField.current.value.toLowerCase());
     const password = passwordField.current.value;
 
     const errors = {};

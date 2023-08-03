@@ -19,33 +19,32 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useUser();
   const { t, i18n } = useTranslation();
-  const [language, setLanguage] = useState(i18n.language);
+  const [language, setLanguage] = useState(i18n.resolvedLanguage);
   const [flagIcon, setFlagIcon] = useState();
 
   useEffect(() => {
-    if (language.split("_")[0] === "sv") {
-      setFlagIcon(flagIcons.sv);
-    } else {
-      setFlagIcon(flagIcons.en);
-    }
+    const key = language.split("_")[0];
+    setFlagIcon(flagIcons[key]);
   }, [language]);
 
   const changeLanguage = () => {
+    let newLanguage;
     if (language === "sv") {
-      setLanguage("en");
-      i18n.changeLanguage("en");
+      newLanguage = "en";
     } else {
-      setLanguage("sv");
-      i18n.changeLanguage("sv");
+      newLanguage = "sv";
     }
+    setLanguage(newLanguage);
+    i18n.changeLanguage(newLanguage);
   };
+
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
     <Navbar color="light" light fixed="top" className="Header d-flex border-bottom py-1">
       <Container>
         <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
-        <Dropdown inNavbar className="float-end" toggle={changeLanguage}>
+        <Dropdown inNavbar className="float-end ms-1" toggle={changeLanguage}>
           <DropdownToggle nav>
             <Media src={flagIcon} width="32" height="32" />
           </DropdownToggle>
