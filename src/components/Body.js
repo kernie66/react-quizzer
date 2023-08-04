@@ -5,14 +5,14 @@ import Sidebar from "./Sidebar";
 export default function Body({ sidebar, children }) {
   return (
     <Container className="p-0">
-      <Row className="gx-2 Body">
+      <Row className="gx-2 ps-0 pe-2 Body">
         {sidebar && (
           <Col xs="auto">
             <Sidebar className="LeftSidebar" />
           </Col>
         )}
-        <Col>
-          <Container className="align-self-start Content">
+        <Col className="px-0">
+          <Container className="align-self-start Content px-0">
             <FlashMessage />
             {children}
           </Container>

@@ -10,7 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import { Container } from "reactstrap";
 import ApiProvider from "./contexts/ApiProvider";
-import RegistrationPage from "./pages/RegistrationPage";
+// import RegistrationPage from "./pages/RegistrationPage";
 import FlashProvider from "./contexts/FlashProvider";
 import UserProvider from "./contexts/UserProvider";
 import PublicRoute from "./components/PublicRoute";
@@ -18,6 +18,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ResetRequestPage from "./pages/ResetRequestPage";
 import ResetPage from "./pages/ResetPage";
+import { lazy } from "react";
+
+const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
 export default function App() {
   return (

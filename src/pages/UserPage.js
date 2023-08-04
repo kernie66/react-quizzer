@@ -20,6 +20,10 @@ export default function UserPage() {
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
 
+  const imgStyle = {
+    maxWidth: "100%",
+    maxHeight: "auto",
+  };
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
@@ -92,16 +96,19 @@ export default function UserPage() {
           ) : (
             <>
               <EditUser modal={modal} closeModal={closeModal} />
-              <Container className="UserPage">
+              <Container className="UserPage px-1">
                 <Row className="border-bottom mb-2">
-                  <Col xs="2" className="Avatar128">
-                    <Media src={user.avatar_url + "&s=128"} className="rounded-circle" />
-                    <Media src="/test.jpeg" />
+                  <Col xs="2" className="Avatar128 ps-0 pe-1 me-0">
+                    <Media
+                      src={user.avatar_url + "&s=128"}
+                      className="rounded-circle"
+                      style={imgStyle}
+                    />
                   </Col>
                   <Col>
                     <h3 className="text-light">{user.name}</h3>
                     {user.about_me && <h5>{user.about_me}</h5>}
-                    <ul>
+                    <ul className="list-unstyled">
                       <li>
                         {t("quizzer-since")} <TimeAgo isoDate={user.createdAt} />
                       </li>

@@ -50,6 +50,7 @@
     ],
     "i18n-ally.sourceLanguage": "en",
     "i18next.i18nPaths": "/Users/kernie/Workspace/react-quizzer/client/build/locales,/Users/kernie/Workspace/react-quizzer/client/public/locales,/Users/kernie/Workspace/react-quizzer/server/src/public/locales,/Users/kernie/Workspace/react-quizzer/public/locales",
-    "i18n-ally.keystyle": "nested"
+    "i18n-ally.keystyle": "nested",
+    "json.schemaDownload.enable": true
   }
 }
