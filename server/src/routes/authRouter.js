@@ -10,6 +10,7 @@ import updateUser from "../db/db.updateUser.js";
 
 export const authRouter = Router();
 authRouter.get("/", (req, res) => {
+  logger.debug("Session id:", req.session.id);
   res.status(200).json({ success: "This is Auth root!" });
 });
 authRouter.post("/register", register);
@@ -18,7 +19,13 @@ authRouter.get("/login", checkLoggedIn, (req, res) => {
 });
 authRouter.post("/login", passport.authenticate("local"), (req, res) => {
   logger.info("Logging in:", req.user);
+
+  logger.debug("Request:", req.headers);
+  logger.debug("Response:", req.isAuthenticated());
+  logger.debug("Session id:", req.session.id);
+
   updateUser(req.user.id, { lastSeen: Date.now() });
+  req.session.save();
   res.status(200).json(req.user); // { success: `User ${req.user.username} logged in` });
 });
 authRouter.delete("/logout", logout);

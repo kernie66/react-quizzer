@@ -41,7 +41,34 @@ logger.debug("Path to build files:", buildPath);
 app.use(express.static(buildPath));
 app.use(express.static(publicPath));
 // app.use("/locales", express.static(localesPath));
-app.use(cors({ credentials: true, origin: "http://localhost:3002" }));
+/*
+const allowedOrigins = [
+  "http://localhost:3002",
+  "http://192.168.0.148:3002",
+  "http://192.168.1.133:3002",
+];
+*/
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+    exposedHeaders: ["set-cookie"],
+    /*
+    origin: (origin, callback) => {
+      // allow requests with no origin
+      // (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      logger.debug("Origin:", origin);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "The CORS policy for this site does not " + "allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    */
+  }),
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -50,13 +77,16 @@ const myStore = new SequelizeStore({
   db,
 });
 
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SECRET,
     store: myStore,
-    resave: true,
-    saveUninitialized: false,
-    cookie: { expires: 30 * 24 * 60 * 60 * 1000 },
+    resave: false,
+    saveUninitialized: true,
+    proxy: true,
+    name: "quizzerCookie",
+    cookie: { sameSite: "lax", secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
   }),
 );
 myStore.sync();
@@ -65,7 +95,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(authUser));
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
-// app.use(printData);
+app.use(printData);
 
 app.use(morgan("dev"));
 app.use("/api/auth", authRouter);

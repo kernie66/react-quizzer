@@ -2,11 +2,11 @@ import PasswordStrengthBar from "react-password-strength-bar";
 import InputField from "./InputField.js";
 import { useTranslation } from "react-i18next";
 import { Popover, PopoverBody, PopoverHeader, UncontrolledTooltip } from "reactstrap";
-// import zxcvbn from "zxcvbn";
-import { lazy, useEffect, useState } from "react";
+import zxcvbn from "zxcvbn";
+import { useEffect, useState } from "react";
 import getPasswordPopoverButtons from "../helpers/getPasswordPopoverButtons.js";
 
-const zxcvbn = lazy(() => import(zxcvbn));
+// const zxcvbn = lazy(() => import(zxcvbn));
 
 const initialPasswordStrength = zxcvbn("");
 

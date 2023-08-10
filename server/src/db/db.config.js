@@ -29,8 +29,13 @@ export const db = new Sequelize(database, userName, password, {
     acquire: 20000,
     idle: 5000,
   },
-  logging: (msg) =>
-    process.env.NODE_ENV === "test" ? null : logger.log(logLevel, msg, { service: "Postgres" }),
+  logging: (msg) => {
+    process.env.NODE_ENV === "test"
+      ? null
+      : logLevel === "info"
+      ? null
+      : logger.log(logLevel, msg, { service: "Postgres" });
+  },
 });
 
 export const testDbConnection = async () => {
