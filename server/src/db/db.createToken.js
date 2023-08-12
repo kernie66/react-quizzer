@@ -19,15 +19,15 @@ export default async function dbCreateToken(id) {
       );
       logger.debug("Token length:", refreshToken.length);
       try {
-        const existingToken = await Token.findOne({ where: { userId: id } });
-        if (isEmpty(existingToken)) {
-          const newToken = await Token.create({
-            token: refreshToken,
-          });
-          await newToken.setUser(user);
-          await newToken.save();
+        const [newToken, created] = await Token.findOrCreate({
+          where: { userId: user.id },
+          defaults: { token: refreshToken },
+        });
+        if (created) {
+          logger.debug("New refresh token created for user:", user.username);
         } else {
-          existingToken.update({ token: refreshToken });
+          newToken.update({ token: refreshToken });
+          logger.debug("Refresh token updated for user:", user.username);
         }
       } catch (error) {
         logger.error("Failed to get existing token", error);
