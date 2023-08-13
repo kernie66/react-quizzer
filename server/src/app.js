@@ -95,7 +95,8 @@ app.use(passport.session());
 passport.use(new LocalStrategy(authUser));
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
-app.use(printData);
+
+// app.use(printData);
 
 app.use(morgan("dev"));
 app.use("/api/auth", authRouter);

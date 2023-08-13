@@ -23,12 +23,18 @@ async function parseUser(req) {
       where: {
         id: userId,
       },
+      attributes: {
+        exclude: ["hashedPassword"],
+      },
     });
   } else if (req.query.username) {
     const username = req.query.username;
     users = await User.findAll({
       where: {
         username: username,
+      },
+      attributes: {
+        exclude: ["hashedPassword"],
       },
     });
   } else if (req.query.name) {
@@ -37,6 +43,9 @@ async function parseUser(req) {
       where: {
         name: name,
       },
+      attributes: {
+        exclude: ["hashedPassword"],
+      },
     });
   } else if (req.query.email) {
     const email = req.query.email;
@@ -44,11 +53,18 @@ async function parseUser(req) {
       where: {
         email: email,
       },
+      attributes: {
+        exclude: ["hashedPassword"],
+      },
     });
   } else if (!isEmpty(req.query)) {
     logger.warn("Unknown query:", req.query);
   } else {
-    users = await User.findAll();
+    users = await User.findAll({
+      attributes: {
+        exclude: ["hashedPassword"],
+      },
+    });
   }
   return users;
 }

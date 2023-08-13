@@ -7,6 +7,7 @@ import { checkUser } from "../controllers/users.js";
 import checkPasswordStrength from "../auth/checkPasswordStrength.js";
 import { logger } from "../logger/logger.js";
 import updateUser from "../db/db.updateUser.js";
+import updateAccessToken from "../auth/updateAccessToken.js";
 
 export const authRouter = Router();
 authRouter.get("/", (req, res) => {
@@ -28,6 +29,7 @@ authRouter.post("/login", passport.authenticate("local"), (req, res) => {
   req.session.save();
   res.status(200).json(req.user); // { success: `User ${req.user.username} logged in` });
 });
+authRouter.post("/refresh", checkLoggedIn, updateAccessToken);
 authRouter.delete("/logout", logout);
 authRouter.get("/check", checkUser);
 authRouter.post("/password", checkPasswordStrength);

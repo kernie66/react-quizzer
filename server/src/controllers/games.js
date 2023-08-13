@@ -46,7 +46,11 @@ export const getGameMaster = async (req, res) => {
   const gameId = req.params.id;
   const game = await Game.findByPk(gameId);
   if (!isEmpty(game)) {
-    const quizMaster = await game.getQuizMaster();
+    const quizMaster = await game.getQuizMaster({
+      attributes: {
+        exclude: ["hashedPassword"],
+      },
+    });
     res.status(200).json(quizMaster);
   } else {
     res.status(404).json({ error: `No game with ID ${gameId} found` });

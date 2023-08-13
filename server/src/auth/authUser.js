@@ -3,6 +3,9 @@ import { User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
 import isValidEmail from "../utils/isValidEmail.js";
+import dbCreateToken from "../db/db.createToken.js";
+import { set } from "radash";
+import createAccessToken from "./createAccessToken.js";
 
 export const authUser = async (username, password, done) => {
   try {
@@ -18,11 +21,20 @@ export const authUser = async (username, password, done) => {
       logger.warn("User not found");
       return done(null, false);
     }
-    logger.debug("User info:", user.dataValues);
+    logger.debug("User info:", user.dataValues.hashedPassword);
+    // Ensure to get the real hashed password and not the redacted print version
     if (user.dataValues.hashedPassword) {
       const passwordsMatch = await bcrypt.compare(password, user.dataValues.hashedPassword);
       if (passwordsMatch) {
-        const authenticatedUser = { id: user.dataValues.id, username: user.dataValues.username };
+        let authenticatedUser = { id: user.id, username: user.username };
+        const accessToken = await createAccessToken(user.id);
+        if (accessToken) {
+          authenticatedUser = set(authenticatedUser, "accessToken", accessToken);
+        }
+        const refreshToken = await dbCreateToken(user.id);
+        if (refreshToken) {
+          authenticatedUser = set(authenticatedUser, "refreshToken", refreshToken);
+        }
         return done(null, authenticatedUser);
       } else {
         logger.warn("Incorrect username/password combination");
@@ -50,7 +62,7 @@ export const deserializeUser = async (id, done) => {
       return done(null, false);
     }
     logger.debug("Found user:", user.dataValues);
-    return done(null, user.dataValues);
+    return done(null, user);
   } catch (error) {
     logger.warn("Deserialize error, assuming database 'Users' needs to be synced", error);
     done(null, error);

@@ -1,5 +1,5 @@
 import { col, fn } from "sequelize";
-import { Question, User } from "../../models/index.js";
+import { Question } from "../../models/index.js";
 import { Quiz } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
@@ -44,7 +44,11 @@ export const getQuizAuthor = async (req, res) => {
   const quizId = req.params.id;
   const quiz = await Quiz.findByPk(quizId);
   if (!isEmpty(quiz)) {
-    const quizAuthor = await quiz.getAuthor();
+    const quizAuthor = await quiz.getAuthor({
+      attributes: {
+        exclude: ["hashedPassword"],
+      },
+    });
     res.status(200).json(quizAuthor);
   } else {
     res.status(404).json({ error: `Quiz with ID ${quizId} not found.` });
@@ -65,7 +69,7 @@ export const createQuiz = async (req, res) => {
 };
 
 export const updateQuiz = async (req, res) => {
-  const userData = await parseUser(req);
+  const userData = await parseQuiz(req);
   if (!isEmpty(userData)) {
     try {
       const user = userData[0];
