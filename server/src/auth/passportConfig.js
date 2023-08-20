@@ -1,12 +1,7 @@
 import passport from "passport";
-import { Strategy as JWTStrategy } from "passport-jwt";
+import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
-import { User } from "../../models/index.js";
-import bcrypt from "bcrypt";
-import isEmpty from "../utils/isEmpty.js";
-import { logger } from "../logger/logger.js";
-
-const secret = process.env.SECRET;
+import { authUser } from "./authUser.js";
 
 passport.use(
   new LocalStrategy(
@@ -14,40 +9,23 @@ passport.use(
       usernameField: "username",
       passwordField: "password",
     },
-    async (username, password, done) => {
+    authUser,
+  ),
+);
+
+passport.use(
+  new JWTStrategy(
+    {
+      secretOrKey: process.env.JWT_ACCESSTOKEN_SECRET,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    },
+    async (jwtPayload, done) => {
+      console.log("JWT payload:", jwtPayload);
       try {
-        const user = await User.findOne({ where: { username: username } });
-        logger.debug("Username", username);
-        logger.debug("User", user.dataValues.username);
-        if (isEmpty(user.dataValues)) {
-          return done("User not found");
-        }
-        const passwordsMatch = await bcrypt.compare(password, user.dataValues.hashedPassword);
-        if (passwordsMatch) {
-          return done(null, user.dataValues);
-        } else {
-          return done("Incorrect username/password combination");
-        }
+        return done(null, jwtPayload);
       } catch (error) {
         done(error);
       }
     },
   ),
 );
-
-/*
-passport.use(
-  new JWTStrategy(
-    {
-      jwtFromRequest: (req) => req.cookies.jwt,
-      secretOrKey: secret,
-    },
-    (jwtPayload, done) => {
-      if (Date.now() > jwtPayload.expires) {
-        return done("JWT expired");
-      }
-      return done(null, jwtPayload);
-    },
-  ),
-);
-*/

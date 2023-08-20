@@ -5,7 +5,7 @@ import { Sarah } from "./user.data.js";
 
 // const request = supertest();
 const thisDb = db;
-let session;
+let accessToken, refreshToken;
 
 afterAll(async () => {
   await thisDb.close();
@@ -31,22 +31,25 @@ describe("Register and login", () => {
 
   it("should login user Sarah", async () => {
     const res = await request(app).post("/login").send(Sarah);
-    session = res.header["set-cookie"];
+    accessToken = res.body.accessToken;
+    console.log(accessToken);
+    refreshToken = res.body.refreshToken;
+    console.log(refreshToken);
     expect(res.statusCode).toEqual(200);
   }, 1000);
 
   it("should be allowed access to API root", async () => {
-    const res = await request(app).get("/api/").set("Cookie", session);
+    const res = await request(app).get("/api/").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
   });
 
   it("should log out user Sarah", async () => {
-    const res = await request(app).delete("/logout").set("Cookie", session);
+    const res = await request(app).delete("/logout").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
   });
 
   it("should not be allowed access to API root", async () => {
-    const res = await request(app).get("/api/").set("Cookie", session);
+    const res = await request(app).get("/api/").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(401);
   });
 
@@ -54,7 +57,10 @@ describe("Register and login", () => {
     const res = await request(app)
       .post("/login")
       .send({ username: Sarah.email.toLowerCase(), password: Sarah.password });
-    session = res.header["set-cookie"];
+    accessToken = res.body.accessToken;
+    console.log(accessToken);
+    refreshToken = res.body.refreshToken;
+    console.log(refreshToken);
     expect(res.statusCode).toEqual(200);
   }, 1000);
 });

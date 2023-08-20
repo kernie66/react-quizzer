@@ -1,7 +1,6 @@
 import { Token } from "../../models/index.js";
 import jwt from "jsonwebtoken";
 import createAccessToken from "./createAccessToken.js";
-const { verify } = jwt;
 
 export default async function updateAccessToken(req, res) {
   const { refreshToken: requestToken } = req.body;
@@ -16,13 +15,13 @@ export default async function updateAccessToken(req, res) {
       return;
     }
     try {
-      const validToken = verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const validToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
       if (req.user.username !== validToken.username) {
         res.status(401).send("Refresh token is not associated with the logged in user");
         return;
       }
     } catch (error) {
-      if (error.name === "TokenExpiredError") {
+      if (error.name === jwt.TokenExpiredError) {
         Token.destroy({ where: { id: refreshToken.id } });
         res.status(403).send("Refresh token was expired. Please make a new sign in request");
         return;

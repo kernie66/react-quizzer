@@ -3,7 +3,6 @@ import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-
 import { logger } from "./logger/logger.js";
 import { db, testDbConnection } from "./db/db.config.js";
 import dbSync from "./db/db.sync.js";
@@ -13,10 +12,8 @@ import { apiRouter } from "./routes/apiRouter.js";
 import { register } from "./auth/register.js";
 import session from "express-session";
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
 import storeBuilder from "connect-session-sequelize";
 import {
-  authUser,
   checkAuthenticated,
   checkLoggedIn,
   deserializeUser,
@@ -91,12 +88,13 @@ app.use(
 );
 myStore.sync();
 
-app.use(passport.session());
-passport.use(new LocalStrategy(authUser));
+// app.use(passport.session());
+// passport.use(new LocalStrategy(authUser));
+import "./auth/passportConfig.js";
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
 
-// app.use(printData);
+app.use(printData);
 
 app.use(morgan("dev"));
 app.use("/api/auth", authRouter);
@@ -106,10 +104,10 @@ app.post("/register", register);
 app.get("/login", checkLoggedIn, (req, res) => {
   res.status(200).json({ success: `User ${req.user.username} already logged in...` });
 });
-app.post("/login", passport.authenticate("local"), (req, res) => {
+app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
   res.status(200).json(req.user); // { success: `User ${req.user.username} logged in` });
 });
-app.delete("/logout", (req, res, next) => {
+app.delete("/logout", passport.authenticate("jwt", { session: false }), (req, res, next) => {
   if (req.user) {
     const user = req.user.username;
     req.logOut((error) => {

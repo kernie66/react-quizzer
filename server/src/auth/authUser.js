@@ -70,11 +70,11 @@ export const deserializeUser = async (id, done) => {
 };
 
 export function checkAuthenticated(req, res, next) {
-  logger.debug("Authenticated:", req.isAuthenticated());
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ error: "User not logged in" });
+  // logger.debug("Authenticated:", req.isAuthenticated());
+  //  if (req.isAuthenticated()) {
+  return next();
+  //  }
+  //  res.status(401).json({ error: "User not logged in" });
 }
 
 export function checkLoggedIn(req, res, next) {
@@ -89,6 +89,10 @@ let count = 1;
 export const printData = (req, res, next) => {
   console.log("\n==============================");
   console.log(`------------>  ${count++}`);
+
+  if (req.headers.Authorization) {
+    console.log(`req.headers -------> ${req.headers.Authorization}`);
+  }
 
   console.log(`req.body.username -------> ${req.body.username}`);
   console.log(`req.body.password -------> ${req.body.password}`);
