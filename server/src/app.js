@@ -13,13 +13,7 @@ import { register } from "./auth/register.js";
 import session from "express-session";
 import passport from "passport";
 import storeBuilder from "connect-session-sequelize";
-import {
-  checkAuthenticated,
-  checkLoggedIn,
-  deserializeUser,
-  printData,
-  serializeUser,
-} from "./auth/authUser.js";
+import { checkAuthenticated, checkLoggedIn, printData } from "./auth/authUser.js";
 import { dbRouter } from "./routes/dbRouter.js";
 import setPath from "./utils/setPath.js";
 import { authRouter } from "./routes/authRouter.js";
@@ -31,11 +25,11 @@ const invalidPathHandler = (req, res) => {
 export const app = express();
 
 logger.debug("Source location:", new URL(import.meta.url).pathname);
-const publicPath = setPath("../public");
+const publicPath = setPath("../public/server");
 const buildPath = setPath("../build");
 logger.debug("Path to public files:", publicPath);
 logger.debug("Path to build files:", buildPath);
-app.use(express.static(buildPath));
+// app.use(express.static(buildPath));
 app.use(express.static(publicPath));
 // app.use("/locales", express.static(localesPath));
 /*
@@ -91,22 +85,24 @@ myStore.sync();
 // app.use(passport.session());
 // passport.use(new LocalStrategy(authUser));
 import "./auth/passportConfig.js";
-passport.serializeUser(serializeUser);
-passport.deserializeUser(deserializeUser);
+import { publicRouter } from "./routes/publicRoutes.js";
 
 app.use(printData);
 
 app.use(morgan("dev"));
 app.use("/api/auth", authRouter);
 app.use("/api/db", dbRouter);
-app.use("/api", checkAuthenticated, apiRouter);
-app.post("/register", register);
+app.use("/api", passport.authenticate("jwt", { session: false }), apiRouter);
+app.use("/", publicRouter);
+// app.post("/register", register);
 app.get("/login", checkLoggedIn, (req, res) => {
   res.status(200).json({ success: `User ${req.user.username} already logged in...` });
 });
+/*
 app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
   res.status(200).json(req.user); // { success: `User ${req.user.username} logged in` });
 });
+*/
 app.delete("/logout", passport.authenticate("jwt", { session: false }), (req, res, next) => {
   if (req.user) {
     const user = req.user.username;
@@ -119,17 +115,6 @@ app.delete("/logout", passport.authenticate("jwt", { session: false }), (req, re
   } else {
     res.status(404).json({ error: "User not logged in..." });
   }
-});
-
-app.get("/", (req, res) => {
-  const dbStatus = testDbConnection();
-  let statusString;
-  if (dbStatus) {
-    statusString = "Connection to database established";
-  } else {
-    statusString = "Couldn't connect to the database";
-  }
-  res.send("<h3>Welcome to the Quizzer API server...</h3>" + statusString);
 });
 
 app.get("/sync", (req, res) => {

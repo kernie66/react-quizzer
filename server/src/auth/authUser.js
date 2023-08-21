@@ -21,7 +21,7 @@ export const authUser = async (username, password, done) => {
       logger.warn("User not found");
       return done(null, false);
     }
-    logger.debug("User info:", user.dataValues.hashedPassword);
+    logger.debug("User info:", user.dataValues);
     // Ensure to get the real hashed password and not the redacted print version
     if (user.dataValues.hashedPassword) {
       const passwordsMatch = await bcrypt.compare(password, user.dataValues.hashedPassword);
@@ -70,11 +70,11 @@ export const deserializeUser = async (id, done) => {
 };
 
 export function checkAuthenticated(req, res, next) {
-  // logger.debug("Authenticated:", req.isAuthenticated());
-  //  if (req.isAuthenticated()) {
-  return next();
-  //  }
-  //  res.status(401).json({ error: "User not logged in" });
+  logger.debug("Authenticated:", req.isAuthenticated());
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ error: "User not logged in" });
 }
 
 export function checkLoggedIn(req, res, next) {

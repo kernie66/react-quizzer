@@ -1,9 +1,28 @@
 import { Router } from "express";
 import passport from "passport";
-import jwt from "jsonwebtoken";
+import { register } from "../auth/register.js";
+import { testDbConnection } from "../db/db.config.js";
 
-const publicRouter = Router();
+export const publicRouter = Router();
 
+publicRouter.post("/register", register);
+
+publicRouter.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
+  res.status(200).json(req.user);
+});
+
+publicRouter.all("/", (req, res) => {
+  const dbStatus = testDbConnection();
+  let statusString;
+  if (dbStatus) {
+    statusString = "Connection to database established";
+  } else {
+    statusString = "Couldn't connect to the database";
+  }
+  res.send("<h3>Welcome to the Quizzer API server...</h3>" + statusString);
+});
+
+/*
 publicRouter.post("/login", async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
@@ -26,5 +45,4 @@ publicRouter.post("/login", async (req, res, next) => {
     }
   })(req, res, next);
 });
-
-module.exports = publicRouter;
+*/

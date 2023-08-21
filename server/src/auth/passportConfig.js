@@ -1,7 +1,7 @@
 import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
-import { authUser } from "./authUser.js";
+import { authUser, deserializeUser, serializeUser } from "./authUser.js";
 
 passport.use(
   new LocalStrategy(
@@ -29,3 +29,6 @@ passport.use(
     },
   ),
 );
+
+passport.serializeUser(serializeUser);
+passport.deserializeUser(deserializeUser);
