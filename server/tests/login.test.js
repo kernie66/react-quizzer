@@ -48,8 +48,8 @@ describe("Register and login", () => {
     expect(res.statusCode).toEqual(200);
   });
 
-  it("should not be allowed access to API root", async () => {
-    const res = await request(app).get("/api/").auth(accessToken, { type: "bearer" });
+  it("should not be allowed access to API root with refresh token", async () => {
+    const res = await request(app).get("/api/").auth(refreshToken, { type: "bearer" });
     expect(res.statusCode).toEqual(401);
   });
 
