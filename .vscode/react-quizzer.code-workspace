@@ -53,6 +53,7 @@
     "i18n-ally.keystyle": "nested",
     "json.schemaDownload.enable": true,
     "search.exclude": {
+      "**/coverage": true,
       "**/logs": true
     },
     "cSpell.words": [

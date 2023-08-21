@@ -4,19 +4,20 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { logger } from "./logger/logger.js";
-import { db, testDbConnection } from "./db/db.config.js";
+import { db } from "./db/db.config.js";
 import dbSync from "./db/db.sync.js";
 import morgan from "morgan";
 import zxcvbn from "zxcvbn";
-import { apiRouter } from "./routes/apiRouter.js";
-import { register } from "./auth/register.js";
 import session from "express-session";
 import passport from "passport";
 import storeBuilder from "connect-session-sequelize";
 import { checkAuthenticated, checkLoggedIn, printData } from "./auth/authUser.js";
-import { dbRouter } from "./routes/dbRouter.js";
 import setPath from "./utils/setPath.js";
+import { apiRouter } from "./routes/apiRouter.js";
 import { authRouter } from "./routes/authRouter.js";
+import { dbRouter } from "./routes/dbRouter.js";
+import { publicRouter } from "./routes/publicRoutes.js";
+import { logout } from "./auth/logout.js";
 
 const invalidPathHandler = (req, res) => {
   res.status(404).json({ error: "Invalid path" });
@@ -85,7 +86,6 @@ myStore.sync();
 // app.use(passport.session());
 // passport.use(new LocalStrategy(authUser));
 import "./auth/passportConfig.js";
-import { publicRouter } from "./routes/publicRoutes.js";
 
 app.use(printData);
 
@@ -98,24 +98,8 @@ app.use("/", publicRouter);
 app.get("/login", checkLoggedIn, (req, res) => {
   res.status(200).json({ success: `User ${req.user.username} already logged in...` });
 });
-/*
-app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
-  res.status(200).json(req.user); // { success: `User ${req.user.username} logged in` });
-});
-*/
-app.delete("/logout", passport.authenticate("jwt", { session: false }), (req, res, next) => {
-  if (req.user) {
-    const user = req.user.username;
-    req.logOut((error) => {
-      if (error) {
-        return next(error);
-      }
-      res.status(200).json({ success: `User ${user} logged out` });
-    });
-  } else {
-    res.status(404).json({ error: "User not logged in..." });
-  }
-});
+
+app.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
 
 app.get("/sync", (req, res) => {
   dbSync(true);
