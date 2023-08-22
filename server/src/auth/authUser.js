@@ -77,13 +77,6 @@ export function checkAuthenticated(req, res, next) {
   res.status(401).json({ error: "User not logged in" });
 }
 
-export function checkLoggedIn(req, res, next) {
-  if (!req.isAuthenticated()) {
-    return res.status(400).json({ error: "No user logged in" });
-  }
-  next();
-}
-
 let count = 1;
 
 export const printData = (req, res, next) => {

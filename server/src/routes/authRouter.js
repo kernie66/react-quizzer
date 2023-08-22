@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { register } from "../auth/register.js";
-import { checkLoggedIn } from "../auth/authUser.js";
+import { checkLoggedIn } from "../auth/checkLoggedIn.js";
 import passport from "passport";
 import { logout } from "../auth/logout.js";
 import { checkUser } from "../controllers/users.js";

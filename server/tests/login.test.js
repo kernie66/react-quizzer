@@ -15,14 +15,14 @@ describe("Test database connection", () => {
   it("should connect to the test database", async () => {
     const res = await testDbConnection();
     expect(res).toBe(true);
-  }, 10000);
+  }, 5000);
 });
 
 describe("Register and login", () => {
   beforeAll(async () => {
     const status = await thisDb.sync({ force: true });
     expect(status.config.database).toEqual("quizzer_test");
-  });
+  }, 1000);
 
   it("should register user Sarah", async () => {
     const res = await request(app).post("/register").send(Sarah);
@@ -41,17 +41,17 @@ describe("Register and login", () => {
   it("should be allowed access to API root", async () => {
     const res = await request(app).get("/api/").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
-  });
+  }, 1000);
 
   it("should log out user Sarah", async () => {
     const res = await request(app).delete("/logout").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
-  });
+  }, 1000);
 
-  it("should not be allowed access to API root with refresh token", async () => {
-    const res = await request(app).get("/api/").auth(refreshToken, { type: "bearer" });
+  it("should not be allowed access to API root when logged out", async () => {
+    const res = await request(app).get("/api/").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(401);
-  });
+  }, 1000);
 
   it("should login user Sarah with email", async () => {
     const res = await request(app)
