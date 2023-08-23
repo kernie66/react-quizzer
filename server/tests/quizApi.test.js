@@ -31,7 +31,7 @@ describe("Create quizzes", () => {
     const res = await request(app).get("/api/quizzes").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(1);
-  });
+  }, 1000);
 
   it("should get the author of the quiz", async () => {
     const res = await request(app)
@@ -39,7 +39,7 @@ describe("Create quizzes", () => {
       .auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
     expect(res.body.name).toEqual(Sarah.name);
-  });
+  }, 1000);
 
   it("should create another quiz", async () => {
     const res = await request(app)
@@ -53,19 +53,19 @@ describe("Create quizzes", () => {
     const res = await request(app).get("/api/quizzes").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(2);
-  });
+  }, 1000);
 
   it("should delete one quiz", async () => {
     const res = await request(app).delete("/api/quizzes/1").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
-  });
+  }, 1000);
 
   it("should list one quiz with ID 2", async () => {
     const res = await request(app).get("/api/quizzes").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(1);
     expect(res.body[0].id).toEqual(2);
-  });
+  }, 1000);
 });
 
 describe("Add questions to quiz", () => {

@@ -1,5 +1,5 @@
 import { col, fn } from "sequelize";
-import { User } from "../../models/index.js";
+import { Token, User } from "../../models/index.js";
 import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import bcrypt from "bcrypt";
@@ -135,21 +135,31 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   const id = parseInt(req.params.id);
-  if (req.user.id === id) {
-    logger.warn("This is the current logged in used, logging out");
-    req.logOut((error) => {
-      if (error) {
-        logger.error("Error logging out", error);
-      }
-    });
+  try {
+    const tokens = await Token.findAll({ where: { userId: id } });
+    if (!isEmpty(tokens)) {
+      tokens.map((token) => token.destroy());
+      logger.debug("Tokens destroyed:", tokens.length);
+    } else {
+      logger.warn("No token found to delete");
+    }
+  } catch (error) {
+    logger.error("Error when destroying token:", error);
   }
-  const user = await User.findByPk(id);
-  if (!isEmpty(user)) {
-    await user.destroy();
-    res.status(200).json({ success: `User ${user.username} deleted.` });
-  } else {
-    res.status(404).json({ error: "No matching user found." });
-    logger.warn("No user found to delete.");
+  if (req.user.id === id) {
+    logger.warn("This is the current logged in used, will be logged out");
+  }
+  try {
+    const user = await User.findByPk(id);
+    if (!isEmpty(user)) {
+      await user.destroy();
+      res.status(200).json({ success: `User ${user.username} deleted.` });
+    } else {
+      res.status(404).json({ error: "No matching user found." });
+      logger.warn("No user found to delete.");
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Couldn't delete user" });
   }
 };
 
