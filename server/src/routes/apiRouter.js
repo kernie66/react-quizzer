@@ -25,6 +25,11 @@ export const apiRouter = Router();
 apiRouter.get("/", (req, res) => {
   res.status(200).json({ success: "This is API root!" });
 });
+
+apiRouter.get("/login", (req, res) => {
+  res.status(200).json({ success: `User ${req.user.username} already logged in...` });
+});
+
 apiRouter.post("/users", createUser);
 apiRouter.get("/users", getUsers);
 apiRouter.get("/users/:id", getUsers);

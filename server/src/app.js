@@ -31,13 +31,7 @@ logger.debug("Path to build files:", buildPath);
 app.use(express.static(publicPath));
 // app.use("/locales", express.static(localesPath));
 
-app.use(
-  cors({
-    credentials: true,
-    origin: true,
-    exposedHeaders: ["set-cookie"],
-  }),
-);
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -48,9 +42,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/db", dbRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), checkLoggedIn, apiRouter);
 app.use("/", publicRouter);
-app.get("/login", checkLoggedIn, (req, res) => {
-  res.status(200).json({ success: `User ${req.user.username} already logged in...` });
-});
 
 app.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
 

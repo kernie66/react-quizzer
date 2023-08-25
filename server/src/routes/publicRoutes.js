@@ -2,12 +2,22 @@ import { Router } from "express";
 import passport from "passport";
 import { register } from "../auth/register.js";
 import { testDbConnection } from "../db/db.config.js";
+import { logger } from "../logger/logger.js";
+import dbUpdateUser from "../db/db.updateUser.js";
 
 export const publicRouter = Router();
 
 publicRouter.post("/register", register);
 
 publicRouter.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
+  logger.info("Logging in:", req.user);
+
+  try {
+    dbUpdateUser(req.user.id, { lastSeen: Date.now() });
+    req.session.save();
+  } catch (error) {
+    logger.error("Error updating user last seen time:", error);
+  }
   res.status(200).json(req.user);
 });
 

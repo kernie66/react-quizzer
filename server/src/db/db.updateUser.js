@@ -2,7 +2,7 @@ import { User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import isEmpty from "../utils/isEmpty.js";
 
-export default async function updateUser(id, params) {
+export default async function dbUpdateUser(id, params) {
   try {
     const user = await User.findByPk(id);
     if (!isEmpty(user)) {

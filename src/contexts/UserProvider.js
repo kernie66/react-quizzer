@@ -9,6 +9,8 @@ export default function UserProvider({ children }) {
 
   useEffect(() => {
     (async () => {
+      let userData = null;
+
       if (api.isAuthenticated()) {
         let response;
         response = await api.checkLoggedIn();
@@ -17,14 +19,12 @@ export default function UserProvider({ children }) {
           console.log("User:", userId);
           response = await api.get("/users/" + userId);
           console.log("Current user:", response.data[0]);
-          setUser(response.ok ? response.data[0] : null);
+          userData = response.ok ? response.data[0] : null;
+        } else {
+          api.removeLogin();
         }
-        if (!response.ok) {
-          api.removeUserId();
-        }
-      } else {
-        setUser(null);
       }
+      setUser(userData);
     })();
   }, [api]);
 

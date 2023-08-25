@@ -10,7 +10,7 @@ const myAxios = axios.create({
     return status >= 200 && status < 500; // default
   },
 });
-/*
+
 // Add a request interceptor
 myAxios.interceptors.request.use(
   (config) => {
@@ -51,5 +51,5 @@ myAxios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-*/
+
 export default myAxios;

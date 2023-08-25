@@ -1,4 +1,7 @@
+import { redirect } from "react-router-dom";
 import myAxios from "./myAxios.instance.js";
+
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default class AxiosApiClient {
   constructor(onError) {
@@ -62,25 +65,27 @@ export default class AxiosApiClient {
   }
 
   async login(username, password) {
-    const response = await this.post("/auth/login", { username, password });
+    const response = await this.post("/login", { username, password }, { baseURL: BASE_API_URL });
     if (response.ok) {
+      console.log("Response:", response.data);
       this.setUserId(response.data.id);
+      this.setAccessToken(response.data.accessToken);
     }
     return response;
   }
 
   async checkLoggedIn() {
-    const response = await this.get("/auth/login", {});
+    const response = await this.get("/login");
     console.log("Check login:", response);
     return response;
   }
 
   async logout() {
-    const response = await this.delete("/auth/logout");
+    const response = await this.delete("/logout", { baseURL: BASE_API_URL });
     if (response.ok) {
-      this.removeUserId();
+      this.removeLogin();
     }
-    return response;
+    return redirect("/login");
   }
 
   isAuthenticated() {
@@ -100,7 +105,11 @@ export default class AxiosApiClient {
     return localStorage.getItem("userData");
   }
 
-  removeUserId() {
+  removeLogin() {
     return localStorage.clear();
+  }
+
+  setAccessToken(accessToken) {
+    localStorage.setItem("authToken", accessToken);
   }
 }
