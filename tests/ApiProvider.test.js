@@ -22,6 +22,7 @@ function setup() {
     user: userEvent.setup(),
   };
 }
+
 const renderTestAuthComponent = (userId) => {
   render(
     <FlashProvider>
@@ -74,8 +75,9 @@ describe("should test the login and logout server methods of the API", () => {
   test("checks login and logout calls to server", async () => {
     const { user } = setup();
     const responseData = { id: 2, username: "john" };
-    mockAxios.onPost("/auth/login").reply(200, responseData);
-    mockAxios.onDelete("/auth/logout").reply(200);
+    mockAxios.onPost("/login").reply(200, responseData);
+    mockAxios.onDelete("/logout").reply(200);
+    mockAxios.onPost("/refresh-token").reply(200);
     renderTestLoginComponent();
 
     expect(screen.getByText(/^Not logged in/)).toBeDefined();

@@ -69,7 +69,7 @@ export default class AxiosApiClient {
     if (response.ok) {
       console.log("Response:", response.data);
       this.setUserId(response.data.id);
-      this.setAccessToken(response.data.accessToken);
+      this.setTokens(response.data);
     }
     return response;
   }
@@ -82,10 +82,12 @@ export default class AxiosApiClient {
 
   async logout() {
     const response = await this.delete("/logout", { baseURL: BASE_API_URL });
+    console.log("Response:", response);
     if (response.ok) {
       this.removeLogin();
     }
-    return redirect("/login");
+    return response;
+    //  return redirect("/login");
   }
 
   isAuthenticated() {
@@ -109,7 +111,8 @@ export default class AxiosApiClient {
     return localStorage.clear();
   }
 
-  setAccessToken(accessToken) {
-    localStorage.setItem("authToken", accessToken);
+  setTokens(tokens) {
+    localStorage.setItem("accessToken", tokens.accessToken);
+    localStorage.setItem("refreshToken", tokens.refreshToken);
   }
 }

@@ -4,6 +4,7 @@ import { register } from "../auth/register.js";
 import { testDbConnection } from "../db/db.config.js";
 import { logger } from "../logger/logger.js";
 import dbUpdateUser from "../db/db.updateUser.js";
+import updateAccessToken from "../auth/updateAccessToken.js";
 
 export const publicRouter = Router();
 
@@ -14,12 +15,13 @@ publicRouter.post("/login", passport.authenticate("local", { session: false }), 
 
   try {
     dbUpdateUser(req.user.id, { lastSeen: Date.now() });
-    req.session.save();
   } catch (error) {
     logger.error("Error updating user last seen time:", error);
   }
   res.status(200).json(req.user);
 });
+
+publicRouter.post("/refresh-token", updateAccessToken);
 
 publicRouter.all("/", (req, res) => {
   const dbStatus = testDbConnection();

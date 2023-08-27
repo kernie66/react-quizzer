@@ -16,8 +16,8 @@ import TestLogoutComponent from "./components/LoginPage.test/TestLogoutComponent
 const mockAxios = new MockAdapter(myAxios, { onNoMatch: "throwException" });
 const loginData = { username: "john", password: "VerySimplePassword" };
 const loginEmail = "john@doe.com";
-const loginUrl = "/auth/login";
-const logoutUrl = "/auth/logout";
+const loginUrl = "/login";
+const logoutUrl = "/logout";
 const checkUrl = "/auth/check";
 
 beforeAll(() => {

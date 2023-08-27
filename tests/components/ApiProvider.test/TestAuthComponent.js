@@ -8,7 +8,7 @@ export default function TestAuthComponent({ userId }) {
   const [hasUserId, setHasUserId] = useState();
 
   function removeUser() {
-    api.removeUserId();
+    api.removeLogin();
     setHasUserId(api.getUserId());
   }
 
