@@ -6,7 +6,6 @@ import { logger } from "../logger/logger.js";
 import dbUpdateUser from "../db/db.updateUser.js";
 import updateAccessToken from "../auth/updateAccessToken.js";
 import { logout } from "../auth/logout.js";
-import { checkUser } from "../controllers/users.js";
 
 export const publicRouter = Router();
 
@@ -26,8 +25,6 @@ publicRouter.post("/login", passport.authenticate("local", { session: false }), 
 publicRouter.post("/refresh-token", updateAccessToken);
 
 publicRouter.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
-
-publicRouter.get("/check", checkUser);
 
 publicRouter.all("/", (req, res) => {
   const dbStatus = testDbConnection();

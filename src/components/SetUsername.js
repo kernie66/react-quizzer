@@ -28,7 +28,7 @@ export default function SetUsername({
       } else if (isValidEmail(username)) {
         userError = t("username-cannot-be-an-email-address");
       } else {
-        const existingUser = await api.get("/auth/check", { username });
+        const existingUser = await api.get("/check", { username });
         if (existingUser.status === 200) {
           userError = t("username-already-registered");
         } else if (existingUser.status === 404) {

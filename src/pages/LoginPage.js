@@ -41,7 +41,7 @@ export default function LoginPage() {
       } else {
         userCheck.username = username;
       }
-      const existingUser = await api.get("/auth/check", userCheck);
+      const existingUser = await api.get("/check", userCheck);
       if (existingUser.status !== 200) {
         errors.username = t("user-not-found");
       }

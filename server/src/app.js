@@ -9,6 +9,7 @@ import morgan from "morgan";
 import zxcvbn from "zxcvbn";
 import passport from "passport";
 import setPath from "./utils/setPath.js";
+import { checkUser } from "./controllers/users.js";
 import { apiRouter } from "./routes/apiRoutes.js";
 import { dbRouter } from "./routes/dbRoutes.js";
 import { publicRouter } from "./routes/publicRoutes.js";
@@ -37,6 +38,7 @@ app.use(bodyParser.json());
 import "./auth/passportConfig.js";
 
 app.use(morgan("dev"));
+app.get("/api/check", checkUser);
 app.use("/api/db", passport.authenticate("jwt", { session: false }), checkAdmin, dbRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), checkLoggedIn, apiRouter);
 app.use("/", publicRouter);
