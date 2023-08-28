@@ -10,7 +10,14 @@ import myAxios from "../src/myAxios.instance.js";
 import MockAdapter from "axios-mock-adapter";
 
 const mockAxios = new MockAdapter(myAxios, { onNoMatch: "throwException" });
-
+/*
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(() => console.log("Mocking setItem")),
+  clear: jest.fn(),
+};
+global.localStorage = localStorageMock; // as unknown as Storage;
+*/
 beforeAll(() => {
   mockAxios.reset();
 });
@@ -44,6 +51,8 @@ const renderTestLoginComponent = () => {
 };
 
 describe("should test the direct methods of the API", () => {
+  mockAxios.onPost("/refresh-token").reply(200);
+
   test("checks that no user is authenticated", () => {
     renderTestAuthComponent();
 
@@ -72,9 +81,33 @@ describe("should test the direct methods of the API", () => {
 });
 
 describe("should test the login and logout server methods of the API", () => {
+  let store = {};
+
+  beforeEach(() => {
+    Object.defineProperty(window, "localStorage", {
+      value: {
+        getItem: jest.fn((key) => {
+          return store[key];
+        }),
+        setItem: jest.fn((key, value) => {
+          store[key] = value;
+        }),
+        clear: jest.fn(() => {
+          store = {};
+        }),
+      },
+      writable: true,
+    });
+  });
+
   test("checks login and logout calls to server", async () => {
     const { user } = setup();
-    const responseData = { id: 2, username: "john" };
+    const responseData = {
+      id: 2,
+      username: "john",
+      accessToken: "fakeToken",
+      refreshToken: "fakeRefreshToken",
+    };
     mockAxios.onPost("/login").reply(200, responseData);
     mockAxios.onDelete("/logout").reply(200);
     mockAxios.onPost("/refresh-token").reply(200);
@@ -82,12 +115,19 @@ describe("should test the login and logout server methods of the API", () => {
 
     expect(screen.getByText(/^Not logged in/)).toBeDefined();
     expect(screen.getByRole("heading").className).toEqual("");
+    expect(window.localStorage.setItem).not.toHaveBeenCalled();
+    expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
 
     // Click test button to log in
     await user.click(screen.getByRole("button"));
     const loggedIn = await screen.findByText(/^User logged in/);
     expect(loggedIn).toBeDefined();
     expect(screen.getByRole("heading").className).toEqual(String(responseData.id));
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(3);
+    expect(window.localStorage.setItem).toHaveBeenCalledWith("userData", 2);
+    expect(window.localStorage.setItem).toHaveBeenCalledWith("accessToken", "fakeToken");
+    expect(window.localStorage.setItem).toHaveBeenCalledWith("refreshToken", "fakeRefreshToken");
+    expect(window.localStorage.getItem).toHaveBeenCalledTimes(3);
 
     // Click test button again to log out
     await user.click(screen.getByRole("button"));
@@ -97,5 +137,8 @@ describe("should test the login and logout server methods of the API", () => {
 
     expect(mockAxios.history.post.length).toBe(1);
     expect(mockAxios.history.delete.length).toBe(1);
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(3);
+    expect(window.localStorage.getItem).toHaveBeenCalledTimes(5);
+    expect(window.localStorage.clear).toHaveBeenCalledTimes(1);
   });
 });

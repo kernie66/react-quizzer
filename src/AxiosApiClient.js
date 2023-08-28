@@ -1,4 +1,3 @@
-import { redirect } from "react-router-dom";
 import myAxios from "./myAxios.instance.js";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
@@ -100,6 +99,7 @@ export default class AxiosApiClient {
   }
 
   setUserId(userId) {
+    console.log("Set user ID:", userId);
     localStorage.setItem("userData", userId);
   }
 
