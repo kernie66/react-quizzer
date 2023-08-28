@@ -1,7 +1,7 @@
 import { Game, Quiz, User } from "../../models/index.js";
 import dbCreateGame from "../db/db.createGame.js";
 import { logger } from "../logger/logger.js";
-import isEmpty from "../utils/isEmpty.js";
+import { isEmpty } from "radash";
 
 export const getGames = async (req, res) => {
   const games = await Game.findAll();

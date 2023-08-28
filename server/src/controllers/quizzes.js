@@ -2,7 +2,7 @@ import { col, fn } from "sequelize";
 import { Question } from "../../models/index.js";
 import { Quiz } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
-import isEmpty from "../utils/isEmpty.js";
+import { isEmpty } from "radash";
 import dbCreateQuiz from "../db/db.createQuiz.js";
 
 async function parseQuiz(req) {

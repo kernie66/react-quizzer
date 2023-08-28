@@ -9,12 +9,11 @@ import morgan from "morgan";
 import zxcvbn from "zxcvbn";
 import passport from "passport";
 import setPath from "./utils/setPath.js";
-import { apiRouter } from "./routes/apiRouter.js";
-import { authRouter } from "./routes/authRouter.js";
-import { dbRouter } from "./routes/dbRouter.js";
+import { apiRouter } from "./routes/apiRoutes.js";
+import { dbRouter } from "./routes/dbRoutes.js";
 import { publicRouter } from "./routes/publicRoutes.js";
-import { logout } from "./auth/logout.js";
 import { checkLoggedIn } from "./auth/checkLoggedIn.js";
+import { checkAdmin } from "./auth/checkAdmin.js";
 
 const invalidPathHandler = (req, res) => {
   res.status(404).json({ error: "Invalid path" });
@@ -38,12 +37,9 @@ app.use(bodyParser.json());
 import "./auth/passportConfig.js";
 
 app.use(morgan("dev"));
-app.use("/api/auth", authRouter);
-app.use("/api/db", dbRouter);
+app.use("/api/db", passport.authenticate("jwt", { session: false }), checkAdmin, dbRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), checkLoggedIn, apiRouter);
 app.use("/", publicRouter);
-
-app.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
 
 app.get("/sync", (req, res) => {
   dbSync(true);

@@ -1,6 +1,6 @@
+import { isEmpty } from "radash";
 import { Token } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
-import isEmpty from "../utils/isEmpty.js";
 
 export const checkLoggedIn = async (req, res, next) => {
   logger.debug("Logged in user:", req.user);

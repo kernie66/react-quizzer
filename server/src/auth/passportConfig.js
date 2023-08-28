@@ -1,7 +1,7 @@
 import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
-import { authUser, deserializeUser, serializeUser } from "./authUser.js";
+import { authUser } from "./authUser.js";
 
 passport.use(
   new LocalStrategy(
@@ -20,7 +20,6 @@ passport.use(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     },
     async (jwtPayload, done) => {
-      console.log("JWT payload:", jwtPayload);
       try {
         return done(null, jwtPayload);
       } catch (error) {
@@ -29,6 +28,3 @@ passport.use(
     },
   ),
 );
-
-passport.serializeUser(serializeUser);
-passport.deserializeUser(deserializeUser);

@@ -57,7 +57,8 @@
       "**/logs": true
     },
     "cSpell.words": [
-      "ACCESSTOKEN"
+      "ACCESSTOKEN",
+      "radash"
     ]
   }
 }
