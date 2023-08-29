@@ -2,19 +2,19 @@ import { Token } from "../../models/index.js";
 import jwt from "jsonwebtoken";
 import createAccessToken from "./createAccessToken.js";
 import { logger } from "../logger/logger.js";
+import { BadRequest, Forbidden, GeneralError } from "../utils/errorHandler.js";
 
 export default async function updateAccessToken(req, res) {
   const requestToken = req.body.refreshToken;
   logger.debug("Refresh token:", requestToken);
   if (requestToken == null) {
-    return res.status(403).send("Refresh Token is required!");
+    throw new Forbidden("Refresh Token is required!");
   }
 
   try {
     let refreshToken = await Token.findOne({ where: { token: requestToken } });
     if (!refreshToken) {
-      res.status(403).json({ error: "Invalid refresh token" });
-      return;
+      throw new BadRequest("Invalid refresh token");
     }
     try {
       const validToken = jwt.verify(requestToken, process.env.JWT_REFRESH_SECRET);
@@ -25,23 +25,16 @@ export default async function updateAccessToken(req, res) {
         accessToken: newAccessToken,
         refreshToken: refreshToken.token,
       });
-      // if (req.user.username !== validToken.username) {
-      //  res.status(401).send("Refresh token is not associated with the logged in user");
-      //  return;
-      // }
     } catch (error) {
       if (error.name === jwt.TokenExpiredError) {
         Token.destroy({ where: { id: refreshToken.id } });
-        res
-          .status(403)
-          .json({ error: "Refresh token was expired. Please make a new sign in request" });
-        return;
+        throw new Forbidden("Refresh token was expired. Please make a new sign in request");
       } else {
-        res.status(403).json(error);
+        throw new Forbidden(error);
       }
     }
   } catch (error) {
     logger.error("Error updating access token:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    throw new GeneralError("Internal server error when updating access token");
   }
 }

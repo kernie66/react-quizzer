@@ -1,6 +1,7 @@
 import { isEmpty } from "radash";
 import { Token } from "../../models/token.model.js";
 import { logger } from "../logger/logger.js";
+import { GeneralError, NotFound } from "../utils/errorHandler.js";
 
 export const logout = async (req, res, next) => {
   if (req.user) {
@@ -16,10 +17,10 @@ export const logout = async (req, res, next) => {
       }
     } catch (error) {
       logger.error("Error when destroying token:", error);
-      res.status(500).json({ error: "Cannot log out, error deleting user token..." });
+      throw new GeneralError("Cannot log out, error deleting user token...");
     }
   } else {
-    res.status(404).json({ error: "User not logged in..." });
+    throw new NotFound("User not logged in...");
   }
   next();
 };

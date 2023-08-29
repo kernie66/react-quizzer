@@ -15,9 +15,11 @@ import { dbRouter } from "./routes/dbRoutes.js";
 import { publicRouter } from "./routes/publicRoutes.js";
 import { checkLoggedIn } from "./auth/checkLoggedIn.js";
 import { checkAdmin } from "./auth/checkAdmin.js";
+import { handleErrors } from "./middleware/handleErrors.js";
+import { NotFound } from "./utils/errorHandler.js";
 
-const invalidPathHandler = (req, res) => {
-  res.status(404).json({ error: "Invalid path" });
+const invalidPathHandler = () => {
+  throw new NotFound("Invalid path");
 };
 
 export const app = express();
@@ -53,6 +55,7 @@ app.get("/password", (req, res) => {
 });
 
 app.use(invalidPathHandler);
+app.use(handleErrors);
 
 const dbStatus = dbSync(true);
 

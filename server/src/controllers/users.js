@@ -4,6 +4,7 @@ import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import bcrypt from "bcrypt";
 import { isEmpty } from "radash";
+import { GeneralError, NotFound } from "../utils/errorHandler.js";
 
 /* ==========================================================
 This function looks for one or more matching users. The users
@@ -75,8 +76,8 @@ export const getUsers = async (req, res) => {
   if (!isEmpty(users)) {
     res.status(200).json(users);
   } else {
-    res.status(404).json({ error: "No matching users found." });
     logger.warn("No users found.");
+    throw new NotFound("No matching users found.");
   }
 };
 
@@ -93,10 +94,10 @@ export const createUser = async (req, res) => {
     if (status) {
       res.status(201).json({ success: `User created for ${userData.name}` });
     } else {
-      res.status(400).json({ error: "Error creating user" });
+      throw new GeneralError("Error creating user");
     }
   } catch (error) {
-    res.status(500).json(error);
+    throw new GeneralError(error);
   }
 };
 
@@ -124,12 +125,12 @@ export const updateUser = async (req, res) => {
       logger.debug(`User ${user.username} has been updated`);
       res.status(200).json(updatedUser);
     } catch (error) {
-      res.status(500).json(error);
       logger.error("Update error:", error);
+      throw new GeneralError(error);
     }
   } else {
-    res.status(404).json({ error: "No matching user found." });
     logger.warn("No user found.");
+    throw new NotFound("No matching user found.");
   }
 };
 
@@ -155,11 +156,11 @@ export const deleteUser = async (req, res) => {
       await user.destroy();
       res.status(200).json({ success: `User ${user.username} deleted.` });
     } else {
-      res.status(404).json({ error: "No matching user found." });
       logger.warn("No user found to delete.");
+      throw new NotFound("No matching user found.");
     }
   } catch (error) {
-    res.status(500).json({ error: "Couldn't delete user" });
+    throw new GeneralError("Couldn't delete user");
   }
 };
 
@@ -169,6 +170,6 @@ export const checkUser = async (req, res) => {
   if (!isEmpty(users)) {
     res.status(200).json({ success: "User exists" });
   } else {
-    res.status(404).json({ error: "No matching users found." });
+    throw new NotFound("No matching user found.");
   }
 };

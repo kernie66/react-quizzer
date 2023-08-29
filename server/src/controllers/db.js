@@ -1,5 +1,6 @@
 import { db } from "../db/db.config.js";
 import { logger } from "../logger/logger.js";
+import { GeneralError } from "../utils/errorHandler.js";
 
 export const syncDb = async (req, res) => {
   let option = {};
@@ -16,6 +17,6 @@ export const syncDb = async (req, res) => {
     res.status(200).json({ success: `Successfully synced database (option: ${req.body.options})` });
   } catch (error) {
     logger.error("Error syncing database:", error);
-    res.status(500).json(error);
+    throw new GeneralError(error);
   }
 };
