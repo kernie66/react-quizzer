@@ -18,10 +18,29 @@ const loginData = { username: "john", password: "VerySimplePassword" };
 const loginEmail = "john@doe.com";
 const loginUrl = "/login";
 const logoutUrl = "/logout";
-const checkUrl = "/auth/check";
+const checkUrl = "/check";
+
+let store = {};
 
 beforeAll(() => {
   mockAxios.reset();
+});
+
+beforeEach(() => {
+  Object.defineProperty(window, "localStorage", {
+    value: {
+      getItem: jest.fn((key) => {
+        return store[key];
+      }),
+      setItem: jest.fn((key, value) => {
+        store[key] = value;
+      }),
+      clear: jest.fn(() => {
+        store = {};
+      }),
+    },
+    writable: true,
+  });
 });
 
 // afterEach(cleanup);
@@ -73,7 +92,12 @@ describe("<LoginPage />", () => {
     const user = setup();
     const userId = 2;
     const userUrl = `/users/${userId}`;
-    const loginResponseData = { id: userId, username: "john" };
+    const loginResponseData = {
+      id: userId,
+      username: "john",
+      accessToken: "fakeToken",
+      refreshToken: "fakeRefreshToken",
+    };
     const userResponseData = [
       { id: userId, username: "john", name: "John Doe", email: "john@doe.com" },
     ];
@@ -96,10 +120,12 @@ describe("<LoginPage />", () => {
     expect(mockAxios.history.post[0].url).toEqual(loginUrl);
     expect(mockAxios.history.post[0].data).toBe(JSON.stringify(loginData));
     expect(mockAxios.history.get[1].url).toEqual(userUrl);
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(3);
 
     // Logout user
     await user.click(screen.getByRole("button", { name: /logout/i }));
     expect(mockAxios.history.delete.length).toBe(1);
+    expect(window.localStorage.clear).toHaveBeenCalledTimes(1);
   });
 
   it("checks for errors when username is missing", async () => {
@@ -111,6 +137,7 @@ describe("<LoginPage />", () => {
     await user.type(passwordInput, loginData.password);
     await user.click(screen.getByRole("button", { name: "login" }));
     expect(screen.getByText(/^username-or-email-is-missing/)).toBeDefined();
+    expect(window.localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it("checks for errors when password is missing", async () => {
@@ -123,6 +150,7 @@ describe("<LoginPage />", () => {
     await user.type(usernameInput, loginData.username);
     await user.click(screen.getByRole("button", { name: "login" }));
     expect(screen.getByText(/^password-is-missing/)).toBeDefined();
+    expect(window.localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it("checks for errors when username is wrong", async () => {
@@ -137,6 +165,7 @@ describe("<LoginPage />", () => {
     await user.type(passwordInput, loginData.password);
     await user.click(screen.getByRole("button", { name: "login" }));
     expect(screen.getByText(/^user-not-found/)).toBeDefined();
+    expect(window.localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it("checks for errors when email as username is wrong", async () => {
@@ -151,12 +180,14 @@ describe("<LoginPage />", () => {
     await user.type(passwordInput, loginData.password);
     await user.click(screen.getByRole("button", { name: "login" }));
     expect(screen.getByText(/^user-not-found/)).toBeDefined();
+    expect(window.localStorage.setItem).not.toHaveBeenCalled();
   });
 
   it("checks for errors when password is wrong", async () => {
     const user = setup();
     mockAxios.onGet(checkUrl).reply(200);
     mockAxios.onPost(loginUrl).reply(401);
+    mockAxios.onPost("/refresh-token").reply(200);
 
     renderLoginPage();
     const usernameInput = screen.getByRole("textbox", { name: /^username/ });
@@ -166,6 +197,7 @@ describe("<LoginPage />", () => {
     await user.type(passwordInput, "WrongPassword");
     await user.click(screen.getByRole("button", { name: "login" }));
     expect(screen.getByText(/^invalid-password/)).toBeDefined();
+    expect(window.localStorage.setItem).not.toHaveBeenCalled();
   });
 });
 

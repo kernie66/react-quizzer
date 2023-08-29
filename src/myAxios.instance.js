@@ -41,19 +41,21 @@ myAxios.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await myAxios.post(
-          "/refresh-token",
-          { refreshToken },
-          { baseURL: BASE_API_URL },
-        );
+        if (refreshToken) {
+          const response = await myAxios.post(
+            "/refresh-token",
+            { refreshToken },
+            { baseURL: BASE_API_URL },
+          );
 
-        const tokens = response.data;
-        localStorage.setItem("accessToken", tokens.accessToken);
-        console.log("Access token refreshed");
+          const tokens = response.data;
+          localStorage.setItem("accessToken", tokens.accessToken);
+          console.log("Access token refreshed");
 
-        // Retry the original request with the new token
-        originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
-        return axios(originalRequest);
+          // Retry the original request with the new token
+          originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
+          return axios(originalRequest);
+        }
       } catch (error) {
         console.error("Token refresh error:", error);
         // Handle refresh token error or redirect to login
