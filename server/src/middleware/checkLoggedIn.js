@@ -1,7 +1,6 @@
 import { isEmpty } from "radash";
 import { Token } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
-import { Unauthorized } from "../utils/errorHandler.js";
 
 export const checkLoggedIn = async (req, res, next) => {
   logger.debug("Logged in user:", req.user);
@@ -13,8 +12,10 @@ export const checkLoggedIn = async (req, res, next) => {
       }
     } catch (error) {
       logger.error("Error checking database for token:", error);
+      return next(error);
     }
   }
   logger.debug("No user logged in");
-  throw new Unauthorized("User not logged in...");
+  // Note: Do not throw error in middleware...
+  res.status(401).json({ message: "User not logged in..." });
 };

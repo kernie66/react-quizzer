@@ -13,8 +13,8 @@ import { checkUser } from "./controllers/users.js";
 import { apiRouter } from "./routes/apiRoutes.js";
 import { dbRouter } from "./routes/dbRoutes.js";
 import { publicRouter } from "./routes/publicRoutes.js";
-import { checkLoggedIn } from "./auth/checkLoggedIn.js";
-import { checkAdmin } from "./auth/checkAdmin.js";
+import { checkLoggedIn } from "./middleware/checkLoggedIn.js";
+import { checkAdmin } from "./middleware/checkAdmin.js";
 import { handleErrors } from "./middleware/handleErrors.js";
 import { NotFound } from "./utils/errorHandler.js";
 

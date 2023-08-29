@@ -115,5 +115,5 @@ describe("User API", () => {
   it("should not allow access to show users", async () => {
     const res = await request(app).get("/api/users").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(401);
-  });
+  }, 1000);
 });
