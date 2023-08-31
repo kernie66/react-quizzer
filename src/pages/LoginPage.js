@@ -9,6 +9,7 @@ import { useApi } from "../contexts/ApiProvider.js";
 import { Trans, useTranslation } from "react-i18next";
 import isValidEmail from "../helpers/isValidEmail.js";
 import { trim } from "radash";
+import { useErrorBoundary } from "react-error-boundary";
 
 export default function LoginPage() {
   const [formErrors, setFormErrors] = useState({});
@@ -21,54 +22,59 @@ export default function LoginPage() {
   const flash = useFlash();
   const navigate = useNavigate();
   const location = useLocation();
+  const { showBoundary } = useErrorBoundary();
 
   const onOpened = () => {
     usernameField.current.focus();
   };
 
   const onSubmit = async (ev) => {
-    ev.preventDefault();
-    const username = trim(usernameField.current.value.toLowerCase());
-    const password = passwordField.current.value;
+    try {
+      ev.preventDefault();
+      const username = trim(usernameField.current.value.toLowerCase());
+      const password = passwordField.current.value;
 
-    const errors = {};
-    let userCheck = {};
-    if (!username) {
-      errors.username = t("username-or-email-is-missing");
-    } else {
-      if (isValidEmail(username)) {
-        userCheck.email = username;
+      const errors = {};
+      let userCheck = {};
+      if (!username) {
+        errors.username = t("username-or-email-is-missing");
       } else {
-        userCheck.username = username;
-      }
-      const existingUser = await api.get("/check", userCheck);
-      if (existingUser.status !== 200) {
-        errors.username = t("user-not-found");
-      }
-    }
-    if (!password) {
-      errors.password = t("password-is-missing");
-    }
-    if (Object.keys(errors).length === 0) {
-      flash(t("logging-in-username", { username }), "info", 2);
-      const result = await login(username, password);
-      console.log("Login result:", result);
-      if (!result.ok) {
-        if (result.status === 401) {
-          errors.password = t("invalid-password");
+        if (isValidEmail(username)) {
+          userCheck.email = username;
         } else {
-          flash(t("server-error-when-logging-in"), "danger");
+          userCheck.username = username;
         }
-      } else {
-        setModal(false);
-        let next = "/";
-        if (location.state && location.state.next) {
-          next = location.state.next;
+        const existingUser = await api.get("/check", userCheck);
+        if (existingUser.status !== 200) {
+          errors.username = t("user-not-found");
         }
-        navigate(next);
       }
+      if (!password) {
+        errors.password = t("password-is-missing");
+      }
+      if (Object.keys(errors).length === 0) {
+        flash(t("logging-in-username", { username }), "info", 2);
+        const result = await login(username, password);
+        console.log("Login result:", result);
+        if (!result.ok) {
+          if (result.status === 401) {
+            errors.password = t("invalid-password");
+          } else {
+            flash(t("server-error-when-logging-in"), "danger");
+          }
+        } else {
+          setModal(false);
+          let next = "/";
+          if (location.state && location.state.next) {
+            next = location.state.next;
+          }
+          navigate(next);
+        }
+      }
+      setFormErrors(errors);
+    } catch (error) {
+      showBoundary(error);
     }
-    setFormErrors(errors);
   };
 
   return (

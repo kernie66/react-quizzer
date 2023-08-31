@@ -9,6 +9,7 @@ import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
+import { useErrorBoundary } from "react-error-boundary";
 
 export default function UserPage() {
   const { username } = useParams();
@@ -19,33 +20,39 @@ export default function UserPage() {
   const flash = useFlash();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
+  const { showBoundary } = useErrorBoundary();
 
   const imgStyle = {
     maxWidth: "100%",
     maxHeight: "auto",
   };
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
     (async () => {
-      const response = await api.get("/users?username=" + username);
-      if (response.ok) {
-        setUser(response.data[0]);
-        if (response.data[0].username !== loggedInUser.username) {
-          /* const follower = await api.get('/me/following/' + response.body.id);
-          if (follower.status === 204) {
-            setIsFollower(true);
+      try {
+        const response = await api.get("/users?username=" + username);
+        if (response.ok) {
+          setUser(response.data[0]);
+          if (response.data[0].username !== loggedInUser.username) {
+            /* const follower = await api.get('/me/following/' + response.body.id);
+            if (follower.status === 204) {
+              setIsFollower(true);
+            }
+            else if (follower.status === 404) {
+              setIsFollower(false);
+            }*/
+          } else {
+            setIsFollower(null);
           }
-          else if (follower.status === 404) {
-            setIsFollower(false);
-          }*/
         } else {
-          setIsFollower(null);
+          setUser(null);
         }
-      } else {
-        setUser(null);
+      } catch (error) {
+        showBoundary(error);
       }
     })();
   }, [username, api, loggedInUser]);

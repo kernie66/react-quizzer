@@ -10,6 +10,7 @@ import SetUsername from "../components/SetUsername.js";
 import SetEmailAddress from "../components/SetEmailAddress.js";
 import { sift } from "radash";
 import SetPassword from "../components/SetPassword.js";
+import { useErrorBoundary } from "react-error-boundary";
 
 export default function RegistrationPage() {
   const [modal, setModal] = useState(true);
@@ -29,6 +30,7 @@ export default function RegistrationPage() {
   const api = useApi();
   const flash = useFlash();
   const { t } = useTranslation();
+  const { showBoundary } = useErrorBoundary;
 
   const onOpened = () => {
     usernameField.current.focus();
@@ -37,40 +39,44 @@ export default function RegistrationPage() {
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    const currentErrors = [usernameError, emailAddressError, passwordError, password2Error];
-    console.log("Sift:", sift(currentErrors), currentErrors);
-    let errors = sift(currentErrors).length !== 0;
-    console.log("Errors:", errors);
-    if (!usernameValue) {
-      setUsernameError(t("please-select-a-username"));
-      errors = true;
-    }
-    if (!emailAddressValue) {
-      setEmailAddressError(t("please-enter-a-valid-email-address"));
-      errors = true;
-    }
-    if (!passwordValue) {
-      setPasswordError(t("please-select-a-password"));
-    }
-    if (!password2Value) {
-      setPassword2Error(t("please-repeat-the-password"));
-    }
+    try {
+      const currentErrors = [usernameError, emailAddressError, passwordError, password2Error];
+      console.log("Sift:", sift(currentErrors), currentErrors);
+      let errors = sift(currentErrors).length !== 0;
+      console.log("Errors:", errors);
+      if (!usernameValue) {
+        setUsernameError(t("please-select-a-username"));
+        errors = true;
+      }
+      if (!emailAddressValue) {
+        setEmailAddressError(t("please-enter-a-valid-email-address"));
+        errors = true;
+      }
+      if (!passwordValue) {
+        setPasswordError(t("please-select-a-password"));
+      }
+      if (!password2Value) {
+        setPassword2Error(t("please-repeat-the-password"));
+      }
 
-    if (errors) {
-      return;
-    }
+      if (errors) {
+        return;
+      }
 
-    const name = getNameFromEmail(emailAddressValue);
-    const data = await api.register({
-      username: usernameValue,
-      name: name,
-      email: emailAddressValue,
-      password: passwordValue,
-    });
-    if (data.ok) {
-      setModal(false);
-      flash(t("you-have-successfully-registered"), "success");
-      navigate("/login");
+      const name = getNameFromEmail(emailAddressValue);
+      const data = await api.register({
+        username: usernameValue,
+        name: name,
+        email: emailAddressValue,
+        password: passwordValue,
+      });
+      if (data.ok) {
+        setModal(false);
+        flash(t("you-have-successfully-registered"), "success");
+        navigate("/login");
+      }
+    } catch (error) {
+      showBoundary(error);
     }
   };
 

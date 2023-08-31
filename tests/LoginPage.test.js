@@ -12,6 +12,7 @@ import userEvent from "@testing-library/user-event";
 import myAxios from "../src/myAxios.instance.js";
 import MockAdapter from "axios-mock-adapter";
 import TestLogoutComponent from "./components/LoginPage.test/TestLogoutComponent.js";
+import { ErrorBoundary } from "react-error-boundary";
 
 const mockAxios = new MockAdapter(myAxios, { onNoMatch: "throwException" });
 const loginData = { username: "john", password: "VerySimplePassword" };
@@ -51,16 +52,18 @@ function setup() {
 
 const renderLoginPage = () => {
   render(
-    <BrowserRouter>
-      <FlashProvider>
-        <ApiProvider>
-          <UserProvider>
-            <TestLogoutComponent />
-            <LoginPage />
-          </UserProvider>
-        </ApiProvider>
-      </FlashProvider>
-    </BrowserRouter>,
+    <ErrorBoundary>
+      <BrowserRouter>
+        <FlashProvider>
+          <ApiProvider>
+            <UserProvider>
+              <TestLogoutComponent />
+              <LoginPage />
+            </UserProvider>
+          </ApiProvider>
+        </FlashProvider>
+      </BrowserRouter>
+    </ErrorBoundary>,
   );
 };
 
