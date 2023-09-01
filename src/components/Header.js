@@ -68,7 +68,7 @@ export default function Header() {
                   <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
                 </DropdownToggle>
                 <DropdownMenu className="bg-primary" style={{ right: 0 }}>
-                  <DropdownItem tag={NavLink} to={"/user/" + user.username}>
+                  <DropdownItem tag={NavLink} to={"/user/" + user.id}>
                     {t("profile")}
                   </DropdownItem>
                   {user.isAdmin && (

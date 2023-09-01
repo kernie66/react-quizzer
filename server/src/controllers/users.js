@@ -17,67 +17,81 @@ can be given in the following ways:
 ===========================================================*/
 async function parseUser(req) {
   let users;
-  // Use findAll for all to ensure that the result is an array
-  if (req.params.id || req.query.id) {
-    const userId = parseInt(req.params.id ? req.params.id : req.query.id);
-    users = await User.findAll({
-      where: {
-        id: userId,
-      },
-      attributes: {
-        exclude: ["hashedPassword"],
-      },
-    });
-  } else if (req.query.username) {
-    const username = req.query.username;
-    users = await User.findAll({
-      where: {
-        username: username,
-      },
-      attributes: {
-        exclude: ["hashedPassword"],
-      },
-    });
-  } else if (req.query.name) {
-    const name = req.query.name;
-    users = await User.findAll({
-      where: {
-        name: name,
-      },
-      attributes: {
-        exclude: ["hashedPassword"],
-      },
-    });
-  } else if (req.query.email) {
-    const email = req.query.email;
-    users = await User.findAll({
-      where: {
-        email: email,
-      },
-      attributes: {
-        exclude: ["hashedPassword"],
-      },
-    });
-  } else if (!isEmpty(req.query)) {
-    logger.warn("Unknown query:", req.query);
-  } else {
-    users = await User.findAll({
-      attributes: {
-        exclude: ["hashedPassword"],
-      },
-    });
+
+  try {
+    // Use findAll for all to ensure that the result is an array
+    if (req.params.id || req.query.id) {
+      const userId = parseInt(req.params.id ? req.params.id : req.query.id);
+      if (isNaN(userId)) {
+        users = null;
+      } else {
+        users = await User.findAll({
+          where: {
+            id: userId,
+          },
+          attributes: {
+            exclude: ["hashedPassword"],
+          },
+        });
+      }
+    } else if (req.query.username) {
+      const username = req.query.username;
+      users = await User.findAll({
+        where: {
+          username: username,
+        },
+        attributes: {
+          exclude: ["hashedPassword"],
+        },
+      });
+    } else if (req.query.name) {
+      const name = req.query.name;
+      users = await User.findAll({
+        where: {
+          name: name,
+        },
+        attributes: {
+          exclude: ["hashedPassword"],
+        },
+      });
+    } else if (req.query.email) {
+      const email = req.query.email;
+      users = await User.findAll({
+        where: {
+          email: email,
+        },
+        attributes: {
+          exclude: ["hashedPassword"],
+        },
+      });
+    } else if (!isEmpty(req.query)) {
+      logger.warn("Unknown query:", req.query);
+    } else {
+      users = await User.findAll({
+        attributes: {
+          exclude: ["hashedPassword"],
+        },
+      });
+    }
+    return users;
+  } catch (error) {
+    logger.error("Database query failed:", error);
+    Promise.reject(new Error("Query failed"));
   }
-  return users;
 }
 
-export const getUsers = async (req, res) => {
-  const users = await parseUser(req);
-  logger.debug("Number of users found:", isEmpty(users) ? "None" : users.length);
-  if (!isEmpty(users)) {
-    res.status(200).json(users);
-  } else {
-    logger.warn("No users found.");
-    throw new NotFound("No matching users found.");
+export const getUsers = async (req, res, next) => {
+  try {
+    const users = await parseUser(req);
+    logger.debug("Number of users found:", isEmpty(users) ? "None" : users.length);
+    if (!isEmpty(users)) {
+      res.status(200).json(users);
+    } else {
+      logger.warn("No users found.");
+      throw new NotFound("No matching users found.");
+    }
+  } catch (error) {
+    next(error);
   }
 };
 

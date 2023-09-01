@@ -8,7 +8,8 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
-        "plugin:jest/recommended"
+        "plugin:jest/recommended",
+        "plugin:@tanstack/eslint-plugin-query/recommended"
     ],
     "overrides": [
     ],
@@ -17,7 +18,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "@tanstack/query"
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",

@@ -11,6 +11,7 @@ import reportWebVitals from "./reportWebVitals";
 if (typeof window !== "undefined") {
   console.log("Runs when the app starts");
 }
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

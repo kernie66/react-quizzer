@@ -9,28 +9,65 @@ import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
-import { useErrorBoundary } from "react-error-boundary";
+// import { useErrorBoundary } from "react-error-boundary";
+import { useQuery } from "@tanstack/react-query";
 
 export default function UserPage() {
-  const { username } = useParams();
-  const [user, setUser] = useState();
+  const { userid } = useParams();
+  // const [user, setUser] = useState();
   const [isFollower, setIsFollower] = useState();
   const [modal, setModal] = useState(false);
   const api = useApi();
   const flash = useFlash();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
-  const { showBoundary } = useErrorBoundary();
+  //  const { showBoundary } = useErrorBoundary();
 
   const imgStyle = {
     maxWidth: "100%",
     maxHeight: "auto",
   };
 
+  const { isLoading: isLoadingUser, data: user } = useQuery(
+    ["user", userid],
+    async () => {
+      const response = await api.get("/users?id=" + userid);
+      if (response.ok) {
+        if (response.data[0].id !== loggedInUser.id) {
+          /* const follower = await api.get('/me/following/' + response.body.id);
+          if (follower.status === 204) {
+            setIsFollower(true);
+          }
+          else if (follower.status === 404) {
+            setIsFollower(false);
+          }*/
+        } else {
+          setIsFollower(null);
+        }
+        return response.data[0];
+      } else {
+        // setUser(null);
+        throw new Error("User not found");
+      }
+    },
+    {
+      enabled: true,
+    },
+  );
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
+  /*
+  useEffect(() => {
+    try {
+      getUser();
+    } catch (error) {
+      showBoundary(error);
+    }
+  }, []);
+  /*
   useEffect(() => {
     (async () => {
       try {
@@ -44,7 +81,7 @@ export default function UserPage() {
             }
             else if (follower.status === 404) {
               setIsFollower(false);
-            }*/
+            }
           } else {
             setIsFollower(null);
           }
@@ -56,7 +93,7 @@ export default function UserPage() {
       }
     })();
   }, [username, api, loggedInUser]);
-
+*/
   const editUser = () => {
     setModal(true);
   };
@@ -94,7 +131,7 @@ export default function UserPage() {
   };
   return (
     <Body sidebar>
-      {user === undefined ? (
+      {isLoadingUser ? (
         <Spinner animation="border" />
       ) : (
         <>

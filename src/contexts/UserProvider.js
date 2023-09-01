@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useApi } from "./ApiProvider";
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 
 export default function UserProvider({ children }) {
   const [user, setUser] = useState();
   const api = useApi();
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -46,6 +48,7 @@ export default function UserProvider({ children }) {
   const logout = useCallback(async () => {
     await api.logout();
     setUser(null);
+    navigate("/login");
   }, [api]);
 
   return (
