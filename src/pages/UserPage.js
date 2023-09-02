@@ -46,7 +46,6 @@ export default function UserPage() {
   const { isLoading: isLoadingUser, data: user } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUser(id),
-    enabled: true,
   });
 
   useEffect(() => {

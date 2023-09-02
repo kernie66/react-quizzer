@@ -53,6 +53,7 @@ export default function LoginPage() {
         errors.password = t("password-is-missing");
       }
       if (Object.keys(errors).length === 0) {
+        setModal(false);
         flash(t("logging-in-username", { username }), "info", 2);
         const result = await login(username, password);
         console.log("Login result:", result);
@@ -62,8 +63,8 @@ export default function LoginPage() {
           } else {
             flash(t("server-error-when-logging-in"), "danger");
           }
+          setModal(true);
         } else {
-          setModal(false);
           let next = "/";
           if (location.state && location.state.next) {
             next = location.state.next;
