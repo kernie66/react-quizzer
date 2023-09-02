@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function UserPage() {
   const { id } = useParams();
   // const [user, setUser] = useState();
-  const [isFollower, setIsFollower] = useState();
+  const [editable, setEditable] = useState(false);
   const [modal, setModal] = useState(false);
   const api = useApi();
   const flash = useFlash();
@@ -31,16 +31,10 @@ export default function UserPage() {
   const getUser = async (id) => {
     const response = await api.get("/users/" + id);
     if (response.ok) {
-      if (response.data[0].id !== loggedInUser.id) {
-        /* const follower = await api.get('/me/following/' + response.body.id);
-        if (follower.status === 204) {
-          setIsFollower(true);
-        }
-        else if (follower.status === 404) {
-          setIsFollower(false);
-        }*/
+      if (response.data[0].id === loggedInUser.id) {
+        setEditable(true);
       } else {
-        setIsFollower(null);
+        setEditable(false);
       }
       return response.data[0];
     } else {
@@ -112,7 +106,7 @@ export default function UserPage() {
         "success",
         5,
       );
-      setIsFollower(true);
+      //setIsFollower(true);
     }
   };
 
@@ -126,16 +120,21 @@ export default function UserPage() {
         "success",
         5,
       );
-      setIsFollower(false);
+      //setIsFollower(false);
     }
   };
   return (
     <Body sidebar>
       {isLoadingUser ? (
-        <Spinner animation="border" />
+        <>
+          <div className="text-secondary">
+            Looking for user
+            <Spinner animation="border" />
+          </div>
+        </>
       ) : (
         <>
-          {user === null ? (
+          {!user ? (
             <p>{t("user-not-found")}</p>
           ) : (
             <>
@@ -160,17 +159,17 @@ export default function UserPage() {
                         {t("last-login")} <TimeAgo isoDate={user.lastSeen} />
                       </li>
                     </ul>
-                    {isFollower === null && (
+                    {editable === null && (
                       <Button color="primary" onClick={editUser} className="mb-2">
                         Edit
                       </Button>
                     )}
-                    {isFollower === true && (
+                    {editable === true && (
                       <Button color="primary" onClick={unfollow} className="mb-2">
                         Unfollow
                       </Button>
                     )}
-                    {isFollower === false && (
+                    {editable === false && (
                       <Button color="primary" onClick={follow} className="mb-2">
                         Follow
                       </Button>
