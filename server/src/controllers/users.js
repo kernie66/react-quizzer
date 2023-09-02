@@ -95,12 +95,12 @@ export const getUsers = async (req, res, next) => {
   }
 };
 
-export const createUser = async (req, res) => {
-  const userData = req.body;
-  logger.debug("User", userData.name, userData.email, req.body);
-  const hashCost = 10;
-
+export const createUser = async (req, res, next) => {
   try {
+    const userData = req.body;
+    logger.debug("User", userData.name, userData.email, req.body);
+    const hashCost = 10;
+
     const hashedPassword = await bcrypt.hash(userData.password, hashCost);
     userData.hashedPassword = hashedPassword;
 
@@ -111,14 +111,14 @@ export const createUser = async (req, res) => {
       throw new GeneralError("Error creating user");
     }
   } catch (error) {
-    throw new GeneralError(error);
+    next(error);
   }
 };
 
-export const updateUser = async (req, res) => {
-  const userData = await parseUser(req);
-  if (!isEmpty(userData)) {
-    try {
+export const updateUser = async (req, res, next) => {
+  try {
+    const userData = await parseUser(req);
+    if (!isEmpty(userData)) {
       const user = userData[0];
       if (req.body.name) {
         user.name = req.body.name;
@@ -138,33 +138,32 @@ export const updateUser = async (req, res) => {
       }
       logger.debug(`User ${user.username} has been updated`);
       res.status(200).json(updatedUser);
-    } catch (error) {
-      logger.error("Update error:", error);
-      throw new GeneralError(error);
+    } else {
+      logger.warn("No user found.");
+      throw new NotFound("No matching user found.");
     }
-  } else {
-    logger.warn("No user found.");
-    throw new NotFound("No matching user found.");
+  } catch (error) {
+    next(error);
   }
 };
 
-export const deleteUser = async (req, res) => {
-  const id = parseInt(req.params.id);
+export const deleteUser = async (req, res, next) => {
   try {
-    const tokens = await Token.findAll({ where: { userId: id } });
-    if (!isEmpty(tokens)) {
-      tokens.map((token) => token.destroy());
-      logger.debug("Tokens destroyed:", tokens.length);
-    } else {
-      logger.warn("No token found to delete");
+    const id = parseInt(req.params.id);
+    try {
+      const tokens = await Token.findAll({ where: { userId: id } });
+      if (!isEmpty(tokens)) {
+        tokens.map((token) => token.destroy());
+        logger.debug("Tokens destroyed:", tokens.length);
+      } else {
+        logger.warn("No token found to delete");
+      }
+    } catch (error) {
+      logger.error("Error when destroying token:", error);
     }
-  } catch (error) {
-    logger.error("Error when destroying token:", error);
-  }
-  if (req.user.id === id) {
-    logger.warn("This is the current logged in used, will be logged out");
-  }
-  try {
+    if (req.user.id === id) {
+      logger.warn("This is the current logged in used, will be logged out");
+    }
     const user = await User.findByPk(id);
     if (!isEmpty(user)) {
       await user.destroy();
@@ -174,16 +173,20 @@ export const deleteUser = async (req, res) => {
       throw new NotFound("No matching user found.");
     }
   } catch (error) {
-    throw new GeneralError("Couldn't delete user");
+    next(error);
   }
 };
 
-export const checkUser = async (req, res) => {
-  const users = await parseUser(req);
-  logger.debug("Number of users found:", isEmpty(users) ? "None" : users.length);
-  if (!isEmpty(users)) {
-    res.status(200).json({ success: "User exists" });
-  } else {
-    throw new NotFound("No matching user found.");
+export const checkUser = async (req, res, next) => {
+  try {
+    const users = await parseUser(req);
+    logger.debug("Number of users found:", isEmpty(users) ? "None" : users.length);
+    if (!isEmpty(users)) {
+      res.status(200).json({ success: "User exists" });
+    } else {
+      throw new NotFound("No matching user found.");
+    }
+  } catch (error) {
+    next(error);
   }
 };
