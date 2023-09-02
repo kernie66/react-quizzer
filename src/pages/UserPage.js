@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
 export default function UserPage() {
-  const { userid } = useParams();
+  const { id } = useParams();
   // const [user, setUser] = useState();
   const [isFollower, setIsFollower] = useState();
   const [modal, setModal] = useState(false);
@@ -28,32 +28,32 @@ export default function UserPage() {
     maxHeight: "auto",
   };
 
-  const { isLoading: isLoadingUser, data: user } = useQuery(
-    ["user", userid],
-    async () => {
-      const response = await api.get("/users?id=" + userid);
-      if (response.ok) {
-        if (response.data[0].id !== loggedInUser.id) {
-          /* const follower = await api.get('/me/following/' + response.body.id);
-          if (follower.status === 204) {
-            setIsFollower(true);
-          }
-          else if (follower.status === 404) {
-            setIsFollower(false);
-          }*/
-        } else {
-          setIsFollower(null);
+  const getUser = async (id) => {
+    const response = await api.get("/users/" + id);
+    if (response.ok) {
+      if (response.data[0].id !== loggedInUser.id) {
+        /* const follower = await api.get('/me/following/' + response.body.id);
+        if (follower.status === 204) {
+          setIsFollower(true);
         }
-        return response.data[0];
+        else if (follower.status === 404) {
+          setIsFollower(false);
+        }*/
       } else {
-        // setUser(null);
-        throw new Error("User not found");
+        setIsFollower(null);
       }
-    },
-    {
-      enabled: true,
-    },
-  );
+      return response.data[0];
+    } else {
+      // setUser(null);
+      throw new Error("User not found");
+    }
+  };
+
+  const { isLoading: isLoadingUser, data: user } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUser(id),
+    enabled: true,
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });

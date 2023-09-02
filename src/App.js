@@ -94,7 +94,7 @@ export default function App() {
                             <Routes>
                               <Route path="/" element={<QuizPage />} />
                               <Route path="/explore" element={<ExplorePage />} />
-                              <Route path="/user/:userid" element={<UserPage />} />
+                              <Route path="/user/:id" element={<UserPage />} />
                               <Route path="/password" element={<ChangePasswordPage />} />
                               <Route path="*" element={<Navigate to="/" />} />
                             </Routes>
