@@ -3,22 +3,24 @@ import { useParams } from "react-router-dom";
 import { Button, Col, Container, Media, Row, Spinner } from "reactstrap";
 import Body from "../components/Body";
 import EditUser from "../components/EditUser";
-import Posts from "../components/Posts";
 import TimeAgo from "../components/TimeAgo";
 import { useApi } from "../contexts/ApiProvider";
-import { useFlash } from "../contexts/FlashProvider";
+// import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
 // import { useErrorBoundary } from "react-error-boundary";
 import { useQuery } from "@tanstack/react-query";
+import ChangeAvatar from "../components/ChangeAvatar.js";
+import Quizzers from "../components/Quizzers.js";
 
 export default function UserPage() {
   const { id } = useParams();
   // const [user, setUser] = useState();
-  const [editable, setEditable] = useState(false);
-  const [modal, setModal] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [avatarModal, setAvatarModal] = useState(false);
   const api = useApi();
-  const flash = useFlash();
+  // const flash = useFlash();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
   //  const { showBoundary } = useErrorBoundary();
@@ -31,10 +33,10 @@ export default function UserPage() {
   const getUser = async (id) => {
     const response = await api.get("/users/" + id);
     if (response.ok) {
-      if (response.data[0].id === loggedInUser.id) {
-        setEditable(true);
+      if (response.data[0].id === loggedInUser.id || loggedInUser.isAdmin) {
+        setLoggedIn(true);
       } else {
-        setEditable(false);
+        setLoggedIn(false);
       }
       return response.data[0];
     } else {
@@ -52,49 +54,22 @@ export default function UserPage() {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
-  /*
-  useEffect(() => {
-    try {
-      getUser();
-    } catch (error) {
-      showBoundary(error);
-    }
-  }, []);
-  /*
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await api.get("/users?username=" + username);
-        if (response.ok) {
-          setUser(response.data[0]);
-          if (response.data[0].username !== loggedInUser.username) {
-            /* const follower = await api.get('/me/following/' + response.body.id);
-            if (follower.status === 204) {
-              setIsFollower(true);
-            }
-            else if (follower.status === 404) {
-              setIsFollower(false);
-            }
-          } else {
-            setIsFollower(null);
-          }
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        showBoundary(error);
-      }
-    })();
-  }, [username, api, loggedInUser]);
-*/
   const editUser = () => {
-    setModal(true);
+    setEditModal(true);
+    setAvatarModal(false);
+  };
+
+  const changeAvatar = () => {
+    setEditModal(false);
+    setAvatarModal(true);
   };
 
   const closeModal = () => {
-    setModal(false);
+    setEditModal(false);
+    setAvatarModal(false);
   };
 
+  /*
   const follow = async () => {
     const response = await api.post("/me/following/" + user.id);
     if (response.ok) {
@@ -105,29 +80,16 @@ export default function UserPage() {
         "success",
         5,
       );
-      //setIsFollower(true);
     }
   };
+  */
 
-  const unfollow = async () => {
-    const response = await api.delete("/me/following/" + user.id);
-    if (response.ok) {
-      flash(
-        <>
-          You have unfollowed <b>{user.username}</b>.
-        </>,
-        "success",
-        5,
-      );
-      //setIsFollower(false);
-    }
-  };
   return (
     <Body sidebar>
       {isLoadingUser ? (
         <>
           <div className="text-secondary">
-            Looking for user
+            {t("looking-for-user")}
             <Spinner animation="border" />
           </div>
         </>
@@ -137,7 +99,8 @@ export default function UserPage() {
             <p>{t("user-not-found")}</p>
           ) : (
             <>
-              <EditUser modal={modal} closeModal={closeModal} />
+              <EditUser modal={editModal} closeModal={closeModal} />
+              <ChangeAvatar modal={avatarModal} closeModal={closeModal} />
               <Container className="UserPage px-1">
                 <Row className="border-bottom mb-2">
                   <Col xs="2" className="Avatar128 ps-0 pe-1 me-0">
@@ -148,7 +111,7 @@ export default function UserPage() {
                     />
                   </Col>
                   <Col>
-                    <h3 className="text-light">{user.name}</h3>
+                    <h3 className="text-primary">{user.name}</h3>
                     {user.about_me && <h5>{user.about_me}</h5>}
                     <ul className="list-unstyled">
                       <li>
@@ -158,24 +121,19 @@ export default function UserPage() {
                         {t("last-login")} <TimeAgo isoDate={user.lastSeen} />
                       </li>
                     </ul>
-                    {editable === null && (
-                      <Button color="primary" onClick={editUser} className="mb-2">
-                        Edit
+                    {loggedIn === true && (
+                      <Button color="info" onClick={editUser} className="mb-2 me-2 p-1">
+                        {t("update")}
                       </Button>
                     )}
-                    {editable === true && (
-                      <Button color="primary" onClick={unfollow} className="mb-2">
-                        Unfollow
-                      </Button>
-                    )}
-                    {editable === false && (
-                      <Button color="primary" onClick={follow} className="mb-2">
-                        Follow
+                    {loggedIn === true && (
+                      <Button color="info" onClick={changeAvatar} className="mb-2 me-2 p-1">
+                        {t("change-avatar")}
                       </Button>
                     )}
                   </Col>
                 </Row>
-                <Posts content={user.id} />
+                <Quizzers currentId={user.id} />
               </Container>
             </>
           )}

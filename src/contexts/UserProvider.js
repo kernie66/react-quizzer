@@ -20,9 +20,10 @@ export default function UserProvider({ children }) {
   useEffect(() => {
     (async () => {
       let userData = null;
-
+      // Check if the user has been logged in
       if (api.isAuthenticated()) {
         let response;
+        // Check if the login is still valid
         response = await api.checkLoggedIn();
         if (response.ok) {
           const userId = api.getUserId();

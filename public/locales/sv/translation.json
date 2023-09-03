@@ -56,5 +56,8 @@
   "username-cannot-be-an-email-address": "Användarnamnet kan inte vara en e-postadress",
   "old-password": "Nuvarande lösenord",
   "invalid-password": "Felaktigt lösenord",
-  "report-a-problem": "Rapportera ett problem"
+  "report-a-problem": "Rapportera ett problem",
+  "looking-for-user": "Söker användare",
+  "update": "Uppdatera",
+  "change-avatar": "Ändra avatar"
 }

@@ -55,5 +55,8 @@
   "username-cannot-be-an-email-address": "Username cannot be an email address",
   "old-password": "Old password",
   "invalid-password": "Invalid password",
-  "report-a-problem": "Report a problem"
+  "report-a-problem": "Report a problem",
+  "looking-for-user": "Looking for user",
+  "update": "Update",
+  "change-avatar": "Change avatar"
 }

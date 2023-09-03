@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import Body from "../components/Body";
-import Posts from "../components/Posts";
+import Quizzers from "../components/Quizzers.js";
 
 export default function ExplorePage() {
   useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
   return (
     <Body sidebar>
       <h1>Explore</h1>
-      <Posts content="explore" />
+      <Quizzers content="explore" />
     </Body>
   );
 }
