@@ -13,6 +13,9 @@ import myAxios from "../src/myAxios.instance.js";
 import MockAdapter from "axios-mock-adapter";
 import TestLogoutComponent from "./components/LoginPage.test/TestLogoutComponent.js";
 import { ErrorBoundary } from "react-error-boundary";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const mockAxios = new MockAdapter(myAxios, { onNoMatch: "throwException" });
 const loginData = { username: "john", password: "VerySimplePassword" };
@@ -54,14 +57,16 @@ const renderLoginPage = () => {
   render(
     <ErrorBoundary>
       <BrowserRouter>
-        <FlashProvider>
-          <ApiProvider>
-            <UserProvider>
-              <TestLogoutComponent />
-              <LoginPage />
-            </UserProvider>
-          </ApiProvider>
-        </FlashProvider>
+        <QueryClientProvider client={queryClient}>
+          <FlashProvider>
+            <ApiProvider>
+              <UserProvider>
+                <TestLogoutComponent />
+                <LoginPage />
+              </UserProvider>
+            </ApiProvider>
+          </FlashProvider>
+        </QueryClientProvider>
       </BrowserRouter>
     </ErrorBoundary>,
   );
@@ -208,15 +213,17 @@ describe("<LoginPage snapshot />", () => {
   it("should show login modal", () => {
     const component = renderer.create(
       <BrowserRouter>
-        <FlashProvider>
-          <ApiProvider>
-            <UserProvider>
-              <PublicRoute>
-                <LoginPage />
-              </PublicRoute>
-            </UserProvider>
-          </ApiProvider>
-        </FlashProvider>
+        <QueryClientProvider client={queryClient}>
+          <FlashProvider>
+            <ApiProvider>
+              <UserProvider>
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              </UserProvider>
+            </ApiProvider>
+          </FlashProvider>
+        </QueryClientProvider>
       </BrowserRouter>,
     );
     let tree = component.toJSON();

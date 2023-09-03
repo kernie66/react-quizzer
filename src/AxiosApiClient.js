@@ -41,8 +41,28 @@ export default class AxiosApiClient {
     };
   }
 
+  async request2(options) {
+    let response;
+    response = await myAxios.request(options.url, {
+      params: options.query,
+      method: options.method,
+      data: options.data,
+      baseURL: options.baseURL,
+    });
+    console.log("Request 2:", response.status);
+    if (response.status >= 500 && this.onError) {
+      this.onError(response);
+    }
+    // Imitate fetch() response
+    return {
+      ok: response.status < 200 || response.status > 299 ? false : true,
+      status: response.status,
+      data: response.status !== 204 ? response.data : null,
+    };
+  }
+
   async get(url, query, options) {
-    return this.request({ method: "GET", url, query, ...options });
+    return this.request2({ method: "GET", url, query, ...options });
   }
 
   async post(url, data, options) {
@@ -74,7 +94,8 @@ export default class AxiosApiClient {
   }
 
   async checkLoggedIn() {
-    const response = await this.get("/login");
+    let response = await this.get("/login");
+    response.userId = this.getUserId();
     console.log("Check login:", response);
     return response;
   }

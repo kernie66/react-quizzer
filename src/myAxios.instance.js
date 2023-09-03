@@ -30,41 +30,45 @@ myAxios.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("error.", error);
-    console.log("Intercepting response status:", error.response.status);
-    const originalRequest = error.config;
-    console.log("Intercepting response:", originalRequest);
-    // If the error status is 401 and there is no originalRequest._retry flag,
-    // it means the token has expired and we need to refresh it
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    console.log("error:", error);
+    console.log("error.code:", error.code);
+    if (error.code !== "ERR_NETWORK") {
+      console.log("Intercepting response status:", error.response.status);
+      const originalRequest = error.config;
+      console.log("Intercepting response:", originalRequest);
+      // If the error status is 401 and there is no originalRequest._retry flag,
+      // it means the token has expired and we need to refresh it
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
 
-      try {
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (refreshToken) {
-          const response = await myAxios.post(
-            "/refresh-token",
-            { refreshToken },
-            { baseURL: BASE_API_URL },
-          );
+        try {
+          const refreshToken = localStorage.getItem("refreshToken");
+          if (refreshToken) {
+            const response = await myAxios.post(
+              "/refresh-token",
+              { refreshToken },
+              { baseURL: BASE_API_URL },
+            );
 
-          const tokens = response.data;
-          localStorage.setItem("accessToken", tokens.accessToken);
-          console.log("Access token refreshed");
+            const tokens = response.data;
+            localStorage.setItem("accessToken", tokens.accessToken);
+            console.log("Access token refreshed");
 
-          // Retry the original request with the new token
-          originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
-          return axios(originalRequest);
+            // Retry the original request with the new token
+            originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
+            return axios(originalRequest);
+          }
+        } catch (error) {
+          console.error("Token refresh error:", error);
+          // Handle refresh token error or redirect to login
         }
-      } catch (error) {
-        console.error("Token refresh error:", error);
-        // Handle refresh token error or redirect to login
       }
-    }
-    if (error.response.status < 500) {
-      return error.response;
+      if (error.response.status < 500) {
+        return error.response;
+      }
     } else {
-      return Promise.reject(error);
+      throw new Error("Network error");
+      // return Promise.reject(error);
     }
   },
 );

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useApi } from "./ApiProvider";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const UserContext = createContext();
 
@@ -8,6 +9,13 @@ export default function UserProvider({ children }) {
   const [user, setUser] = useState();
   const api = useApi();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const updateUserQuery = (userData) => {
+    if (userData) {
+      queryClient.setQueryData(["user", String(userData.id)], userData);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -22,6 +30,7 @@ export default function UserProvider({ children }) {
           response = await api.get("/users/" + userId);
           console.log("Current user:", response.data[0]);
           userData = response.ok ? response.data[0] : null;
+          updateUserQuery(userData);
         } else {
           api.removeLogin();
         }
@@ -37,7 +46,9 @@ export default function UserProvider({ children }) {
         const userId = result.data.id;
         const response = await api.get("/users/" + userId);
         console.log("Logged in user:", response.data[0]);
-        setUser(response.ok ? response.data[0] : null);
+        const userData = response.ok ? response.data[0] : null;
+        updateUserQuery(userData);
+        setUser(userData);
         return response;
       }
       return result;
