@@ -31,7 +31,11 @@ export default function Quizzers({ currentId }) {
     }
   };
 
-  const { isLoading: isLoadingQuizzers, data: quizzers } = useQuery({
+  const {
+    isLoading: isLoadingQuizzers,
+    isError: quizzerError,
+    data: quizzers,
+  } = useQuery({
     queryKey: ["quizzers"],
     queryFn: () => getQuizzers(),
   });
@@ -80,7 +84,7 @@ export default function Quizzers({ currentId }) {
 
   return (
     <>
-      {quizzers === null ? (
+      {quizzerError ? (
         /*        flash('Could not retrieve blog posts from server', 'warning', 0) */
         <Alert color="warning">Could not retrieve quizzers</Alert>
       ) : (

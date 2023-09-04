@@ -59,5 +59,8 @@
   "report-a-problem": "Rapportera ett problem",
   "looking-for-user": "Söker användare",
   "update": "Uppdatera",
-  "change-avatar": "Ändra avatar"
+  "change-avatar": "Ändra avatar",
+  "last-played": "Spelade senast",
+  "never-played": "Har inte spelat ännu",
+  "administrator": "Administratör"
 }

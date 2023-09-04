@@ -58,5 +58,8 @@
   "report-a-problem": "Report a problem",
   "looking-for-user": "Looking for user",
   "update": "Update",
-  "change-avatar": "Change avatar"
+  "change-avatar": "Change avatar",
+  "last-played": "Last played",
+  "never-played": "Never played",
+  "administrator": "Administrator"
 }
