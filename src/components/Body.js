@@ -5,9 +5,9 @@ import Sidebar from "./Sidebar";
 export default function Body({ sidebar, children }) {
   return (
     <Container className="p-0">
-      <Row className="gx-2 ps-0 pe-2 Body">
+      <Row className="m-0 px-0 pe-2 Body">
         {sidebar && (
-          <Col xs="auto">
+          <Col xs="auto" className="d-none d-md-block">
             <Sidebar className="LeftSidebar" />
           </Col>
         )}

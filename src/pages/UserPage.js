@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
+import ShowWindowSize from "../components/ShowWindowSize.js";
+import OnlineStatus from "../components/OnlineStatus.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -88,7 +90,7 @@ export default function UserPage() {
     <Body sidebar>
       {isLoadingUser ? (
         <>
-          <div className="text-secondary">
+          <div className="text-secondary align-items-center">
             {t("looking-for-user")}
             <Spinner animation="border" />
           </div>
@@ -102,15 +104,15 @@ export default function UserPage() {
               <EditUser modal={editModal} closeModal={closeModal} />
               <ChangeAvatar modal={avatarModal} closeModal={closeModal} />
               <Container className="UserPage px-1">
-                <Row className="border-bottom mb-2">
-                  <Col xs="2" className="Avatar128 ps-0 pe-1 me-0">
+                <Row className="mb-2">
+                  <Col xs="2" className="Avatar128 px-0 me-0">
                     <Media
                       src={user.avatar_url + "&s=128"}
                       className="rounded-circle"
                       style={imgStyle}
                     />
                   </Col>
-                  <Col>
+                  <Col xs="6">
                     <h3 className="text-primary">{user.name}</h3>
                     {user.about_me && <h5>{user.about_me}</h5>}
                     <ul className="list-unstyled">
@@ -121,15 +123,23 @@ export default function UserPage() {
                         {t("last-login")} <TimeAgo isoDate={user.lastSeen} />
                       </li>
                     </ul>
+                  </Col>
+                  <Col>
+                    <ShowWindowSize />
+                    <OnlineStatus />
+                  </Col>
+                </Row>
+                <Row className="border-bottom border-primary mb-2">
+                  <Col>
                     {loggedIn === true && (
-                      <Button color="info" onClick={editUser} className="mb-2 me-2 p-1">
-                        {t("update")}
-                      </Button>
-                    )}
-                    {loggedIn === true && (
-                      <Button color="info" onClick={changeAvatar} className="mb-2 me-2 p-1">
-                        {t("change-avatar")}
-                      </Button>
+                      <>
+                        <Button color="info" onClick={changeAvatar} className="mb-2 me-2 p-1">
+                          {t("change-avatar")}
+                        </Button>
+                        <Button color="info" onClick={editUser} className="mb-2 me-2 p-1">
+                          {t("update")}
+                        </Button>
+                      </>
                     )}
                   </Col>
                 </Row>

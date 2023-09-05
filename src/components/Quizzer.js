@@ -10,7 +10,7 @@ export default memo(function Quizzer({ quizzer }) {
   return (
     <Container className="Quizzer">
       <Row className="border-bottom">
-        <Col xs="1" className="Avatar48">
+        <Col xs="2" lg="1" className="Avatar48">
           <Media
             src={quizzer.avatar_url + "&s=48"}
             alt={quizzer.username}
