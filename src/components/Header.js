@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import {
+  Col,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -7,12 +8,14 @@ import {
   Media,
   Navbar,
   NavbarBrand,
+  Row,
   Spinner,
 } from "reactstrap";
 import { Container } from "reactstrap";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import OnlineStatus from "./OnlineStatus.js";
 
 const flagIcons = { sv: "/Swedish large.png", en: "/English large.png" };
 export default function Header() {
@@ -43,60 +46,76 @@ export default function Header() {
   return (
     <Navbar color="light" light fixed="top" className="Header d-flex border-bottom py-1">
       <Container>
-        <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
-        <Dropdown inNavbar className="float-end ms-1" toggle={changeLanguage}>
-          <DropdownToggle nav>
-            <Media src={flagIcon} width="32" height="32" />
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem>Change language</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        {user === undefined ? (
-          <Spinner animation="border" />
-        ) : (
-          <>
-            {user !== null && (
-              <Dropdown
-                isOpen={dropdownOpen}
-                toggle={toggle}
-                inNavbar
-                className="float-end text-end mx-1"
-                style={{ width: 48 }}
-              >
-                <DropdownToggle nav caret>
-                  <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
-                </DropdownToggle>
-                <DropdownMenu className="bg-primary" style={{ right: 0 }}>
-                  <DropdownItem tag={NavLink} to={"/user/" + user.id}>
-                    {t("profile")}
-                  </DropdownItem>
-                  {user.isAdmin && (
-                    <DropdownItem tag={NavLink} to={"/admin"}>
-                      {t("administer")}
-                    </DropdownItem>
-                  )}
-                  <DropdownItem divider className="bg-light m-0" />
-                  <DropdownItem>
-                    <a
-                      href="https://github.com/kernie66/react-quizzer/issues"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-decoration-none"
-                    >
-                      {t("report-a-problem")}
-                    </a>
-                  </DropdownItem>
-                  <DropdownItem divider className="bg-light m-0" />
-                  <DropdownItem tag={NavLink} to={"/password"}>
-                    {t("change-password")}
-                  </DropdownItem>
-                  <DropdownItem onClick={logout}>{t("logout")}</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+        <Row>
+          <Col className="me-auto">
+            <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
+          </Col>
+          <Col xs="3" md="2" className="float-end text-end">
+            <OnlineStatus />
+          </Col>
+          <Col xs="1" className="mx-1 px-0 gx-0">
+            {user === undefined ? (
+              <Spinner animation="border" />
+            ) : (
+              <>
+                {user !== null && (
+                  <Dropdown
+                    isOpen={dropdownOpen}
+                    toggle={toggle}
+                    inNavbar
+                    className="float-end"
+                    style={{ width: 48 }}
+                  >
+                    <DropdownToggle nav caret>
+                      <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
+                    </DropdownToggle>
+                    <DropdownMenu style={{ right: 0 }}>
+                      <DropdownItem tag={NavLink} to={"/user/" + user.id}>
+                        {t("profile")}
+                      </DropdownItem>
+                      {user.isAdmin && (
+                        <DropdownItem tag={NavLink} to={"/admin"}>
+                          {t("administer")}
+                        </DropdownItem>
+                      )}
+                      <DropdownItem divider className="bg-light m-0" />
+                      <DropdownItem>
+                        <a
+                          href="https://github.com/kernie66/react-quizzer/issues"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-decoration-none"
+                        >
+                          {t("report-a-problem")}
+                        </a>
+                      </DropdownItem>
+                      <DropdownItem divider className="bg-light m-0" />
+                      <DropdownItem tag={NavLink} to={"/password"}>
+                        {t("change-password")}
+                      </DropdownItem>
+                      <DropdownItem onClick={logout}>{t("logout")}</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                )}
+              </>
             )}
-          </>
-        )}
+          </Col>
+          <Col xs="1" className="gx-0 mx-1 px-0">
+            <Dropdown
+              inNavbar
+              className="float-end ms-1"
+              style={{ width: 48 }}
+              toggle={changeLanguage}
+            >
+              <DropdownToggle nav>
+                <Media src={flagIcon} width="32" height="32" />
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem>Change language</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </Col>
+        </Row>
       </Container>
     </Navbar>
   );
