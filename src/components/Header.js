@@ -47,13 +47,13 @@ export default function Header() {
     <Navbar color="light" light fixed="top" className="Header d-flex border-bottom py-1">
       <Container>
         <Row>
-          <Col className="me-auto">
+          <Col className="flex-grow-1">
             <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
           </Col>
           <Col xs="3" md="2" className="float-end text-end">
             <OnlineStatus />
           </Col>
-          <Col xs="1" className="mx-1 px-0 gx-0">
+          <Col xs="1" className="d-inline-flex mx-1 px-0 gx-0">
             {user === undefined ? (
               <Spinner animation="border" />
             ) : (
@@ -63,7 +63,7 @@ export default function Header() {
                     isOpen={dropdownOpen}
                     toggle={toggle}
                     inNavbar
-                    className="float-end"
+                    className=""
                     style={{ width: 48 }}
                   >
                     <DropdownToggle nav caret>
@@ -99,8 +99,6 @@ export default function Header() {
                 )}
               </>
             )}
-          </Col>
-          <Col xs="1" className="gx-0 mx-1 px-0">
             <Dropdown
               inNavbar
               className="float-end ms-1"
