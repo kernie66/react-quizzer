@@ -44,16 +44,16 @@ export default function Header() {
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
-    <Navbar color="light" light fixed="top" className="Header d-flex border-bottom py-1">
+    <Navbar color="light" light fixed="top" className="Header border-bottom py-1">
       <Container>
-        <Row>
-          <Col className="flex-grow-1">
+        <Row className="d-flex">
+          <Col className="me-auto">
             <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
           </Col>
-          <Col xs="3" md="2" className="float-end text-end">
+          <Col className="d-none d-sm-block text-end">
             <OnlineStatus />
           </Col>
-          <Col xs="1" className="d-inline-flex mx-1 px-0 gx-0">
+          <Col xs="3" sm="2" md="1" className="d-inline-flex mx-1 px-0 gx-0">
             {user === undefined ? (
               <Spinner animation="border" />
             ) : (
@@ -99,12 +99,7 @@ export default function Header() {
                 )}
               </>
             )}
-            <Dropdown
-              inNavbar
-              className="float-end ms-1"
-              style={{ width: 48 }}
-              toggle={changeLanguage}
-            >
+            <Dropdown inNavbar className="ps-2" style={{ width: 48 }} toggle={changeLanguage}>
               <DropdownToggle nav>
                 <Media src={flagIcon} width="32" height="32" />
               </DropdownToggle>
