@@ -61,6 +61,7 @@ myAxios.interceptors.response.use(
         } catch (error) {
           console.error("Token refresh error:", error);
           // Handle refresh token error or redirect to login
+          localStorage.clear();
         }
       }
       if (error.response.status < 500) {

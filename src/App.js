@@ -53,7 +53,7 @@ export default function App() {
               <ApiProvider>
                 <UserProvider>
                   <Header />
-                  <Container className="p-0 MainBody">
+                  <Container fluid="md" className="p-0 MainBody">
                     <Routes>
                       <Route
                         path="/login"

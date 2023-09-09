@@ -103,9 +103,9 @@ export default function UserPage() {
             <>
               <EditUser modal={editModal} closeModal={closeModal} />
               <ChangeAvatar modal={avatarModal} closeModal={closeModal} />
-              <Container className="UserPage px-1">
+              <Container fluid="md" className="UserPage px-1">
                 <Row className="mb-2">
-                  <Col xs="2" className="Avatar128 px-0 me-0">
+                  <Col xs="2" className="Avatar128">
                     <Media
                       src={user.avatar_url + "&s=128"}
                       className="rounded-circle"
