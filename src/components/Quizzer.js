@@ -8,7 +8,7 @@ export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
 
   return (
-    <Container className="Quizzer">
+    <Container fluid="md" className="Quizzer">
       <Row className="border-bottom">
         <Col xs="2" lg="1" className="Avatar48">
           <Media

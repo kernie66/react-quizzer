@@ -101,14 +101,16 @@ export default function Quizzers({ currentId }) {
               ) : (
                 quizzers.map((quizzer) => <Quizzer key={quizzer.id} quizzer={quizzer} />)
               )}
-              <Container>
-                <Row>
-                  <Col>
-                    <Top />
-                  </Col>
-                  <Col></Col>
-                </Row>
-              </Container>
+              {quizzers.length > 5 ? (
+                <Container fluid="md">
+                  <Row>
+                    <Col>
+                      <Top />
+                    </Col>
+                    <Col></Col>
+                  </Row>
+                </Container>
+              ) : null}
             </>
           )}
         </>

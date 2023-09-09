@@ -26,9 +26,11 @@ export default function OnlineStatus() {
   return (
     <div>
       {isOnline ? (
-        <span>{t("you-are-online")}</span>
+        <span className="align-middle">{t("you-are-online")}</span>
       ) : (
-        <span>{t("you-are-offline-please-check-your-internet-connection")}</span>
+        <span className="align-middle">
+          {t("you-are-offline-please-check-your-internet-connection")}
+        </span>
       )}
     </div>
   );

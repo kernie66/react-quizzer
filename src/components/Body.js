@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 
 export default function Body({ sidebar, children }) {
   return (
-    <Container className="p-0">
+    <Container fluid="md" className="p-0">
       <Row className="m-0 px-2 Body">
         {sidebar && (
           <Col xs="auto" className="d-none d-md-block">
@@ -12,7 +12,7 @@ export default function Body({ sidebar, children }) {
           </Col>
         )}
         <Col className="px-0">
-          <Container className="align-self-start Content px-0">
+          <Container fluid="md" className="align-self-start Content px-0">
             <FlashMessage />
             {children}
           </Container>

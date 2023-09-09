@@ -10,7 +10,7 @@ export default function Header() {
 
   return (
     <Navbar color="light" light fixed="top" className="Header border-bottom py-1">
-      <Container>
+      <Container fluid="md">
         <div
           className="d-flex flex-row justify-content-between align-items-center"
           style={{ minHeight: "36px" }}
