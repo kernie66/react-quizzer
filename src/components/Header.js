@@ -15,7 +15,9 @@ export default function Header() {
           className="d-flex flex-row justify-content-between align-items-center"
           style={{ minHeight: "36px" }}
         >
-          <NavbarBrand className="pt-0 fs-4 me-auto">{t("app-name")}</NavbarBrand>
+          <NavbarBrand href="/" className="pt-0 fs-4 me-auto">
+            {t("app-name")}
+          </NavbarBrand>
           <div className="px-4 my-0">
             <OnlineStatus />
           </div>
