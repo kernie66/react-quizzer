@@ -61,5 +61,7 @@
   "change-avatar": "Change avatar",
   "last-played": "Last played",
   "never-played": "Never played",
-  "administrator": "Administrator"
+  "administrator": "Administrator",
+  "you-are-online": "You are online.",
+  "you-are-offline-please-check-your-internet-connection": "You are offline. Please check your internet connection."
 }

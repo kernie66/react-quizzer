@@ -1,4 +1,4 @@
-import { Col, Navbar, NavbarBrand, Row } from "reactstrap";
+import { Navbar, NavbarBrand } from "reactstrap";
 import { Container } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import OnlineStatus from "./OnlineStatus.js";
@@ -11,18 +11,17 @@ export default function Header() {
   return (
     <Navbar color="light" light fixed="top" className="Header border-bottom py-1">
       <Container>
-        <Row className="d-flex">
-          <Col className="me-auto">
-            <NavbarBrand className="pt-0">{t("app-name")}</NavbarBrand>
-          </Col>
-          <Col className="d-none d-sm-block text-end">
+        <div
+          className="d-flex flex-row justify-content-between align-items-center"
+          style={{ minHeight: "36px" }}
+        >
+          <NavbarBrand className="pt-0 fs-4 me-auto">{t("app-name")}</NavbarBrand>
+          <div className="px-4 my-0">
             <OnlineStatus />
-          </Col>
-          <Col xs="3" sm="2" md="1" className="d-inline-flex mx-1 px-0 gx-0">
-            <UserMenu />
-            <LanguageSwitcher />
-          </Col>
-        </Row>
+          </div>
+          <UserMenu />
+          <LanguageSwitcher />
+        </div>
       </Container>
     </Navbar>
   );

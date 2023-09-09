@@ -26,7 +26,7 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <Dropdown inNavbar className="ps-2" style={{ width: 48 }} toggle={changeLanguage}>
+    <Dropdown inNavbar className="ps-2" toggle={changeLanguage}>
       <DropdownToggle nav>
         <Media src={flagIcon} width="32" height="32" />
       </DropdownToggle>

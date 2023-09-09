@@ -18,13 +18,7 @@ export default function UserMenu() {
       ) : (
         <>
           {user !== null && (
-            <Dropdown
-              isOpen={dropdownOpen}
-              toggle={toggle}
-              inNavbar
-              className=""
-              style={{ width: 48 }}
-            >
+            <Dropdown isOpen={dropdownOpen} toggle={toggle} inNavbar className="">
               <DropdownToggle nav caret>
                 <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
               </DropdownToggle>

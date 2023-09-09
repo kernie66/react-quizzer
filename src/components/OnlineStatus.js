@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function OnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const { t } = useTranslation();
 
   useEffect(() => {
     function onlineHandler() {
@@ -24,9 +26,9 @@ export default function OnlineStatus() {
   return (
     <div>
       {isOnline ? (
-        <p>You are online.</p>
+        <span>{t("you-are-online")}</span>
       ) : (
-        <p>You are offline. Please check your internet connection.</p>
+        <span>{t("you-are-offline-please-check-your-internet-connection")}</span>
       )}
     </div>
   );
