@@ -63,5 +63,10 @@
   "never-played": "Never played",
   "administrator": "Administrator",
   "you-are-online": "You are online.",
-  "you-are-offline-please-check-your-internet-connection": "You are offline. Please check your internet connection."
+  "you-are-offline-please-check-your-internet-connection": "You are offline. Please check your internet connection.",
+  "no-quizzers-found": "No quizzers found",
+  "could-not-retrieve-quizzers": "Could not retrieve quizzers",
+  "getting-data-from": "Getting data from",
+  "there-are-no-quizzers-registered-yet": "There are no quizzers registered yet!",
+  "me": "me"
 }

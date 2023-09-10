@@ -64,5 +64,9 @@
   "never-played": "Har inte spelat ännu",
   "administrator": "Administratör",
   "you-are-online": "Du är online.",
-  "you-are-offline-please-check-your-internet-connection": "Du är offline. \nKontrollera din internetanslutning."
+  "you-are-offline-please-check-your-internet-connection": "Du är offline. \nKontrollera din internetanslutning.",
+  "could-not-retrieve-quizzers": "Det gick inte att hämta quizzare",
+  "getting-data-from": "Hämtar data från",
+  "there-are-no-quizzers-registered-yet": "Det finns inga quizzare registrerade än!",
+  "me": "jag"
 }

@@ -7,15 +7,16 @@ import Top from "./Top";
 import { useQuery } from "@tanstack/react-query";
 import Quizzer from "./Quizzer.js";
 import { alphabetical, fork } from "radash";
+import { useTranslation } from "react-i18next";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default function Quizzers({ currentId }) {
   // const [pagination, setPagination] = useState();
   const api = useApi();
-  //  const flash = useFlash();
+  const { t } = useTranslation();
 
-  const getQuizzers = async () => {
+  const getQuizzers = async (currentId) => {
     const response = await api.get("/users");
     if (response.ok) {
       const quizzers = alphabetical(response.data, (item) => item.name);
@@ -35,74 +36,36 @@ export default function Quizzers({ currentId }) {
     isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
-  } = useQuery({
-    queryKey: ["quizzers"],
-    queryFn: () => getQuizzers(),
-  });
-
-  /*
-  let url;
-  switch (content) {
-    case "feed":
-    case undefined:
-      url = "/feed";
-      break;
-    case "explore":
-      url = "/posts";
-      break;
-    default:
-      url = `/users/${content}/posts`;
-      break;
-  }
-
-  useEffect(() => {
-    (async () => {
-      const response = await api.get(url);
-      if (response.ok) {
-        setPosts(response.body.data);
-        setPagination(response.body.pagination);
-      } else {
-        setPosts(null);
-      }
-    })();
-  }, [api, url]);
-
-  const showPost = (newPost) => {
-    setPosts([newPost, ...posts]);
-  };
-  const loadNextPage = async () => {
-    flash("Posts are loaded...", "info", 2);
-      const response = await api.get(url, {
-      after: posts[posts.length - 1].timestamp,
-    });
-    if (response.ok) {
-      setPosts([...posts, ...response.body.data]);
-      setPagination(response.body.pagination);
-    }
-  };
-  */
+  } = useQuery(
+    {
+      queryKey: ["quizzers", { currentId }],
+      queryFn: () => getQuizzers(currentId),
+    },
+    [currentId],
+  );
 
   return (
     <>
       {quizzerError ? (
-        /*        flash('Could not retrieve blog posts from server', 'warning', 0) */
-        <Alert color="warning">Could not retrieve quizzers</Alert>
+        <Alert color="warning">{t("could-not-retrieve-quizzers")}</Alert>
       ) : (
         <>
           {isLoadingQuizzers ? (
             <>
               <Spinner animation="border" />
-              <p>Getting data from {BASE_API_URL}</p>
+              <p>
+                {t("getting-data-from")} {BASE_API_URL}
+              </p>
             </>
           ) : (
             <>
               {quizzers.length === 0 ? (
-                <p>There are no quizzers registered yet!</p>
+                <p>{t("there-are-no-quizzers-registered-yet")}</p>
               ) : (
                 quizzers.map((quizzer) => <Quizzer key={quizzer.id} quizzer={quizzer} />)
               )}
               {quizzers.length > 5 ? (
-                <Container fluid="md">
+                <Container fluid>
                   <Row>
                     <Col>
                       <Top />

@@ -103,7 +103,7 @@ export default function UserPage() {
             <>
               <EditUser modal={editModal} closeModal={closeModal} />
               <ChangeAvatar modal={avatarModal} closeModal={closeModal} />
-              <Container fluid="md" className="UserPage px-1">
+              <Container fluid className="UserPage px-1">
                 <Row className="mb-2">
                   <Col xs="2" className="Avatar128">
                     <Media
@@ -113,7 +113,10 @@ export default function UserPage() {
                     />
                   </Col>
                   <Col xs="6">
-                    <h3 className="text-primary">{user.name}</h3>
+                    <h3 className="text-primary">
+                      {user.name} {user.id === loggedInUser.id ? <span>({t("me")})</span> : null}{" "}
+                      {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
+                    </h3>
                     {user.about_me && <h5>{user.about_me}</h5>}
                     <ul className="list-unstyled">
                       <li>
