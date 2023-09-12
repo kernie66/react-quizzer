@@ -20,7 +20,7 @@ export default function UserMenu() {
           {user !== null && (
             <Dropdown isOpen={dropdownOpen} toggle={toggle} inNavbar className="">
               <DropdownToggle nav caret>
-                <Media src={user.avatar_url + "&s=32"} className="rounded-circle" />
+                <Media src={user.avatarUrl + "&s=32"} className="rounded-circle" />
               </DropdownToggle>
               <DropdownMenu style={{ right: 0 }}>
                 <DropdownItem tag={NavLink} to={"/user/" + user.id}>

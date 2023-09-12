@@ -1,67 +1,61 @@
-import { useRef, useState } from "react";
-import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
-import InputField from "./InputField";
+import { Button, Form, Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
-import { useUser } from "../contexts/UserProvider";
+import { useEffect, useRef, useState } from "react";
+import Avatar from "./Avatar.js";
 
-export default function ChangeAvatar({ modal, closeModal }) {
-  const [formErrors, setFormErrors] = useState({});
-  const usernameField = useRef();
-  const emailField = useRef();
-  const aboutMeField = useRef();
+const avatarTypes = ["wavatar", "identicon", "monsterid", "retro", "robohash"];
+
+export default function ChangeAvatar({ modal, closeModal, user }) {
   const api = useApi();
-  const { user, setUser } = useUser();
   const flash = useFlash();
+  const avatarField = useRef();
+  const [userData, setUserData] = useState(user);
+
+  const url = user.avatarUrl.split("d=")[0];
 
   const onOpened = () => {
-    usernameField.current.value = user.username;
-    emailField.current.value = user.email;
-    aboutMeField.current.value = user.about_me;
-    usernameField.current.focus();
+    avatarField.current.value = user.avatarType;
+    avatarField.current.focus();
   };
+
+  const changeAvatar = () => {
+    console.log("Avatar:", avatarField.current.value);
+    const avatar = avatarField.current.value;
+    const newUrl = url + `d=${avatar}`;
+    let updatedUser = {};
+    updatedUser.avatarType = avatar;
+    updatedUser.avatarUrl = newUrl;
+    setUserData((userData) => ({
+      ...userData,
+      ...updatedUser,
+    }));
+  };
+
+  useEffect(() => {
+    console.log("Userdata:", userData.avatarType);
+  }, [userData]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const response = await api.put("/me", {
-      username: usernameField.current.value,
-      email: emailField.current.value,
-      about_me: aboutMeField.current.value,
-    });
+    const response = await api.put("/me", {});
     if (response.ok) {
-      setFormErrors({});
-      setUser(response.body);
       flash("Your profile has been updated.", "success", 5);
       closeModal();
-    } else {
-      setFormErrors(response.body.errors.json);
     }
   };
 
   return (
     <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal}>
-      <ModalHeader toggle={closeModal}>Edit user information</ModalHeader>
+      <ModalHeader toggle={closeModal}>Change avatar</ModalHeader>
       <ModalBody className="pt-0">
+        <Avatar user={userData} size={64} />
         <Form onSubmit={onSubmit}>
-          <InputField
-            label="Username"
-            name="username"
-            fieldRef={usernameField}
-            error={formErrors.username}
-          />
-          <InputField
-            label="Email"
-            name="email"
-            type="email"
-            fieldRef={emailField}
-            error={formErrors.email}
-          />
-          <InputField
-            label="About me"
-            name="About me"
-            fieldRef={aboutMeField}
-            error={formErrors.about_me}
-          />
+          <Input type="select" innerRef={avatarField} onChange={changeAvatar}>
+            {avatarTypes.map((avatar, index) => (
+              <option key={index}>{avatar}</option>
+            ))}
+          </Input>
           <Button color="primary" type="submit">
             Update
           </Button>

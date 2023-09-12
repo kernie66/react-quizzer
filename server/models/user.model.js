@@ -20,6 +20,10 @@ export const User = db.define("user", {
       isEmail: true,
     },
   },
+  aboutMe: {
+    type: DataTypes.STRING(),
+    allowNull: true,
+  },
   hashedPassword: {
     type: DataTypes.STRING(64),
     allowNull: false,
@@ -30,11 +34,16 @@ export const User = db.define("user", {
   nicknames: {
     type: DataTypes.ARRAY(DataTypes.STRING(32)),
   },
-  avatar_url: {
+  avatarType: {
+    type: DataTypes.STRING(10),
+    allowNull: false,
+    defaultValue: "wavatar",
+  },
+  avatarUrl: {
     type: DataTypes.VIRTUAL,
     get() {
       const hash = md5(this.email);
-      return `https://www.gravatar.com/avatar/${hash}?d=wavatar`;
+      return `https://www.gravatar.com/avatar/${hash}?d=${this.avatarType}`;
     },
   },
   isAdmin: {

@@ -1,8 +1,9 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { Container, Media, Row } from "reactstrap";
+import { Container, Row } from "reactstrap";
 import TimeAgo from "./TimeAgo";
 import { useTranslation } from "react-i18next";
+import Avatar from "./Avatar.js";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
@@ -11,24 +12,21 @@ export default memo(function Quizzer({ quizzer }) {
     <Container fluid className="Quizzer px-0">
       <div className="d-flex flex-row border-bottom justify-content-start">
         <div className="Avatar48 ps-0 pe-3 mx-0">
-          <Media>
-            <Link to={"/user/" + quizzer.id}>
-              <Media
-                object
-                src={quizzer.avatar_url + "&s=48"}
-                alt={quizzer.username}
-                className="rounded-circle"
-              />
-            </Link>
-          </Media>
+          <Avatar user={quizzer} size={48} />
         </div>
         <div className="col">
           <div className="flex-row">
             <div className="col">
               <span>
-                <Link to={"/user/" + quizzer.id} className="text-primary text-decoration-none">
+                <Link
+                  to={"/user/" + quizzer.id}
+                  className="text-info-emphasis text-decoration-none"
+                >
                   {quizzer.name}
                 </Link>
+                {quizzer.isAdmin && (
+                  <span className="text-danger">&nbsp;({t("administrator")})</span>
+                )}
                 &nbsp;&mdash;&nbsp;
                 {quizzer.lastPlayed ? (
                   <>
@@ -43,9 +41,6 @@ export default memo(function Quizzer({ quizzer }) {
           </div>
           <Row className="mb-0">
             <p>{quizzer.email}</p>
-          </Row>
-          <Row className="mb-0">
-            {quizzer.isAdmin && <span className="text-dark mt-0 mb-2">{t("administrator")}</span>}
           </Row>
         </div>
       </div>

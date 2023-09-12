@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Col, Container, Media, Row, Spinner } from "reactstrap";
+import { Button, Col, Container, Row, Spinner } from "reactstrap";
 import Body from "../components/Body";
 import EditUser from "../components/EditUser";
 import TimeAgo from "../components/TimeAgo";
@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
 import ShowWindowSize from "../components/ShowWindowSize.js";
-import OnlineStatus from "../components/OnlineStatus.js";
+import Avatar from "../components/Avatar.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -26,11 +26,6 @@ export default function UserPage() {
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
   //  const { showBoundary } = useErrorBoundary();
-
-  const imgStyle = {
-    maxWidth: "100%",
-    maxHeight: "auto",
-  };
 
   const getUser = async (id) => {
     const response = await api.get("/users/" + id);
@@ -71,21 +66,6 @@ export default function UserPage() {
     setAvatarModal(false);
   };
 
-  /*
-  const follow = async () => {
-    const response = await api.post("/me/following/" + user.id);
-    if (response.ok) {
-      flash(
-        <>
-          You are now following <b>{user.username}</b>.
-        </>,
-        "success",
-        5,
-      );
-    }
-  };
-  */
-
   return (
     <Body sidebar>
       {isLoadingUser ? (
@@ -102,19 +82,18 @@ export default function UserPage() {
           ) : (
             <>
               <EditUser modal={editModal} closeModal={closeModal} />
-              <ChangeAvatar modal={avatarModal} closeModal={closeModal} />
+              <ChangeAvatar modal={avatarModal} closeModal={closeModal} user={user} />
               <Container fluid className="UserPage px-1">
                 <Row className="mb-2">
                   <Col xs="2" className="Avatar128">
-                    <Media
-                      src={user.avatar_url + "&s=128"}
-                      className="rounded-circle"
-                      style={imgStyle}
-                    />
+                    <Avatar user={user} size={128} />
                   </Col>
                   <Col xs="6">
-                    <h3 className="text-primary">
-                      {user.name} {user.id === loggedInUser.id ? <span>({t("me")})</span> : null}{" "}
+                    <h3 className="text-info-emphasis">
+                      {user.name}{" "}
+                      {user.id === loggedInUser.id ? (
+                        <span className="text-primary">({t("me")})</span>
+                      ) : null}{" "}
                       {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
                     </h3>
                     {user.about_me && <h5>{user.about_me}</h5>}
@@ -127,10 +106,7 @@ export default function UserPage() {
                       </li>
                     </ul>
                   </Col>
-                  <Col>
-                    <ShowWindowSize />
-                    <OnlineStatus />
-                  </Col>
+                  <Col>{loggedInUser.isAdmin && <ShowWindowSize />}</Col>
                 </Row>
                 <Row className="border-bottom border-primary mb-2">
                   <Col>

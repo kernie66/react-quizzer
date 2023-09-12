@@ -3,7 +3,7 @@ export const Sarah = {
   email: "Sarah@example.com",
   username: "sarah",
   password: "eatCookiesKeepAll",
-  avatar_url: "https://www.gravatar.com/avatar/62a9731a313984d2576cd2b5528c0725?d=wavatar",
+  avatarUrl: "https://www.gravatar.com/avatar/62a9731a313984d2576cd2b5528c0725?d=wavatar",
 };
 
 export const John = {

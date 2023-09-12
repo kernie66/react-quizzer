@@ -42,7 +42,7 @@ describe("User API", () => {
     expect(res.body[0].username).toEqual(Sarah.username);
     expect(res.body[0].email).toEqual(Sarah.email.toLowerCase());
     expect(res.body[0].name).toEqual(Sarah.name);
-    expect(res.body[0].avatar_url).toEqual(Sarah.avatar_url);
+    expect(res.body[0].avatarUrl).toEqual(Sarah.avatarUrl);
     expect(res.body[1].id).toEqual(2);
     expect(res.body[1].username).toEqual(John.username);
     expect(res.body[1].email).toEqual(John.email);
