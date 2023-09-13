@@ -68,5 +68,8 @@
   "could-not-retrieve-quizzers": "Det gick inte att hämta quizzare",
   "getting-data-from": "Hämtar data från",
   "there-are-no-quizzers-registered-yet": "Det finns inga quizzare registrerade än!",
-  "me": "jag"
+  "me": "jag",
+  "select-your-preferred-avatar": "Välj din önskade avatar",
+  "try-the-different-avatar-types-below-or-define-your-own-free-avatar-based-on-your-email-at": "Prova de olika avatartyperna nedan, eller definiera din egen fria avatar baserat på din e-post på",
+  "your-profile-has-been-updated": "Din profil har uppdaterats."
 }

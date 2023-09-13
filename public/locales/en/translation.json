@@ -68,5 +68,8 @@
   "could-not-retrieve-quizzers": "Could not retrieve quizzers",
   "getting-data-from": "Getting data from",
   "there-are-no-quizzers-registered-yet": "There are no quizzers registered yet!",
-  "me": "me"
+  "me": "me",
+  "your-profile-has-been-updated": "Your profile has been updated.",
+  "try-the-different-avatar-types-below-or-define-your-own-free-avatar-based-on-your-email-at": "Try the different avatar types below, or define your own free avatar based on your email at",
+  "select-your-preferred-avatar": "Select your preferred avatar"
 }

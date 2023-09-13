@@ -3,7 +3,7 @@ import { Token, User } from "../../models/index.js";
 import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import bcrypt from "bcrypt";
-import { isEmpty } from "radash";
+import { isEmpty, pick } from "radash";
 import { GeneralError, NotFound } from "../utils/errorHandler.js";
 
 /* ==========================================================
@@ -120,13 +120,9 @@ export const updateUser = async (req, res, next) => {
     const userData = await parseUser(req);
     if (!isEmpty(userData)) {
       const user = userData[0];
-      if (req.body.name) {
-        user.name = req.body.name;
-      }
-      if (req.body.email) {
-        user.email = req.body.email;
-      }
-      const updatedUser = await user.save();
+      const updateUser = pick(req.body, ["name", "email", "aboutMe", "avatarType"]);
+      logger.debug("Update user with:", updateUser);
+      const updatedUser = await user.update(updateUser);
       if (req.body.nickname) {
         if (!user.nicknames || (user.nicknames && !user.nicknames.includes(req.body.nickname))) {
           await user.update({
