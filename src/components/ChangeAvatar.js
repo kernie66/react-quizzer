@@ -43,7 +43,7 @@ export default function ChangeAvatar({ modal, closeModal, user }) {
   };
 
   return (
-    <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal}>
+    <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
       <ModalHeader toggle={closeModal}>{t("change-avatar")}</ModalHeader>
       <ModalBody className="pt-0">
         <div className="d-flex py-1 flex-row">

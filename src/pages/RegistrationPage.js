@@ -86,7 +86,7 @@ export default function RegistrationPage() {
 
   return (
     <Body>
-      <Modal isOpen={modal} onOpened={onOpened} className="mt-0">
+      <Modal isOpen={modal} onOpened={onOpened} fullscreen="sm" className="mt-0">
         <Form onSubmit={onSubmit}>
           <ModalHeader className="py-2">{t("user-registration")}</ModalHeader>
           <ModalBody className="pt-0">

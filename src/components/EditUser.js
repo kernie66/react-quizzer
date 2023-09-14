@@ -23,7 +23,7 @@ export default function EditUser({ modal, closeModal }) {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const response = await api.put('/me', {
+    const response = await api.put("/me", {
       username: usernameField.current.value,
       email: emailField.current.value,
       about_me: aboutMeField.current.value,
@@ -31,28 +31,40 @@ export default function EditUser({ modal, closeModal }) {
     if (response.ok) {
       setFormErrors({});
       setUser(response.body);
-      flash('Your profile has been updated.', 'success', 5);
+      flash("Your profile has been updated.", "success", 5);
       closeModal();
-    }
-    else {
+    } else {
       setFormErrors(response.body.errors.json);
     }
   };
 
   return (
-    <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal}>
-      <ModalHeader toggle={closeModal}>
-        Edit user information
-      </ModalHeader>
+    <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
+      <ModalHeader toggle={closeModal}>Edit user information</ModalHeader>
       <ModalBody className="pt-0">
         <Form onSubmit={onSubmit}>
-          <InputField label="Username" name="username"
-            fieldRef={usernameField} error={formErrors.username} />
-          <InputField label="Email" name="email" type="email"
-            fieldRef={emailField} error={formErrors.email} />
-          <InputField label="About me" name="About me"
-            fieldRef={aboutMeField} error={formErrors.about_me} />
-          <Button color="primary" type="submit">Update</Button>
+          <InputField
+            label="Username"
+            name="username"
+            fieldRef={usernameField}
+            error={formErrors.username}
+          />
+          <InputField
+            label="Email"
+            name="email"
+            type="email"
+            fieldRef={emailField}
+            error={formErrors.email}
+          />
+          <InputField
+            label="About me"
+            name="About me"
+            fieldRef={aboutMeField}
+            error={formErrors.about_me}
+          />
+          <Button color="primary" type="submit">
+            Update
+          </Button>
         </Form>
       </ModalBody>
     </Modal>

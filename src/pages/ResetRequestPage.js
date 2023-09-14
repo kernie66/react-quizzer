@@ -20,36 +20,39 @@ export default function ResetRequestPage() {
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    const response = await api.post('/tokens/reset', {
+    const response = await api.post("/tokens/reset", {
       email: emailField.current.value,
     });
     if (!response.ok) {
       setFormErrors(response.body.errors.json);
-    }
-    else {
-      emailField.current.value = '';
+    } else {
+      emailField.current.value = "";
       setFormErrors({});
       setModal(false);
-      flash('You will receive an email with instructions ' +
-        'to reset your password', 'info');
+      flash("You will receive an email with instructions " + "to reset your password", "info");
     }
   };
 
   const cancelRequest = () => {
-    navigate('/');
+    navigate("/");
   };
 
   return (
     <Body>
-      <Modal isOpen={modal} onOpened={onOpened} toggle={cancelRequest}>
-        <ModalHeader toggle={cancelRequest}>
-          Request password reset
-        </ModalHeader>
+      <Modal isOpen={modal} onOpened={onOpened} toggle={cancelRequest} fullscreen="sm">
+        <ModalHeader toggle={cancelRequest}>Request password reset</ModalHeader>
         <ModalBody className="pt-0">
           <Form onSubmit={onSubmit}>
-            <InputField label="Email" name="email" type="email"
-              fieldRef={emailField} error={formErrors.email} />
-            <Button color="primary" type="submit">Reset password</Button>
+            <InputField
+              label="Email"
+              name="email"
+              type="email"
+              fieldRef={emailField}
+              error={formErrors.email}
+            />
+            <Button color="primary" type="submit">
+              Reset password
+            </Button>
           </Form>
         </ModalBody>
       </Modal>

@@ -49,7 +49,7 @@ export default function ChangePasswordPage() {
 
   return (
     <Body sidebar>
-      <Modal isOpen={modal} onOpened={onOpened} className="mt-0">
+      <Modal isOpen={modal} onOpened={onOpened} fullscreen="sm" className="mt-0">
         <Form onSubmit={onSubmit}>
           <ModalHeader className="py-2">{t("change-password")}</ModalHeader>
           <ModalBody className="pt-0">
