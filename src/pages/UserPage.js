@@ -81,7 +81,7 @@ export default function UserPage() {
             <p>{t("user-not-found")}</p>
           ) : (
             <>
-              <EditUser modal={editModal} closeModal={closeModal} />
+              <EditUser modal={editModal} closeModal={closeModal} user={user} />
               <ChangeAvatar modal={avatarModal} closeModal={closeModal} user={user} />
               <Container fluid className="UserPage px-1">
                 <Row className="mb-2">
@@ -96,7 +96,7 @@ export default function UserPage() {
                       ) : null}{" "}
                       {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
                     </h3>
-                    {user.about_me && <h5>{user.about_me}</h5>}
+                    {user.aboutMe && <h5>{user.aboutMe}</h5>}
                     <ul className="list-unstyled">
                       <li>
                         {t("quizzer-since")} <TimeAgo isoDate={user.createdAt} />

@@ -71,5 +71,9 @@
   "me": "me",
   "your-profile-has-been-updated": "Your profile has been updated.",
   "try-the-different-avatar-types-below-or-define-your-own-free-avatar-based-on-your-email-at": "Try the different avatar types below, or define your own free avatar based on your email at",
-  "select-your-preferred-avatar": "Select your preferred avatar"
+  "select-your-preferred-avatar": "Select your preferred avatar",
+  "edit-quizzer-information": "Edit quizzer information",
+  "name": "Name",
+  "email": "Email",
+  "about-me": "About me"
 }
