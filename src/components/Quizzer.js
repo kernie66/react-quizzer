@@ -40,7 +40,9 @@ export default memo(function Quizzer({ quizzer }) {
             </div>
           </div>
           <Row className="mb-0">
-            <p>{quizzer.email}</p>
+            <p className="text-info">
+              {t("email")}: {quizzer.email}
+            </p>
           </Row>
         </div>
       </div>

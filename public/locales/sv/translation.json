@@ -15,8 +15,8 @@
   "server-error-when-logging-in": "Serverfel vid inloggning",
   "dont-have-an-account": "Har du inget konto?",
   "register-here": "Registrera dig här!",
-  "quizzer-since": "Quizzer sedan:",
-  "last-login": "Senaste inloggning:",
+  "quizzer-since": "Quizzer sedan",
+  "last-login": "Senaste inloggning",
   "user-not-found": "Användaren hittades inte",
   "forgot-password": "Glömt ditt lösenord? \nBegär ett <1>nytt lösenord här</1>.",
   "please-select-a-username": "Välj ett användarnamn",
@@ -74,5 +74,8 @@
   "your-profile-has-been-updated": "Din profil har uppdaterats.",
   "edit-quizzer-information": "Uppdatera quizzer-information",
   "about-me": "Om mig",
-  "name": "Namn"
+  "name": "Namn",
+  "last-hosted": "Senast Quizmaster",
+  "never-hosted": "Har inte varit Quizmaster ännu",
+  "email": "E-post"
 }

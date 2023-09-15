@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Button, Col, Container, Row, Spinner } from "reactstrap";
 import Body from "../components/Body";
 import EditUser from "../components/EditUser";
-import TimeAgo from "../components/TimeAgo";
 import { useApi } from "../contexts/ApiProvider";
 // import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
@@ -14,6 +13,7 @@ import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
 import ShowWindowSize from "../components/ShowWindowSize.js";
 import Avatar from "../components/Avatar.js";
+import UserInfo from "../components/UserInfo.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -88,7 +88,7 @@ export default function UserPage() {
                   <Col xs="2" className="Avatar128">
                     <Avatar user={user} size={128} />
                   </Col>
-                  <Col xs="6">
+                  <Col xs="8">
                     <h3 className="text-info-emphasis">
                       {user.name}{" "}
                       {user.id === loggedInUser.id ? (
@@ -96,31 +96,33 @@ export default function UserPage() {
                       ) : null}{" "}
                       {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
                     </h3>
-                    {user.aboutMe && <h5>{user.aboutMe}</h5>}
-                    <ul className="list-unstyled">
-                      <li>
-                        {t("quizzer-since")} <TimeAgo isoDate={user.createdAt} />
-                      </li>
-                      <li>
-                        {t("last-login")} <TimeAgo isoDate={user.lastSeen} />
-                      </li>
-                    </ul>
+                    {user.aboutMe && (
+                      <h5 className="text-info" style={{ whiteSpace: "pre-wrap" }}>
+                        {user.aboutMe}
+                      </h5>
+                    )}
+                    <Row>
+                      <Col>
+                        <UserInfo user={user} />
+                      </Col>
+                      <Col>Number of wins</Col>
+                    </Row>
                   </Col>
                   <Col>{loggedInUser.isAdmin && <ShowWindowSize />}</Col>
-                </Row>
-                <Row className="border-bottom border-primary mb-2">
-                  <Col>
-                    {loggedIn === true && (
-                      <>
-                        <Button color="info" onClick={changeAvatar} className="mb-2 me-2 p-1">
-                          {t("change-avatar")}
-                        </Button>
-                        <Button color="info" onClick={editUser} className="mb-2 me-2 p-1">
-                          {t("update")}
-                        </Button>
-                      </>
-                    )}
-                  </Col>
+                  <Row className="border-bottom border-primary mb-2">
+                    <Col>
+                      {loggedIn === true && (
+                        <>
+                          <Button color="info" onClick={changeAvatar} className="mb-2 me-2 p-1">
+                            {t("change-avatar")}
+                          </Button>
+                          <Button color="info" onClick={editUser} className="mb-2 me-2 p-1">
+                            {t("update")}
+                          </Button>
+                        </>
+                      )}
+                    </Col>
+                  </Row>
                 </Row>
                 <Quizzers currentId={user.id} />
               </Container>
