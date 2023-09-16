@@ -23,14 +23,9 @@ export default function ShowWindowSize() {
 
   return (
     <div>
-      <ul>
-        <li>
-          Width: <strong>{screenSize.width}</strong>
-        </li>
-        <li>
-          Height: <strong>{screenSize.height}</strong>
-        </li>
-      </ul>
+      <span className="text-end align-middle">
+        Size: <strong>{screenSize.width}</strong>&nbsp;x&nbsp;<strong>{screenSize.height}</strong>
+      </span>
     </div>
   );
 }

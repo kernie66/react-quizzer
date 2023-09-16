@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
-import ShowWindowSize from "../components/ShowWindowSize.js";
 import Avatar from "../components/Avatar.js";
 import UserInfo from "../components/UserInfo.js";
 
@@ -88,7 +87,7 @@ export default function UserPage() {
                   <Col xs="2" className="Avatar128">
                     <Avatar user={user} size={128} />
                   </Col>
-                  <Col xs="8">
+                  <Col xs="10">
                     <h3 className="text-info-emphasis">
                       {user.name}{" "}
                       {user.id === loggedInUser.id ? (
@@ -102,13 +101,12 @@ export default function UserPage() {
                       </h5>
                     )}
                     <Row>
-                      <Col>
+                      <Col xs="10">
                         <UserInfo user={user} />
                       </Col>
-                      <Col>Number of wins</Col>
+                      <Col>Wins</Col>
                     </Row>
                   </Col>
-                  <Col>{loggedInUser.isAdmin && <ShowWindowSize />}</Col>
                   <Row className="border-bottom border-primary mb-2">
                     <Col>
                       {loggedIn === true && (
