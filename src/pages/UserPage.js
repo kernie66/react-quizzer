@@ -41,7 +41,11 @@ export default function UserPage() {
     }
   };
 
-  const { isLoading: isLoadingUser, data: user } = useQuery({
+  const {
+    isLoading: isLoadingUser,
+    data: user,
+    refetch: refreshUser,
+  } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUser(id),
   });
@@ -63,6 +67,7 @@ export default function UserPage() {
   const closeModal = () => {
     setEditModal(false);
     setAvatarModal(false);
+    refreshUser();
   };
 
   return (

@@ -26,7 +26,7 @@ export default function SetEmailAddress({
       if (!isValidEmail(email)) {
         emailError = t("please-enter-a-valid-email-address");
       } else {
-        const existingEmail = await api.get("/auth/check", { email });
+        const existingEmail = await api.get("/check", { email });
         if (existingEmail.status === 200) {
           emailError = t("email-address-already-registered-did-you-forget-your-password");
         } else if (existingEmail.status === 404) {

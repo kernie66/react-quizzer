@@ -77,5 +77,6 @@
   "name": "Namn",
   "last-hosted": "Senast Quizmaster",
   "never-hosted": "Har inte varit Quizmaster ännu",
-  "email": "E-post"
+  "email": "E-post",
+  "please-enter-a-name": "Vänligen ange ett namn"
 }

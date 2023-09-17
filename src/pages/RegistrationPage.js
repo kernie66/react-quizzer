@@ -23,14 +23,13 @@ export default function RegistrationPage() {
   const [password2Value, setPassword2Value] = useState("");
   const [password2Error, setPassword2Error] = useState();
   const usernameField = useRef();
-  const emailField = useRef();
   const passwordField = useRef();
   const password2Field = useRef();
   const navigate = useNavigate();
   const api = useApi();
   const flash = useFlash();
   const { t } = useTranslation();
-  const { showBoundary } = useErrorBoundary;
+  const { showBoundary } = useErrorBoundary();
 
   const onOpened = () => {
     usernameField.current.focus();
@@ -103,7 +102,6 @@ export default function RegistrationPage() {
                 setEmailAddressValue={setEmailAddressValue}
                 emailAddressError={emailAddressError}
                 setEmailAddressError={setEmailAddressError}
-                emailAddressField={emailField}
               />
               <SetPassword
                 passwordValue={passwordValue}
