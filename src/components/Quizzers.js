@@ -12,16 +12,20 @@ export default function Quizzers({ currentId }) {
   const api = useApi();
   const { t } = useTranslation();
 
+  const fetchQuizzers = (id) => {
+    return getQuizzers(api, id);
+  };
+
   const {
     isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
   } = useQuery(
     {
-      queryKey: ["quizzers", { api, excludeId: currentId }],
-      queryFn: () => getQuizzers(api, currentId),
+      queryKey: ["quizzers", { excludeId: currentId }],
+      queryFn: () => fetchQuizzers(currentId),
     },
-    [api, currentId],
+    [currentId],
   );
 
   return (

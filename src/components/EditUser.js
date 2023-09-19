@@ -29,16 +29,20 @@ export default function EditUser({ modal, closeModal, user }) {
     nameField.current.focus();
   };
 
+  const fetchQuizzers = (id) => {
+    return getQuizzers(api, id);
+  };
+
   const {
     //isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
   } = useQuery(
     {
-      queryKey: ["quizzers", { api, excludeId: user.id }],
-      queryFn: () => getQuizzers(api, user.id),
+      queryKey: ["quizzers", { excludeId: user.id }],
+      queryFn: () => fetchQuizzers(user.id),
     },
-    [api, user.id],
+    [user.id],
   );
 
   const checkFields = () => {

@@ -1,7 +1,7 @@
 import { Button, Form, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Avatar from "./Avatar.js";
 import { useImmer } from "use-immer";
 import { useTranslation } from "react-i18next";
@@ -16,10 +16,16 @@ export default function ChangeAvatar({ modal, closeModal, user }) {
   const { t } = useTranslation();
 
   const url = user.avatarUrl.split("d=")[0];
+  console.log("Change avatar IDs:", user.id, userData.id);
+
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
 
   const onOpened = () => {
     avatarField.current.value = user.avatarType;
     avatarField.current.focus();
+    // setUserData(user);
   };
 
   const changeAvatar = () => {
