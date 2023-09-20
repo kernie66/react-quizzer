@@ -78,5 +78,6 @@
   "about-me": "About me",
   "last-hosted": "Last Quizmaster",
   "never-hosted": "Never hosted",
-  "please-enter-a-name": "Please enter a name"
+  "please-enter-a-name": "Please enter a name",
+  "email-address-already-registered": "Email address already registered"
 }

@@ -25,7 +25,6 @@ export default function ChangeAvatar({ modal, closeModal, user }) {
   const onOpened = () => {
     avatarField.current.value = user.avatarType;
     avatarField.current.focus();
-    // setUserData(user);
   };
 
   const changeAvatar = () => {
