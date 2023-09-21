@@ -10,6 +10,7 @@ import { isEmpty, sift } from "radash";
 import { useQuery } from "@tanstack/react-query";
 import getQuizzers from "../helpers/getQuizzers.js";
 import isValidEmail from "../helpers/isValidEmail.js";
+import useConfirm from "../helpers/useConfirm.js";
 
 export default function EditUser({ modal, closeModal, user }) {
   const usernameField = useRef();
@@ -17,6 +18,7 @@ export default function EditUser({ modal, closeModal, user }) {
   const emailField = useRef();
   const aboutMeField = useRef();
   const [userData, setUserData] = useImmer(user);
+  const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
   const flash = useFlash();
   const { t } = useTranslation();
@@ -45,6 +47,44 @@ export default function EditUser({ modal, closeModal, user }) {
     },
     [user.id],
   );
+
+  const checkUsername = async () => {
+    let usernameStatus;
+    let errors = false;
+
+    const newUsername = usernameField.current.value.toLowerCase();
+    usernameField.current.value = newUsername;
+    if (newUsername !== user.username) {
+      const checkUsername = quizzers.filter((quizzer) => {
+        return quizzer.username === newUsername;
+      });
+      console.log("Username filter:", checkUsername);
+
+      if (!isEmpty(checkUsername)) {
+        console.log("Username:", checkUsername);
+        usernameStatus = t("username-already-registered");
+        errors = true;
+      } else {
+        const confirm = await getConfirmation();
+        console.log("Confirm?", confirm);
+        if (!confirm) {
+          usernameField.current.value = user.username;
+          return true;
+        }
+      }
+
+      setUserData((draft) => {
+        draft.usernameError = usernameStatus;
+      });
+
+      if (!errors) {
+        setUserData((draft) => {
+          draft.username = usernameField.current.value;
+        });
+      }
+    }
+    return true;
+  };
 
   const checkFields = async () => {
     let usernameStatus, emailStatus;
@@ -94,6 +134,7 @@ export default function EditUser({ modal, closeModal, user }) {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    // await checkUsername();
     let usernameStatus = userData.usernameError;
     let nameStatus = userData.nameError;
     let emailStatus = userData.emailAddressError;
@@ -141,43 +182,46 @@ export default function EditUser({ modal, closeModal, user }) {
   };
 
   return (
-    <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
-      <ModalHeader toggle={closeModal}>{t("edit-quizzer-information")}</ModalHeader>
-      <ModalBody className="pt-0">
-        <Form onSubmit={onSubmit}>
-          <InputField
-            label={t("name")}
-            name="name"
-            fieldRef={nameField}
-            error={userData.nameError}
-          />
-          <InputField
-            label={t("username")}
-            name="username"
-            fieldRef={usernameField}
-            error={userData.usernameError}
-            isValid={userData.usernameValid}
-            onBlur={checkFields}
-          />
-          <InputField
-            label={t("email")}
-            name="email"
-            type="email"
-            fieldRef={emailField}
-            error={userData.emailAddressError}
-            onBlur={checkFields}
-          />
-          <InputField
-            label={t("about-me")}
-            name="aboutMe"
-            type="textarea"
-            fieldRef={aboutMeField}
-          />
-          <Button color="primary" type="submit">
-            {t("update")}
-          </Button>
-        </Form>
-      </ModalBody>
-    </Modal>
+    <>
+      <ConfirmModal />
+      <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
+        <ModalHeader toggle={closeModal}>{t("edit-quizzer-information")}</ModalHeader>
+        <ModalBody className="pt-0">
+          <Form onSubmit={onSubmit}>
+            <InputField
+              label={t("name")}
+              name="name"
+              fieldRef={nameField}
+              error={userData.nameError}
+            />
+            <InputField
+              label={t("username")}
+              name="username"
+              fieldRef={usernameField}
+              error={userData.usernameError}
+              isValid={userData.usernameValid}
+              onBlur={checkUsername}
+            />
+            <InputField
+              label={t("email")}
+              name="email"
+              type="email"
+              fieldRef={emailField}
+              error={userData.emailAddressError}
+              onBlur={checkFields}
+            />
+            <InputField
+              label={t("about-me")}
+              name="aboutMe"
+              type="textarea"
+              fieldRef={aboutMeField}
+            />
+            <Button color="primary" type="submit">
+              {t("update")}
+            </Button>
+          </Form>
+        </ModalBody>
+      </Modal>
+    </>
   );
 }
