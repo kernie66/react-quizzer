@@ -79,5 +79,8 @@
   "last-hosted": "Last Quizmaster",
   "never-hosted": "Never hosted",
   "please-enter-a-name": "Please enter a name",
-  "email-address-already-registered": "Email address already registered"
+  "email-address-already-registered": "Email address already registered",
+  "update-username": "Update username",
+  "do-you-really-want-to-change-your-username-to": "Do you really want to change your username to",
+  "confirm": "Confirm"
 }

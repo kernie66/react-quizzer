@@ -79,5 +79,8 @@
   "never-hosted": "Har inte varit Quizmaster ännu",
   "email": "E-post",
   "please-enter-a-name": "Vänligen ange ett namn",
-  "email-address-already-registered": "E-mail-adressen är redan registrerad"
+  "email-address-already-registered": "E-mail-adressen är redan registrerad",
+  "confirm": "Bekräfta",
+  "do-you-really-want-to-change-your-username-to": "Vill du verkligen ändra ditt användarnamn till",
+  "update-username": "Uppdatera användarnamn"
 }

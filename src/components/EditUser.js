@@ -18,6 +18,7 @@ export default function EditUser({ modal, closeModal, user }) {
   const emailField = useRef();
   const aboutMeField = useRef();
   const [userData, setUserData] = useImmer(user);
+  const [confirmModalText, setConfirmModalText] = useImmer({});
   const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
   const flash = useFlash();
@@ -30,6 +31,14 @@ export default function EditUser({ modal, closeModal, user }) {
     emailField.current.value = user.email;
     aboutMeField.current.value = user.aboutMe || "";
     nameField.current.focus();
+    setUserData((draft) => {
+      draft.usernameError = undefined;
+      draft.usernameValid = undefined;
+    });
+    setConfirmModalText((draft) => {
+      draft.title = "";
+      draft.message = "";
+    });
   };
 
   const fetchQuizzers = (id) => {
@@ -49,12 +58,12 @@ export default function EditUser({ modal, closeModal, user }) {
   );
 
   const checkUsername = async () => {
-    let usernameStatus;
+    let usernameStatus, usernameValid;
     let errors = false;
 
     const newUsername = usernameField.current.value.toLowerCase();
     usernameField.current.value = newUsername;
-    if (newUsername !== user.username) {
+    if (newUsername && newUsername !== user.username) {
       const checkUsername = quizzers.filter((quizzer) => {
         return quizzer.username === newUsername;
       });
@@ -65,25 +74,42 @@ export default function EditUser({ modal, closeModal, user }) {
         usernameStatus = t("username-already-registered");
         errors = true;
       } else {
+        setConfirmModalText((draft) => {
+          draft.title = t("update-username");
+          draft.message = (
+            <>
+              {t("do-you-really-want-to-change-your-username-to")}{" "}
+              <strong>
+                <span className="text-info fs-5">{newUsername}</span>
+              </strong>
+            </>
+          );
+          (draft.confirmText = t("confirm")), (draft.cancelText = t("cancel"));
+        });
         const confirm = await getConfirmation();
         console.log("Confirm?", confirm);
         if (!confirm) {
           usernameField.current.value = user.username;
-          return true;
+        } else {
+          usernameValid = t("username-is-available");
         }
       }
 
       setUserData((draft) => {
         draft.usernameError = usernameStatus;
+        draft.usernameValid = usernameValid;
       });
 
       if (!errors) {
         setUserData((draft) => {
           draft.username = usernameField.current.value;
         });
+        return Promise.resolve("Username changed");
       }
+    } else {
+      usernameField.current.value = user.username;
     }
-    return true;
+    return Promise.resolve("Username not changed");
   };
 
   const checkFields = async () => {
@@ -134,7 +160,7 @@ export default function EditUser({ modal, closeModal, user }) {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    // await checkUsername();
+
     let usernameStatus = userData.usernameError;
     let nameStatus = userData.nameError;
     let emailStatus = userData.emailAddressError;
@@ -160,8 +186,10 @@ export default function EditUser({ modal, closeModal, user }) {
       if (errors) {
         setUserData((draft) => {
           draft.usernameError = usernameStatus;
+          draft.usernameValid = undefined;
           draft.nameError = nameStatus;
           draft.emailAddressError = emailStatus;
+          draft.emailValid = undefined;
         });
         return;
       }
@@ -183,7 +211,13 @@ export default function EditUser({ modal, closeModal, user }) {
 
   return (
     <>
-      <ConfirmModal />
+      <ConfirmModal
+        title={confirmModalText.title}
+        message={confirmModalText.message}
+        confirmText={confirmModalText.confirmText}
+        cancelText={confirmModalText.cancelText}
+        size="sm"
+      />
       <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
         <ModalHeader toggle={closeModal}>{t("edit-quizzer-information")}</ModalHeader>
         <ModalBody className="pt-0">
@@ -216,7 +250,7 @@ export default function EditUser({ modal, closeModal, user }) {
               type="textarea"
               fieldRef={aboutMeField}
             />
-            <Button color="primary" type="submit">
+            <Button color="primary" onClick={onSubmit}>
               {t("update")}
             </Button>
           </Form>
