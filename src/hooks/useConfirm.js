@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import createPromise from "./createPromise.js";
+import createPromise from "../helpers/createPromise.js";
 
 const useConfirm = () => {
   const [open, setOpen] = useState(false);

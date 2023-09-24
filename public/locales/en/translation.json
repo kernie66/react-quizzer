@@ -81,6 +81,10 @@
   "please-enter-a-name": "Please enter a name",
   "email-address-already-registered": "Email address already registered",
   "update-username": "Update username",
-  "do-you-really-want-to-change-your-username-to": "Do you really want to change your username to",
-  "confirm": "Confirm"
+  "do-you-want-to-change-your-username": "Do you want to change your username",
+  "confirm": "Confirm",
+  "please-enter-a-username": "Please enter a username",
+  "from": "From",
+  "to": "To",
+  "are-you-kidding-me-too-long-username": "Are you kidding me, too long username"
 }

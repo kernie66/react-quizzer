@@ -10,7 +10,8 @@ import { isEmpty, sift } from "radash";
 import { useQuery } from "@tanstack/react-query";
 import getQuizzers from "../helpers/getQuizzers.js";
 import isValidEmail from "../helpers/isValidEmail.js";
-import useConfirm from "../helpers/useConfirm.js";
+import useConfirm from "../hooks/useConfirm.js";
+import isValidUsername from "../helpers/isValidUsername.js";
 
 export default function EditUser({ modal, closeModal, user }) {
   const usernameField = useRef();
@@ -59,39 +60,54 @@ export default function EditUser({ modal, closeModal, user }) {
 
   const checkUsername = async () => {
     let usernameStatus, usernameValid;
-    let errors = false;
+
+    setUserData((draft) => {
+      draft.usernameError = usernameStatus;
+      draft.usernameValid = usernameValid;
+    });
 
     const newUsername = usernameField.current.value.toLowerCase();
     usernameField.current.value = newUsername;
     if (newUsername && newUsername !== user.username) {
-      const checkUsername = quizzers.filter((quizzer) => {
-        return quizzer.username === newUsername;
-      });
-      console.log("Username filter:", checkUsername);
+      const validUsername = isValidUsername(newUsername);
+      usernameStatus = validUsername && t(validUsername);
 
-      if (!isEmpty(checkUsername)) {
-        console.log("Username:", checkUsername);
-        usernameStatus = t("username-already-registered");
-        errors = true;
-      } else {
-        setConfirmModalText((draft) => {
-          draft.title = t("update-username");
-          draft.message = (
-            <>
-              {t("do-you-really-want-to-change-your-username-to")}{" "}
-              <strong>
-                <span className="text-info fs-5">{newUsername}</span>
-              </strong>
-            </>
-          );
-          (draft.confirmText = t("confirm")), (draft.cancelText = t("cancel"));
+      if (!usernameStatus) {
+        const checkUsername = quizzers.filter((quizzer) => {
+          return quizzer.username === newUsername;
         });
-        const confirm = await getConfirmation();
-        console.log("Confirm?", confirm);
-        if (!confirm) {
-          usernameField.current.value = user.username;
+        console.log("Username filter:", checkUsername);
+
+        if (!isEmpty(checkUsername)) {
+          console.log("Username:", checkUsername);
+          usernameStatus = t("username-already-registered");
         } else {
-          usernameValid = t("username-is-available");
+          setConfirmModalText((draft) => {
+            draft.title = t("update-username");
+            draft.message = (
+              <>
+                {t("do-you-want-to-change-your-username")}
+                <br />
+                {t("from")}:&nbsp;
+                <strong>
+                  <span className="text-success fs-5">{user.username}</span>
+                </strong>
+                <br />
+                {t("to")}:&nbsp;
+                <strong>
+                  <span className="text-info fs-5">{newUsername}</span>
+                </strong>
+              </>
+            );
+            (draft.confirmText = t("confirm")), (draft.cancelText = t("cancel"));
+          });
+          const confirm = await getConfirmation();
+          console.log("Confirm?", confirm);
+          if (!confirm) {
+            usernameField.current.value = user.username;
+          } else {
+            usernameValid = t("username-is-available");
+          }
         }
       }
 
@@ -100,7 +116,7 @@ export default function EditUser({ modal, closeModal, user }) {
         draft.usernameValid = usernameValid;
       });
 
-      if (!errors) {
+      if (usernameStatus) {
         setUserData((draft) => {
           draft.username = usernameField.current.value;
         });

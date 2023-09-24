@@ -81,6 +81,10 @@
   "please-enter-a-name": "Vänligen ange ett namn",
   "email-address-already-registered": "E-mail-adressen är redan registrerad",
   "confirm": "Bekräfta",
-  "do-you-really-want-to-change-your-username-to": "Vill du verkligen ändra ditt användarnamn till",
-  "update-username": "Uppdatera användarnamn"
+  "do-you-want-to-change-your-username": "Vill du ändra ditt användarnamn",
+  "update-username": "Uppdatera användarnamn",
+  "please-enter-a-username": "Ange ett användarnamn",
+  "to": "Till",
+  "from": "Från",
+  "are-you-kidding-me-too-long-username": "Skämtar du med mig, för långt användarnamn"
 }
