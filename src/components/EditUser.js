@@ -6,7 +6,7 @@ import { useFlash } from "../contexts/FlashProvider";
 import { useImmer } from "use-immer";
 import { useTranslation } from "react-i18next";
 import { useErrorBoundary } from "react-error-boundary";
-import { isEmpty, sift } from "radash";
+import { isEmpty, sift, trim } from "radash";
 import { useQuery } from "@tanstack/react-query";
 import getQuizzers from "../helpers/getQuizzers.js";
 import isValidEmail from "../helpers/isValidEmail.js";
@@ -35,13 +35,17 @@ export default function EditUser({ modal, closeModal, user }) {
     setUserData((draft) => {
       draft.usernameError = undefined;
       draft.usernameValid = undefined;
+      draft.emailError = undefined;
+      draft.emailValid = undefined;
     });
     setConfirmModalText((draft) => {
       draft.title = "";
       draft.message = "";
+      draft.size = "sm";
     });
   };
 
+  // Helper function with api parameter
   const fetchQuizzers = (id) => {
     return getQuizzers(api, id);
   };
@@ -66,7 +70,7 @@ export default function EditUser({ modal, closeModal, user }) {
       draft.usernameValid = usernameValid;
     });
 
-    const newUsername = usernameField.current.value.toLowerCase();
+    const newUsername = trim(usernameField.current.value.toLowerCase());
     usernameField.current.value = newUsername;
     if (newUsername && newUsername !== user.username) {
       const validUsername = isValidUsername(newUsername);
@@ -89,17 +93,15 @@ export default function EditUser({ modal, closeModal, user }) {
                 {t("do-you-want-to-change-your-username")}
                 <br />
                 {t("from")}:&nbsp;
-                <strong>
-                  <span className="text-success fs-5">{user.username}</span>
-                </strong>
+                <span className="text-success fs-5">{user.username}</span>
                 <br />
                 {t("to")}:&nbsp;
-                <strong>
-                  <span className="text-info fs-5">{newUsername}</span>
-                </strong>
+                <span className="text-info fs-5">{newUsername}</span>
               </>
             );
-            (draft.confirmText = t("confirm")), (draft.cancelText = t("cancel"));
+            draft.confirmText = t("confirm");
+            draft.cancelText = t("cancel");
+            draft.size = "sm";
           });
           const confirm = await getConfirmation();
           console.log("Confirm?", confirm);
@@ -116,7 +118,7 @@ export default function EditUser({ modal, closeModal, user }) {
         draft.usernameValid = usernameValid;
       });
 
-      if (usernameStatus) {
+      if (!usernameStatus) {
         setUserData((draft) => {
           draft.username = usernameField.current.value;
         });
@@ -128,49 +130,80 @@ export default function EditUser({ modal, closeModal, user }) {
     return Promise.resolve("Username not changed");
   };
 
-  const checkFields = async () => {
-    let usernameStatus, emailStatus;
-    let errors = false;
-
-    const newUsername = usernameField.current.value.toLowerCase();
-    const newEmailAddress = emailField.current.value.toLowerCase();
-
-    console.log("User's name:", nameField.current.value);
-    const checkUsername = quizzers.filter((quizzer) => {
-      return quizzer.username === newUsername;
-    });
-    console.log("Username filter:", checkUsername);
-
-    const checkEmail = quizzers.filter((quizzer) => {
-      return quizzer.email === newEmailAddress;
-    });
-    console.log("Email filter:", checkEmail);
-
-    if (!isEmpty(checkUsername)) {
-      console.log("Username:", checkUsername);
-      usernameStatus = t("username-already-registered");
-      errors = true;
-    }
-
-    if (!isEmpty(checkEmail)) {
-      emailStatus = t("email-address-already-registered");
-      errors = true;
-    } else if (!isValidEmail(newEmailAddress)) {
-      emailStatus = t("please-enter-a-valid-email-address");
-    }
+  const checkEmail = async () => {
+    let emailStatus, emailValid;
 
     setUserData((draft) => {
-      draft.usernameError = usernameStatus;
-      draft.emailAddressError = emailStatus;
+      draft.emailError = emailStatus;
+      draft.emailValid = emailValid;
     });
 
-    if (!errors) {
-      setUserData((draft) => {
-        draft.name = nameField.current.value;
-        draft.email = emailField.current.value;
-        draft.aboutMe = aboutMeField.current.value;
-      });
+    const newEmailAddress = trim(emailField.current.value.toLowerCase());
+    emailField.current.value = newEmailAddress;
+    if (newEmailAddress && newEmailAddress !== user.email) {
+      if (!isValidEmail(newEmailAddress)) {
+        emailStatus = t("please-enter-a-valid-email-address");
+      } else {
+        const checkEmailAddress = quizzers.filter((quizzer) => {
+          return quizzer.email === newEmailAddress;
+        });
+        console.log("Email filter:", checkEmailAddress);
+
+        if (!isEmpty(checkEmailAddress)) {
+          console.log("Email:", checkEmailAddress);
+          emailStatus = t("email-address-already-registered");
+        } else if (!isValidEmail(newEmailAddress)) {
+          emailStatus = t("please-enter-a-valid-email-address");
+        } else {
+          setConfirmModalText((draft) => {
+            draft.title = t("update-email");
+            draft.message = (
+              <>
+                {t("do-you-want-to-change-your-email")}
+                <br />
+                {t("from")}:&nbsp;
+                <span className="text-success fs-5">{user.email}</span>
+                <br />
+                {t("to")}:&nbsp;
+                <span className="text-info fs-5">{newEmailAddress}</span>
+              </>
+            );
+            draft.confirmText = t("confirm");
+            draft.cancelText = t("cancel");
+            draft.size = "";
+          });
+          const confirm = await getConfirmation();
+          console.log("Confirm?", confirm);
+          if (!confirm) {
+            emailField.current.value = user.email;
+          } else {
+            emailValid = t("email-address-is-available");
+          }
+        }
+
+        setUserData((draft) => {
+          draft.emailError = emailStatus;
+          draft.emailValid = emailValid;
+        });
+
+        if (!emailStatus) {
+          setUserData((draft) => {
+            draft.email = emailField.current.value;
+          });
+          return Promise.resolve("Email changed");
+        }
+      }
+    } else {
+      emailField.current.value = user.email;
     }
+    return Promise.resolve("Email not changed");
+  };
+
+  const checkFields = () => {
+    setUserData((draft) => {
+      draft.name = nameField.current.value;
+      draft.aboutMe = aboutMeField.current.value;
+    });
     return true;
   };
 
@@ -179,7 +212,7 @@ export default function EditUser({ modal, closeModal, user }) {
 
     let usernameStatus = userData.usernameError;
     let nameStatus = userData.nameError;
-    let emailStatus = userData.emailAddressError;
+    let emailStatus = userData.emailError;
 
     try {
       const currentErrors = [usernameStatus, nameStatus, emailStatus, quizzerError];
@@ -204,7 +237,7 @@ export default function EditUser({ modal, closeModal, user }) {
           draft.usernameError = usernameStatus;
           draft.usernameValid = undefined;
           draft.nameError = nameStatus;
-          draft.emailAddressError = emailStatus;
+          draft.emailError = emailStatus;
           draft.emailValid = undefined;
         });
         return;
@@ -232,7 +265,7 @@ export default function EditUser({ modal, closeModal, user }) {
         message={confirmModalText.message}
         confirmText={confirmModalText.confirmText}
         cancelText={confirmModalText.cancelText}
-        size="sm"
+        size={confirmModalText.size}
       />
       <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
         <ModalHeader toggle={closeModal}>{t("edit-quizzer-information")}</ModalHeader>
@@ -243,6 +276,7 @@ export default function EditUser({ modal, closeModal, user }) {
               name="name"
               fieldRef={nameField}
               error={userData.nameError}
+              onBlur={checkFields}
             />
             <InputField
               label={t("username")}
@@ -257,14 +291,16 @@ export default function EditUser({ modal, closeModal, user }) {
               name="email"
               type="email"
               fieldRef={emailField}
-              error={userData.emailAddressError}
-              onBlur={checkFields}
+              error={userData.emailError}
+              isValid={userData.emailValid}
+              onBlur={checkEmail}
             />
             <InputField
               label={t("about-me")}
               name="aboutMe"
               type="textarea"
               fieldRef={aboutMeField}
+              onBlur={checkFields}
             />
             <Button color="primary" onClick={onSubmit}>
               {t("update")}

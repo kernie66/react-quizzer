@@ -86,5 +86,7 @@
   "please-enter-a-username": "Ange ett användarnamn",
   "to": "Till",
   "from": "Från",
-  "are-you-kidding-me-too-long-username": "Skämtar du med mig, för långt användarnamn"
+  "are-you-kidding-me-too-long-username": "Skämtar du med mig, för långt användarnamn",
+  "update-email": "Uppdatera epost-adress",
+  "do-you-want-to-change-your-email": "Vill du ändra din e-postadress"
 }

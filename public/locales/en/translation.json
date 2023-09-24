@@ -86,5 +86,7 @@
   "please-enter-a-username": "Please enter a username",
   "from": "From",
   "to": "To",
-  "are-you-kidding-me-too-long-username": "Are you kidding me, too long username"
+  "are-you-kidding-me-too-long-username": "Are you kidding me, too long username",
+  "update-email": "Update email address",
+  "do-you-want-to-change-your-email": "Do you want to change your email"
 }
