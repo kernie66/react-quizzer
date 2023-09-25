@@ -80,10 +80,8 @@ export default function EditUser({ modal, closeModal, user }) {
         const checkUsername = quizzers.filter((quizzer) => {
           return quizzer.username === newUsername;
         });
-        console.log("Username filter:", checkUsername);
 
         if (!isEmpty(checkUsername)) {
-          console.log("Username:", checkUsername);
           usernameStatus = t("username-already-registered");
         } else {
           setConfirmModalText((draft) => {
@@ -104,11 +102,10 @@ export default function EditUser({ modal, closeModal, user }) {
             draft.size = "sm";
           });
           const confirm = await getConfirmation();
-          console.log("Confirm?", confirm);
-          if (!confirm) {
-            usernameField.current.value = user.username;
-          } else {
+          if (confirm) {
             usernameValid = t("username-is-available");
+          } else {
+            usernameField.current.value = user.username;
           }
         }
       }
@@ -147,10 +144,8 @@ export default function EditUser({ modal, closeModal, user }) {
         const checkEmailAddress = quizzers.filter((quizzer) => {
           return quizzer.email === newEmailAddress;
         });
-        console.log("Email filter:", checkEmailAddress);
 
         if (!isEmpty(checkEmailAddress)) {
-          console.log("Email:", checkEmailAddress);
           emailStatus = t("email-address-already-registered");
         } else if (!isValidEmail(newEmailAddress)) {
           emailStatus = t("please-enter-a-valid-email-address");
@@ -173,11 +168,10 @@ export default function EditUser({ modal, closeModal, user }) {
             draft.size = "";
           });
           const confirm = await getConfirmation();
-          console.log("Confirm?", confirm);
-          if (!confirm) {
-            emailField.current.value = user.email;
-          } else {
+          if (confirm) {
             emailValid = t("email-address-is-available");
+          } else {
+            emailField.current.value = user.email;
           }
         }
 
@@ -200,10 +194,17 @@ export default function EditUser({ modal, closeModal, user }) {
   };
 
   const checkFields = () => {
+    let newName = nameField.current.value;
+
+    if (!newName) {
+      newName = user.name;
+    }
+
     setUserData((draft) => {
-      draft.name = nameField.current.value;
+      draft.name = newName;
       draft.aboutMe = aboutMeField.current.value;
     });
+    nameField.current.value = newName;
     return true;
   };
 
@@ -216,9 +217,7 @@ export default function EditUser({ modal, closeModal, user }) {
 
     try {
       const currentErrors = [usernameStatus, nameStatus, emailStatus, quizzerError];
-      console.log("Sift:", sift(currentErrors), currentErrors);
       let errors = sift(currentErrors).length !== 0;
-      console.log("Errors:", errors);
       if (!userData.name) {
         nameStatus = t("please-enter-a-name");
         errors = true;
