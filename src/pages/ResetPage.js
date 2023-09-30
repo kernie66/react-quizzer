@@ -14,13 +14,13 @@ export default function ResetPage() {
   const flash = useFlash();
   const navigate = useNavigate();
   const { search } = useLocation();
-  const token = new URLSearchParams(search).get('token');
+  const token = new URLSearchParams(search).get("token");
+  const userId = new URLSearchParams(search).get("id");
 
   useEffect(() => {
     if (!token) {
-      navigate('/');
-    }
-    else {
+      navigate("/");
+    } else {
       passwordField.current.focus();
     }
   }, [token, navigate]);
@@ -31,25 +31,19 @@ export default function ResetPage() {
       setFormErrors({
         password2: "New passwords don't match",
       });
-    }
-    else {
-      const response = await api.put('/tokens/reset', {
+    } else {
+      const response = await api.put("/auth/reset-password", {
+        userId,
         token,
-        new_password: passwordField.current.value,
+        password: passwordField.current.value,
       });
       if (response.ok) {
         setFormErrors({});
-        flash('Your password has been successfully reset', 'success');
-        navigate('/login');
-      }
-      else {
-        if (response.body.errors.json.new_password) {
-          setFormErrors(response.body.errors.json);
-        }
-        else {
-          flash('Password could not be reset. Please try again.', 'danger');
-          navigate('/reset-request');
-        }
+        flash("Your password has been successfully reset", "success");
+        navigate("/login");
+      } else {
+        flash("Password could not be reset. Please try again.", "danger");
+        navigate("/reset-request");
       }
     }
   };
@@ -58,11 +52,23 @@ export default function ResetPage() {
     <Body>
       <h1>Reset your password</h1>
       <Form onSubmit={onSubmit}>
-        <InputField label="New password" name="password" type="password"
-          fieldRef={passwordField} error={formErrors.password} />
-        <InputField label="Repeat password" name="password" type="password"
-          fieldRef={password2Field} error={formErrors.password2} />
-        <Button color="primary" type="submit">Update</Button>
+        <InputField
+          label="New password"
+          name="password"
+          type="password"
+          fieldRef={passwordField}
+          error={formErrors.password}
+        />
+        <InputField
+          label="Repeat password"
+          name="password"
+          type="password"
+          fieldRef={password2Field}
+          error={formErrors.password2}
+        />
+        <Button color="primary" type="submit">
+          Update
+        </Button>
       </Form>
     </Body>
   );

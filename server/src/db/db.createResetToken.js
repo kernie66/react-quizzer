@@ -2,7 +2,7 @@ import { ResetToken } from "../../models/index.js";
 import bcrypt from "bcrypt";
 import { logger } from "../logger/logger.js";
 
-export default async function dbCreateResetToken(user) {
+export default async function dbCreateResetToken(user, language) {
   let crypto;
   try {
     crypto = await import("node:crypto");
@@ -21,12 +21,12 @@ export default async function dbCreateResetToken(user) {
     try {
       const [newToken, created] = await ResetToken.findOrCreate({
         where: { userId: user.id },
-        defaults: { resetToken: hash },
+        defaults: { resetToken: hash, language: language },
       });
       if (created) {
         logger.debug("New reset password token created for user:", user.username);
       } else {
-        newToken.update({ resetToken: hash });
+        newToken.update({ resetToken: hash, language: language });
         logger.debug("Reset token updated for user:", user.username);
       }
     } catch (error) {

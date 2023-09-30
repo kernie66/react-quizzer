@@ -6,32 +6,38 @@ import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { trim } from "radash";
 
 export default function ResetRequestPage() {
   const [formErrors, setFormErrors] = useState({});
   const [modal, setModal] = useState(true);
+  const [resetURL, setResetURL] = useState();
+  const [language, setLanguage] = useState("en");
   const emailField = useRef();
   const api = useApi();
   const flash = useFlash();
   const { i18n } = useTranslation();
   const navigate = useNavigate();
 
-  let language = "en";
-
   const onOpened = () => {
     const languageCode = i18n.resolvedLanguage;
-    language = languageCode.split("-")[0];
+    setLanguage(languageCode.split("-")[0]);
+    const currentURL = window.location.href;
+    setResetURL(currentURL.replace("/reset-request", "/reset"));
     emailField.current.focus();
-    console.log(window.location.href, language);
   };
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    const response = await api.post("/tokens/reset", {
-      email: emailField.current.value,
+    const newEmailAddress = trim(emailField.current.value.toLowerCase());
+    emailField.current.value = newEmailAddress;
+    const response = await api.post("/auth/request-reset", {
+      email: newEmailAddress,
+      resetURL: resetURL,
+      language: language,
     });
     if (!response.ok) {
-      setFormErrors(response.body.errors.json);
+      flash("Couldn't request a password request", "warn");
     } else {
       emailField.current.value = "";
       setFormErrors({});

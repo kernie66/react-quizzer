@@ -11,37 +11,40 @@ import resetPassword from "../auth/resetPassword.js";
 
 export const publicRouter = Router();
 
-publicRouter.post("/register", register);
+try {
+  publicRouter.post("/register", register);
 
-publicRouter.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
-  logger.info("Logging in:", req.user);
+  publicRouter.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
+    logger.info("Logging in:", req.user);
 
-  try {
-    dbUpdateUser(req.user.id, { lastSeen: Date.now() });
-  } catch (error) {
-    logger.error("Error updating user last seen time:", error);
-  }
-  res.status(200).json(req.user);
-});
+    try {
+      dbUpdateUser(req.user.id, { lastSeen: Date.now() });
+    } catch (error) {
+      logger.error("Error updating user last seen time:", error);
+    }
+    res.status(200).json(req.user);
+  });
 
-publicRouter.post("/refresh-token", updateAccessToken);
+  publicRouter.post("/refresh-token", updateAccessToken);
 
-publicRouter.post("/request-reset", requestPasswordReset);
-publicRouter.post("/reset-password", resetPassword);
+  publicRouter.post("/request-reset", requestPasswordReset);
+  publicRouter.put("/reset-password", resetPassword);
 
-publicRouter.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
+  publicRouter.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
 
-publicRouter.all("/", (req, res) => {
-  const dbStatus = testDbConnection();
-  let statusString;
-  if (dbStatus) {
-    statusString = "Connection to database established";
-  } else {
-    statusString = "Couldn't connect to the database";
-  }
-  res.send("<h3>Welcome to the Quizzer API server...</h3>" + statusString);
-});
-
+  publicRouter.all("/", (req, res) => {
+    const dbStatus = testDbConnection();
+    let statusString;
+    if (dbStatus) {
+      statusString = "Connection to database established";
+    } else {
+      statusString = "Couldn't connect to the database";
+    }
+    res.send("<h3>Welcome to the Quizzer API server...</h3>" + statusString);
+  });
+} catch (error) {
+  logger.error("Public route error:", error);
+}
 /*
 publicRouter.post("/login", async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkUser, createUser, deleteUser, getUsers, updateUser } from "../controllers/users.js";
+import { createUser, deleteUser, getUsers, updateUser } from "../controllers/users.js";
 import {
   addQuestion,
   createQuiz,

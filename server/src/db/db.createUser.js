@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import { User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import { isEmpty } from "radash";
+import { BadRequest } from "../utils/errorHandler.js";
 
 export default async function dbCreateUser(userData) {
   const lowerCaseEmail = userData.email.trim().toLowerCase();
@@ -46,11 +47,10 @@ export default async function dbCreateUser(userData) {
       return newUser;
     } catch (error) {
       logger.error("Failed to create user:", error);
-      Promise.reject(error);
+      throw new BadRequest(error);
     }
   } else {
     logger.warn("User with same info already exist:", existingUser[0].username);
-    Promise.reject("User already exists");
+    throw new BadRequest("User already exists");
   }
-  return false;
 }

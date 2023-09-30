@@ -42,6 +42,7 @@ import "./auth/passportConfig.js";
 
 app.use(morgan("dev"));
 app.get("/api/check", checkUser);
+app.use("/api/auth", publicRouter);
 app.use("/api/db", passport.authenticate("jwt", { session: false }), checkAdmin, dbRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), checkLoggedIn, apiRouter);
 app.use("/", publicRouter);

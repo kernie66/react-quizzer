@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
-import { BadRequest, GeneralError } from "../utils/errorHandler.js";
+import { BadRequest } from "../utils/errorHandler.js";
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   const { name, username, password, email } = req.body;
 
   const userData = {};
@@ -24,6 +24,6 @@ export const register = async (req, res) => {
     }
   } catch (error) {
     logger.error("Error creating user:", error);
-    throw new GeneralError(error);
+    next(error);
   }
 };

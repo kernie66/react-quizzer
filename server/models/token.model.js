@@ -7,4 +7,5 @@ export const Token = db.define("token", {
 
 export const ResetToken = db.define("resetToken", {
   resetToken: { type: DataTypes.STRING(300) },
+  language: { type: DataTypes.STRING(2), defaultValue: "en" },
 });

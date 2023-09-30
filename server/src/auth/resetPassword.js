@@ -10,8 +10,10 @@ const resetPassword = async (req, res, next) => {
   const token = req.body.token;
   const newPassword = req.body.password;
   const hashCost = 10;
+  let resetToken;
+  let language = "en";
 
-  logger.debug("Reset password user ID:", userId);
+  logger.info("Reset password for user ID:", userId);
 
   try {
     const user = await User.findByPk(userId);
@@ -19,16 +21,21 @@ const resetPassword = async (req, res, next) => {
     if (!passwordResetToken) {
       throw new NotFound("No password reset token requested");
     } else {
+      resetToken = passwordResetToken.resetToken;
+      language = passwordResetToken.language;
       const currentTime = new Date();
       const resetTokenTime = passwordResetToken.updatedAt;
       logger.debug("Time now:", currentTime);
       logger.debug("Timestamp:", resetTokenTime);
+
+      // Delete the reset request token, we don't need it any more
+      passwordResetToken.destroy();
       const minutesSince = (currentTime - resetTokenTime) / 1000 / 60;
       if (minutesSince > 30) {
         throw new BadRequest("Password reset token expired");
       }
     }
-    const isValid = await bcrypt.compare(token, passwordResetToken.resetToken);
+    const isValid = await bcrypt.compare(token, resetToken);
     if (!isValid) {
       throw new BadRequest("Invalid password reset token");
     }
@@ -42,14 +49,14 @@ const resetPassword = async (req, res, next) => {
         {
           name: user.name,
         },
-        "./template/resetPassword.handlebars",
+        `passwordReset_${language}`,
       );
     } else {
       throw new Error("Failed to update password");
     }
-    //await passwordResetToken.deleteOne();
     res.status(201).json(`Password updated for user ${user.name}`);
   } catch (error) {
+    logger.error("Error resetting user password:", error);
     next(error);
   }
 };
