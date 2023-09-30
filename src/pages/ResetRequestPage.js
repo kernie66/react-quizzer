@@ -5,6 +5,7 @@ import Body from "../components/Body";
 import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
 import InputField from "../components/InputField";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function ResetRequestPage() {
   const [formErrors, setFormErrors] = useState({});
@@ -12,10 +13,16 @@ export default function ResetRequestPage() {
   const emailField = useRef();
   const api = useApi();
   const flash = useFlash();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
 
+  let language = "en";
+
   const onOpened = () => {
+    const languageCode = i18n.resolvedLanguage;
+    language = languageCode.split("-")[0];
     emailField.current.focus();
+    console.log(window.location.href, language);
   };
 
   const onSubmit = async (ev) => {

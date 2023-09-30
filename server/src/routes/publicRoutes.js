@@ -6,6 +6,8 @@ import { logger } from "../logger/logger.js";
 import dbUpdateUser from "../db/db.updateUser.js";
 import updateAccessToken from "../auth/updateAccessToken.js";
 import { logout } from "../auth/logout.js";
+import requestPasswordReset from "../auth/requestReset.js";
+import resetPassword from "../auth/resetPassword.js";
 
 export const publicRouter = Router();
 
@@ -23,6 +25,9 @@ publicRouter.post("/login", passport.authenticate("local", { session: false }), 
 });
 
 publicRouter.post("/refresh-token", updateAccessToken);
+
+publicRouter.post("/request-reset", requestPasswordReset);
+publicRouter.post("/reset-password", resetPassword);
 
 publicRouter.delete("/logout", passport.authenticate("jwt", { session: false }), logout);
 

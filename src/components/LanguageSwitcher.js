@@ -10,7 +10,7 @@ export default function LanguageSwitcher() {
   const [flagIcon, setFlagIcon] = useState();
 
   useEffect(() => {
-    const key = language.split("_")[0];
+    const key = language.split("-")[0];
     setFlagIcon(flagIcons[key]);
   }, [language]);
 

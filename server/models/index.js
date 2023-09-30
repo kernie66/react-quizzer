@@ -1,6 +1,6 @@
 import { Game } from "./game.model.js";
 import { Question, Quiz } from "./quiz.model.js";
-import { Token } from "./token.model.js";
+import { ResetToken, Token } from "./token.model.js";
 import { User } from "./user.model.js";
 
 Quiz.hasMany(Question);
@@ -18,4 +18,6 @@ User.belongsToMany(Game, { through: "scoreboard" });
 User.hasOne(Token);
 Token.belongsTo(User);
 
-export { Quiz, Question, User, Game, Token };
+User.hasOne(ResetToken);
+ResetToken.belongsTo(User);
+export { Quiz, Question, User, Game, Token, ResetToken };

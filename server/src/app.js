@@ -17,6 +17,7 @@ import { checkLoggedIn } from "./middleware/checkLoggedIn.js";
 import { checkAdmin } from "./middleware/checkAdmin.js";
 import { handleErrors } from "./middleware/handleErrors.js";
 import { NotFound } from "./utils/errorHandler.js";
+// import sendEmail from "./utils/sendEmail.js";
 
 const invalidPathHandler = () => {
   throw new NotFound("Invalid path");
@@ -38,7 +39,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 import "./auth/passportConfig.js";
-import sendEmail from "./utils/sendEmail.js";
 
 app.use(morgan("dev"));
 app.get("/api/check", checkUser);
@@ -59,7 +59,7 @@ app.use(invalidPathHandler);
 app.use(handleErrors);
 
 const dbStatus = dbSync(true);
-const sendEmailTest = sendEmail();
-logger.debug(sendEmailTest);
+// const sendEmailTest = sendEmail();
+// logger.debug(sendEmailTest);
 
 logger.info("App initialisation completed");

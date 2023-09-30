@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
 import setPath from "./setPath.js";
 
-export default function sendEmail() {
+export default function sendEmail(email, subject, params, template) {
   const transporter = nodemailer.createTransport({
     //host: "smtp.mail.me.com",
     //port: 587,
@@ -24,7 +24,7 @@ export default function sendEmail() {
     }
   });
 
-  const viewPath = setPath("./views/");
+  const viewPath = setPath("./templates/");
   // point to the template folder
   const handlebarOptions = {
     viewEngine: {
@@ -37,17 +37,13 @@ export default function sendEmail() {
   // use a template file with nodemailer
   transporter.use("compile", hbs(handlebarOptions));
 
-  const user = { name: "Kenneth" };
   const mailOptions = {
     from: '"Quizzer Admin" <admin@kernie.net>', // sender address
-    to: "kenneth@kernie.net", // list of receivers
-    subject: `Welcome to My Company, ${user.name}`,
-    template: "resetEmail", // the name of the template file, i.e., email.handlebars
+    to: email, // list of receivers
+    subject: subject,
+    template: template, // the name of the template file, i.e., email.handlebars
     // text_template: "text",
-    context: {
-      name: user.name,
-      company: "my company",
-    },
+    context: params,
   };
 
   transporter.sendMail(mailOptions, function (err, info) {
