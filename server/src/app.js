@@ -45,7 +45,7 @@ app.get("/api/check", checkUser);
 app.use("/api/auth", publicRouter);
 app.use("/api/db", passport.authenticate("jwt", { session: false }), checkAdmin, dbRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), checkLoggedIn, apiRouter);
-app.use("/", publicRouter);
+// app.use("/", publicRouter);
 
 app.get("/sync", (req, res) => {
   dbSync(true);
