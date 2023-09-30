@@ -92,7 +92,7 @@ export default class AxiosApiClient {
   }
 
   async checkLoggedIn() {
-    let response = await this.get("/auth/login");
+    let response = await this.get("/login");
     response.userId = this.getUserId();
     console.log("Check login:", response);
     return response;
