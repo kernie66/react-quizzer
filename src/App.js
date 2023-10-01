@@ -8,7 +8,7 @@ import QuizPage from "./pages/QuizPage";
 import ExplorePage from "./pages/ExplorePage";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
-import { Container } from "reactstrap";
+// import { Container } from "reactstrap";
 import ApiProvider from "./contexts/ApiProvider";
 // import RegistrationPage from "./pages/RegistrationPage";
 import FlashProvider from "./contexts/FlashProvider";
@@ -22,6 +22,7 @@ import { lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Container } from "@mantine/core";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 

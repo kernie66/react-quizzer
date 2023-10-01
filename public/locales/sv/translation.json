@@ -71,7 +71,7 @@
   "me": "jag",
   "select-your-preferred-avatar": "Välj din önskade avatar",
   "try-the-different-avatar-types-below-or-define-your-own-free-avatar-based-on-your-email-at": "Prova de olika avatartyperna nedan, eller definiera din egen fria avatar baserat på din e-post på",
-  "your-profile-has-been-updated": "Din profil har uppdaterats.",
+  "profile-has-been-updated": "Profilen har uppdaterats.",
   "edit-quizzer-information": "Uppdatera quizzer-information",
   "about-me": "Om mig",
   "name": "Namn",
@@ -88,5 +88,12 @@
   "from": "Från",
   "are-you-kidding-me-too-long-username": "Skämtar du med mig, för långt användarnamn",
   "update-email": "Uppdatera epost-adress",
-  "do-you-want-to-change-your-email": "Vill du ändra din e-postadress"
+  "do-you-want-to-change-your-email": "Vill du ändra din e-postadress",
+  "generated-face": "Genererat ansikte",
+  "geometric-pattern": "Geometriskt mönster",
+  "generated-monster": "Genererat monster",
+  "8-bit-arcade-style-pixelated-face": "Pixlat ansikte i 8-bitars arkadstil",
+  "generated-robot": "Genererad robot",
+  "the-profile-could-not-be-updated": "Profilen kunde inte uppdateras",
+  "the-profile-was-not-changed": "Profilen har inte ändrats"
 }

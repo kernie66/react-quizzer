@@ -4,22 +4,22 @@ import { Button, Col, Container, Row, Spinner } from "reactstrap";
 import Body from "../components/Body";
 import EditUser from "../components/EditUser";
 import { useApi } from "../contexts/ApiProvider";
-// import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
 // import { useErrorBoundary } from "react-error-boundary";
 import { useQuery } from "@tanstack/react-query";
 import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
-import Avatar from "../components/Avatar.js";
 import UserInfo from "../components/UserInfo.js";
+import QuizzerAvatar from "../components/QuizzerAvatar.js";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function UserPage() {
   const { id } = useParams();
   // const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [avatarModal, setAvatarModal] = useState(false);
+  const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
   const api = useApi();
   // const flash = useFlash();
   const { t } = useTranslation();
@@ -56,17 +56,17 @@ export default function UserPage() {
 
   const editUser = () => {
     setEditModal(true);
-    setAvatarModal(false);
+    closeAvatar();
   };
 
   const changeAvatar = () => {
     setEditModal(false);
-    setAvatarModal(true);
+    openAvatar();
   };
 
   const closeModal = () => {
     setEditModal(false);
-    setAvatarModal(false);
+    closeAvatar();
     refreshUser();
   };
 
@@ -86,11 +86,11 @@ export default function UserPage() {
           ) : (
             <>
               <EditUser modal={editModal} closeModal={closeModal} user={user} />
-              <ChangeAvatar modal={avatarModal} closeModal={closeModal} user={user} />
+              <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
               <Container fluid className="UserPage px-1">
                 <Row className="mb-2">
                   <Col xs="2" className="Avatar128">
-                    <Avatar user={user} size={128} />
+                    <QuizzerAvatar user={user} size={128} />
                   </Col>
                   <Col xs="10">
                     <h3 className="text-info-emphasis">

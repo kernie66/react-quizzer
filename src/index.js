@@ -5,8 +5,25 @@ import ReactDOM from "react-dom/client";
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import "./services/i18n";
 import "./index.css";
+// core styles are required for all packages
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+
+// other css files are required only if
+// you are using components from the corresponding package
+// import '@mantine/dates/styles.css';
+// import '@mantine/dropzone/styles.css';
+// import '@mantine/code-highlight/styles.css';
+// ...
+
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { MantineProvider, createTheme } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
 
 if (typeof window !== "undefined") {
   console.log("Runs when the app starts");
@@ -16,7 +33,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <React.Suspense fallback="Loading...">
-      <App />
+      <MantineProvider theme={theme}>
+        <Notifications />
+        <App />
+      </MantineProvider>
     </React.Suspense>
   </React.StrictMode>,
 );

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Container, Row } from "reactstrap";
 import TimeAgo from "./TimeAgo";
 import { useTranslation } from "react-i18next";
-import Avatar from "./Avatar.js";
+import QuizzerAvatar from "./QuizzerAvatar.js";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
@@ -12,7 +12,7 @@ export default memo(function Quizzer({ quizzer }) {
     <Container fluid className="Quizzer px-0">
       <div className="d-flex flex-row border-bottom justify-content-start">
         <div className="Avatar48 ps-0 pe-3 mx-0">
-          <Avatar user={quizzer} size={48} />
+          <QuizzerAvatar user={quizzer} size={48} />
         </div>
         <div className="col">
           <div className="flex-row">

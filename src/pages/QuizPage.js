@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import Body from "../components/Body";
+import { Button, Checkbox, ColorInput, ColorPicker } from "@mantine/core";
+import { IconBrandMantine } from "@tabler/icons-react";
 
 export default function QuizPage() {
   useEffect(() => {
@@ -9,6 +11,13 @@ export default function QuizPage() {
   return (
     <Body sidebar>
       <h3>Quiz info placeholder</h3>
+      <Checkbox label="Ready to play some quiz" />
+      <Button color="pink">
+        <IconBrandMantine />
+        Play
+      </Button>
+      <ColorInput />
+      <ColorPicker />
     </Body>
   );
 }
