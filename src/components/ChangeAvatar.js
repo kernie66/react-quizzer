@@ -3,7 +3,7 @@ import { useApi } from "../contexts/ApiProvider";
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, Modal, Select, Text, rem } from "@mantine/core";
+import { Button, Divider, Flex, Modal, Select, Text, rem } from "@mantine/core";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
@@ -68,12 +68,10 @@ export default function ChangeAvatar({ user, opened, close }) {
 
   return (
     <Modal opened={opened} onClose={close} centered title={<h5>{t("change-avatar")}</h5>}>
-      <Divider />
-      <div className="d-flex py-1 flex-row">
-        <div className="pe-2">
-          <QuizzerAvatar user={userData} size={64} />
-        </div>
-        <Text px={8} c="blue">
+      <Divider mb={8} />
+      <Flex gap="md">
+        <QuizzerAvatar user={userData} size={64} />
+        <Text mx={8} c="blue">
           {t(
             "try-the-different-avatar-types-below-or-define-your-own-free-avatar-based-on-your-email-at",
           )}
@@ -84,20 +82,22 @@ export default function ChangeAvatar({ user, opened, close }) {
             </a>
           </em>
         </Text>
-      </div>
-      <div>
-        <Select
-          label={t("select-your-preferred-avatar")}
-          data-autofocus
-          checkIconPosition="right"
-          data={avatarTypes}
-          value={avatarType}
-          allowDeselect={false}
-          onChange={setAvatarType}
-          my={8}
-        />
-      </div>
-      <Button onClick={onSubmit}>{t("update")}</Button>
+      </Flex>
+      <Select
+        size="md"
+        label={t("select-your-preferred-avatar")}
+        data-autofocus
+        checkIconPosition="right"
+        data={avatarTypes}
+        value={avatarType}
+        allowDeselect={false}
+        onChange={setAvatarType}
+        my={16}
+      />
+      <Divider />
+      <Button my={8} onClick={onSubmit}>
+        {t("update")}
+      </Button>
     </Modal>
   );
 }
