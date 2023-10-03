@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
-import { useFlash } from "../contexts/FlashProvider";
 import { useImmer } from "use-immer";
 import { useTranslation } from "react-i18next";
 import { useErrorBoundary } from "react-error-boundary";
@@ -12,6 +11,9 @@ import getQuizzers from "../helpers/getQuizzers.js";
 import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
 import isValidUsername from "../helpers/isValidUsername.js";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
+import { rem } from "@mantine/core";
 
 export default function EditUser({ modal, closeModal, user }) {
   const usernameField = useRef();
@@ -22,7 +24,6 @@ export default function EditUser({ modal, closeModal, user }) {
   const [confirmModalText, setConfirmModalText] = useImmer({});
   const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
-  const flash = useFlash();
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
 
@@ -249,7 +250,11 @@ export default function EditUser({ modal, closeModal, user }) {
       });
 
       if (response.ok) {
-        flash(t("your-profile-has-been-updated"), "success", 5);
+        showNotification({
+          title: userData.name,
+          message: t("your-profile-has-been-updated"),
+          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+        });
         closeModal();
       }
     } catch (error) {

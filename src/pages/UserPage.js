@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Col, Container, Row, Spinner } from "reactstrap";
 import Body from "../components/Body";
 import EditUser from "../components/EditUser";
 import { useApi } from "../contexts/ApiProvider";
@@ -12,18 +11,21 @@ import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
 import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
+import { Button, Divider, Grid, Group, Loader, Stack } from "@mantine/core";
 
 export default function UserPage() {
   const { id } = useParams();
   // const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [avatarSize, setAvatarSize] = useState(128);
   const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
   const api = useApi();
   // const flash = useFlash();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
+  const { width, height } = useViewportSize();
   //  const { showBoundary } = useErrorBoundary();
 
   const getUser = async (id) => {
@@ -54,6 +56,14 @@ export default function UserPage() {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
+  useEffect(() => {
+    let size = 128;
+    if (width < 1000) {
+      size = Math.max((128 * width) / 1000, 64);
+    }
+    setAvatarSize(size);
+  }, [width]);
+
   const editUser = () => {
     setEditModal(true);
     closeAvatar();
@@ -71,12 +81,12 @@ export default function UserPage() {
   };
 
   return (
-    <Body sidebar>
+    <Body>
       {isLoadingUser ? (
         <>
           <div className="text-secondary align-items-center">
             {t("looking-for-user")}
-            <Spinner animation="border" />
+            <Loader color="blue" type="dots" />
           </div>
         </>
       ) : (
@@ -87,12 +97,12 @@ export default function UserPage() {
             <>
               <EditUser modal={editModal} closeModal={closeModal} user={user} />
               <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
-              <Container fluid className="UserPage px-1">
-                <Row className="mb-2">
-                  <Col xs="2" className="Avatar128">
-                    <QuizzerAvatar user={user} size={128} />
-                  </Col>
-                  <Col xs="10">
+              <Grid>
+                <Grid.Col span="content" maw="100%">
+                  <QuizzerAvatar user={user} size={avatarSize} />
+                </Grid.Col>
+                <Grid.Col span="auto">
+                  <Stack>
                     <h3 className="text-info-emphasis">
                       {user.name}{" "}
                       {user.id === loggedInUser.id ? (
@@ -105,30 +115,27 @@ export default function UserPage() {
                         {user.aboutMe}
                       </h5>
                     )}
-                    <Row>
-                      <Col xs="10">
+                    <p>
+                      Width: {width}, Height: {height}
+                    </p>
+                    <Grid>
+                      <Grid.Col span="content">
                         <UserInfo user={user} />
-                      </Col>
-                      <Col>Wins</Col>
-                    </Row>
-                  </Col>
-                  <Row className="border-bottom border-primary mb-2">
-                    <Col>
-                      {loggedIn === true && (
-                        <>
-                          <Button color="info" onClick={changeAvatar} className="mb-2 me-2 p-1">
-                            {t("change-avatar")}
-                          </Button>
-                          <Button color="info" onClick={editUser} className="mb-2 me-2 p-1">
-                            {t("update")}
-                          </Button>
-                        </>
-                      )}
-                    </Col>
-                  </Row>
-                </Row>
-                <Quizzers currentId={user.id} />
-              </Container>
+                      </Grid.Col>
+                      <Grid.Col span={2}>Wins</Grid.Col>
+                    </Grid>
+                  </Stack>
+                </Grid.Col>
+              </Grid>
+
+              {loggedIn === true && (
+                <Group>
+                  <Button onClick={changeAvatar}>{t("change-avatar")}</Button>
+                  <Button onClick={editUser}>{t("update")}</Button>
+                </Group>
+              )}
+              <Divider my={8} />
+              <Quizzers currentId={user.id} />
             </>
           )}
         </>

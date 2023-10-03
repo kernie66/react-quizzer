@@ -1,23 +1,14 @@
-import { Col, Container, Row } from "reactstrap";
-import FlashMessage from "./FlashMessage";
+//import { Col, Container, Row } from "reactstrap";
+import { Container } from "@mantine/core";
 import Sidebar from "./Sidebar";
 
 export default function Body({ sidebar, children }) {
   return (
-    <Container fluid className="p-0">
-      <Row className="m-0 px-2 Body">
-        {sidebar && (
-          <Col xs="auto" className="d-none d-md-block">
-            <Sidebar className="LeftSidebar" />
-          </Col>
-        )}
-        <Col className="px-0">
-          <Container fluid className="align-self-start Content px-0">
-            <FlashMessage />
-            {children}
-          </Container>
-        </Col>
-      </Row>
+    <Container fluid bg="blue.0">
+      {sidebar && <Sidebar className="LeftSidebar" />}
+      <Container fluid mx={{ base: 0, md: 16 }} className="Content">
+        {children}
+      </Container>
     </Container>
   );
 }

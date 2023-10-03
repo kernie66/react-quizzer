@@ -12,7 +12,7 @@ export default function QuizzerAvatar({ user, size = 48 }) {
       to={"/user/" + user.id}
       maw="100%"
       mah="auto"
-      m={8}
+      mx={8}
     />
   );
 }
