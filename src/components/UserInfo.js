@@ -1,8 +1,18 @@
 import { useTranslation } from "react-i18next";
 import TimeAgo from "./TimeAgo.js";
+import { useInterval } from "@mantine/hooks";
+import { useEffect, useState } from "react";
 
 export default function UserInfo({ user }) {
   const { t } = useTranslation();
+  const [update, setUpdate] = useState(0);
+  const interval = useInterval(() => setUpdate((u) => u + 1), 5 * 1000);
+
+  useEffect(() => {
+    interval.start();
+    return interval.stop;
+  }, [update]);
+
   return (
     <ul className="list-unstyled">
       <li>
