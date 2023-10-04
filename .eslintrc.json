@@ -7,7 +7,7 @@
   "root": true,
   "extends": [
     "eslint:recommended",
-    "mantine",
+//    "@mantine/eslint-config",
     "plugin:react/jsx-runtime",
     "plugin:react/recommended",
     "plugin:jest/recommended",
@@ -34,7 +34,8 @@
     {
       "files": ["*.js"],
       "rules": {
-        "no-unused-vars":"error"
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-unused-vars": "error"
       }
     }
   ],
@@ -48,8 +49,7 @@
     "react/prop-types": "off",
     "@typescript-eslint/dot-notation": "off",
     "@typescript-eslint/no-implied-eval": "off",
-    "@typescript-eslint/no-throw-literal": "off",
-    "no-unused-vars": "warn"
+    "@typescript-eslint/no-throw-literal": "off"
   },
   "settings": {
     "react": {

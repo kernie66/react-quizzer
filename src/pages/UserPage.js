@@ -115,26 +115,28 @@ export default function UserPage() {
                         {user.aboutMe}
                       </h5>
                     )}
-                    <p>
-                      Width: {width}, Height: {height}
-                    </p>
                     <Grid>
                       <Grid.Col span="content">
                         <UserInfo user={user} />
                       </Grid.Col>
-                      <Grid.Col span={2}>Wins</Grid.Col>
+                      <Grid.Col span={2}>
+                        Wins
+                        <p>
+                          Width: {width}, Height: {height}
+                        </p>
+                      </Grid.Col>
                     </Grid>
                   </Stack>
                 </Grid.Col>
               </Grid>
 
               {loggedIn === true && (
-                <Group>
+                <Group mx={16}>
                   <Button onClick={changeAvatar}>{t("change-avatar")}</Button>
                   <Button onClick={editUser}>{t("update")}</Button>
                 </Group>
               )}
-              <Divider my={8} />
+              <Divider my={8} color="blue.6" size="sm" />
               <Quizzers currentId={user.id} />
             </>
           )}

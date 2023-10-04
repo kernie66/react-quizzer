@@ -46,7 +46,7 @@ function ErrorFallback({ error }) {
 
 export default function App() {
   return (
-    <Container fluid className="App">
+    <Container fluid className="App" mx={{ base: 0, md: 16 }} px={{ base: 8, md: 16 }}>
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
         <BrowserRouter>
           <QueryClientProvider client={queryClient}>
