@@ -1,16 +1,16 @@
 // import { Button, Form, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { useApi } from "../contexts/ApiProvider";
 import { useEffect, useState } from "react";
-import { useImmer } from "use-immer";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, Flex, Modal, Select, Text, rem } from "@mantine/core";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import { useSetState } from "@mantine/hooks";
 
 export default function ChangeAvatar({ user, opened, close }) {
   const api = useApi();
-  const [userData, setUserData] = useImmer(user); // useState(user);
+  const [userData, setUserData] = useSetState(user); // useState(user);
   const [avatarType, setAvatarType] = useState(user.avatarType);
   const { t } = useTranslation();
 
@@ -30,9 +30,9 @@ export default function ChangeAvatar({ user, opened, close }) {
 
   useEffect(() => {
     const newUrl = url + `d=${avatarType}`;
-    setUserData((draft) => {
-      draft.avatarType = avatarType;
-      draft.avatarUrl = newUrl;
+    setUserData({
+      avatarType: avatarType,
+      avatarUrl: newUrl,
     });
   }, [avatarType]);
 

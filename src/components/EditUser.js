@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
-import { useImmer } from "use-immer";
 import { useTranslation } from "react-i18next";
 import { useErrorBoundary } from "react-error-boundary";
 import { isEmpty, sift, trim } from "radash";
@@ -13,15 +12,16 @@ import useConfirm from "../hooks/useConfirm.js";
 import isValidUsername from "../helpers/isValidUsername.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { rem } from "@mantine/core";
+import { Text, rem } from "@mantine/core";
+import { useSetState } from "@mantine/hooks";
 
 export default function EditUser({ modal, closeModal, user }) {
   const usernameField = useRef();
   const nameField = useRef();
   const emailField = useRef();
   const aboutMeField = useRef();
-  const [userData, setUserData] = useImmer(user);
-  const [confirmModalText, setConfirmModalText] = useImmer({});
+  const [userData, setUserData] = useSetState(user);
+  const [confirmModalText, setConfirmModalText] = useSetState({});
   const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
   const { t } = useTranslation();
@@ -33,16 +33,16 @@ export default function EditUser({ modal, closeModal, user }) {
     emailField.current.value = user.email;
     aboutMeField.current.value = user.aboutMe || "";
     nameField.current.focus();
-    setUserData((draft) => {
-      draft.usernameError = undefined;
-      draft.usernameValid = undefined;
-      draft.emailError = undefined;
-      draft.emailValid = undefined;
+    setUserData({
+      usernameError: undefined,
+      usernameValid: undefined,
+      emailError: undefined,
+      emailValid: undefined,
     });
-    setConfirmModalText((draft) => {
-      draft.title = "";
-      draft.message = "";
-      draft.size = "sm";
+    setConfirmModalText({
+      title: "",
+      message: "",
+      size: "sm",
     });
   };
 
@@ -66,9 +66,9 @@ export default function EditUser({ modal, closeModal, user }) {
   const checkUsername = async () => {
     let usernameStatus, usernameValid;
 
-    setUserData((draft) => {
-      draft.usernameError = usernameStatus;
-      draft.usernameValid = usernameValid;
+    setUserData({
+      usernameError: usernameStatus,
+      usernameValid: usernameValid,
     });
 
     const newUsername = trim(usernameField.current.value.toLowerCase());
@@ -85,10 +85,10 @@ export default function EditUser({ modal, closeModal, user }) {
         if (!isEmpty(checkUsername)) {
           usernameStatus = t("username-already-registered");
         } else {
-          setConfirmModalText((draft) => {
-            draft.title = t("update-username");
-            draft.message = (
-              <>
+          setConfirmModalText({
+            title: t("update-username"),
+            message: (
+              <Text>
                 {t("do-you-want-to-change-your-username")}
                 <br />
                 {t("from")}:&nbsp;
@@ -96,11 +96,11 @@ export default function EditUser({ modal, closeModal, user }) {
                 <br />
                 {t("to")}:&nbsp;
                 <span className="text-info fs-5">{newUsername}</span>
-              </>
-            );
-            draft.confirmText = t("confirm");
-            draft.cancelText = t("cancel");
-            draft.size = "sm";
+              </Text>
+            ),
+            confirmText: t("confirm"),
+            cancelText: t("cancel"),
+            size: "sm",
           });
           const confirm = await getConfirmation();
           if (confirm) {
@@ -111,14 +111,14 @@ export default function EditUser({ modal, closeModal, user }) {
         }
       }
 
-      setUserData((draft) => {
-        draft.usernameError = usernameStatus;
-        draft.usernameValid = usernameValid;
+      setUserData({
+        usernameError: usernameStatus,
+        usernameValid: usernameValid,
       });
 
       if (!usernameStatus) {
-        setUserData((draft) => {
-          draft.username = usernameField.current.value;
+        setUserData({
+          username: usernameField.current.value,
         });
         return Promise.resolve("Username changed");
       }
@@ -131,9 +131,9 @@ export default function EditUser({ modal, closeModal, user }) {
   const checkEmail = async () => {
     let emailStatus, emailValid;
 
-    setUserData((draft) => {
-      draft.emailError = emailStatus;
-      draft.emailValid = emailValid;
+    setUserData({
+      emailError: emailStatus,
+      emailValid: emailValid,
     });
 
     const newEmailAddress = trim(emailField.current.value.toLowerCase());
@@ -151,10 +151,10 @@ export default function EditUser({ modal, closeModal, user }) {
         } else if (!isValidEmail(newEmailAddress)) {
           emailStatus = t("please-enter-a-valid-email-address");
         } else {
-          setConfirmModalText((draft) => {
-            draft.title = t("update-email");
-            draft.message = (
-              <>
+          setConfirmModalText({
+            title: t("update-email"),
+            message: (
+              <Text>
                 {t("do-you-want-to-change-your-email")}
                 <br />
                 {t("from")}:&nbsp;
@@ -162,13 +162,13 @@ export default function EditUser({ modal, closeModal, user }) {
                 <br />
                 {t("to")}:&nbsp;
                 <span className="text-info fs-5">{newEmailAddress}</span>
-              </>
-            );
-            draft.confirmText = t("confirm");
-            draft.cancelText = t("cancel");
-            draft.size = "";
+              </Text>
+            ),
+            confirmText: t("confirm"),
+            cancelText: t("cancel"),
+            size: "",
           });
-          const confirm = await getConfirmation();
+          // const confirm = await getConfirmation();
           if (confirm) {
             emailValid = t("email-address-is-available");
           } else {
@@ -176,14 +176,14 @@ export default function EditUser({ modal, closeModal, user }) {
           }
         }
 
-        setUserData((draft) => {
-          draft.emailError = emailStatus;
-          draft.emailValid = emailValid;
+        setUserData({
+          emailError: emailStatus,
+          emailValid: emailValid,
         });
 
         if (!emailStatus) {
-          setUserData((draft) => {
-            draft.email = emailField.current.value;
+          setUserData({
+            email: emailField.current.value,
           });
           return Promise.resolve("Email changed");
         }
@@ -201,9 +201,9 @@ export default function EditUser({ modal, closeModal, user }) {
       newName = user.name;
     }
 
-    setUserData((draft) => {
-      draft.name = newName;
-      draft.aboutMe = aboutMeField.current.value;
+    setUserData({
+      name: newName,
+      aboutMe: aboutMeField.current.value,
     });
     nameField.current.value = newName;
     return true;
@@ -233,12 +233,12 @@ export default function EditUser({ modal, closeModal, user }) {
       }
 
       if (errors) {
-        setUserData((draft) => {
-          draft.usernameError = usernameStatus;
-          draft.usernameValid = undefined;
-          draft.nameError = nameStatus;
-          draft.emailError = emailStatus;
-          draft.emailValid = undefined;
+        setUserData({
+          usernameError: usernameStatus,
+          usernameValid: undefined,
+          nameError: nameStatus,
+          emailError: emailStatus,
+          emailValid: undefined,
         });
         return;
       }
