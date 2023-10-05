@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Form } from "reactstrap";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
 import { useTranslation } from "react-i18next";
@@ -12,10 +12,10 @@ import useConfirm from "../hooks/useConfirm.js";
 import isValidUsername from "../helpers/isValidUsername.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { Text, rem } from "@mantine/core";
+import { Button, Divider, Modal, Text, rem } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
 
-export default function EditUser({ modal, closeModal, user }) {
+export default function EditUser({ opened, close, user }) {
   const usernameField = useRef();
   const nameField = useRef();
   const emailField = useRef();
@@ -27,7 +27,7 @@ export default function EditUser({ modal, closeModal, user }) {
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
 
-  const onOpened = () => {
+  /*  const onOpened = () => {
     usernameField.current.value = user.username;
     nameField.current.value = user.name;
     emailField.current.value = user.email;
@@ -45,7 +45,7 @@ export default function EditUser({ modal, closeModal, user }) {
       size: "sm",
     });
   };
-
+*/
   // Helper function with api parameter
   const fetchQuizzers = (id) => {
     return getQuizzers(api, id);
@@ -255,7 +255,7 @@ export default function EditUser({ modal, closeModal, user }) {
           message: t("your-profile-has-been-updated"),
           icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
         });
-        closeModal();
+        close();
       }
     } catch (error) {
       showBoundary(error);
@@ -271,46 +271,49 @@ export default function EditUser({ modal, closeModal, user }) {
         cancelText={confirmModalText.cancelText}
         size={confirmModalText.size}
       />
-      <Modal isOpen={modal} onOpened={onOpened} toggle={closeModal} fullscreen="sm">
-        <ModalHeader toggle={closeModal}>{t("edit-quizzer-information")}</ModalHeader>
-        <ModalBody className="pt-0">
-          <Form onSubmit={onSubmit}>
-            <InputField
-              label={t("name")}
-              name="name"
-              fieldRef={nameField}
-              error={userData.nameError}
-              onBlur={checkFields}
-            />
-            <InputField
-              label={t("username")}
-              name="username"
-              fieldRef={usernameField}
-              error={userData.usernameError}
-              isValid={userData.usernameValid}
-              onBlur={checkUsername}
-            />
-            <InputField
-              label={t("email")}
-              name="email"
-              type="email"
-              fieldRef={emailField}
-              error={userData.emailError}
-              isValid={userData.emailValid}
-              onBlur={checkEmail}
-            />
-            <InputField
-              label={t("about-me")}
-              name="aboutMe"
-              type="textarea"
-              fieldRef={aboutMeField}
-              onBlur={checkFields}
-            />
-            <Button color="primary" onClick={onSubmit}>
-              {t("update")}
-            </Button>
-          </Form>
-        </ModalBody>
+      <Modal
+        opened={opened}
+        onClose={close}
+        centered
+        title={<h5>{t("edit-quizzer-information")}</h5>}
+      >
+        <Divider mb={8} />
+        <Form onSubmit={onSubmit}>
+          <InputField
+            label={t("name")}
+            name="name"
+            fieldRef={nameField}
+            error={userData.nameError}
+            onBlur={checkFields}
+          />
+          <InputField
+            label={t("username")}
+            name="username"
+            fieldRef={usernameField}
+            error={userData.usernameError}
+            isValid={userData.usernameValid}
+            onBlur={checkUsername}
+          />
+          <InputField
+            label={t("email")}
+            name="email"
+            type="email"
+            fieldRef={emailField}
+            error={userData.emailError}
+            isValid={userData.emailValid}
+            onBlur={checkEmail}
+          />
+          <InputField
+            label={t("about-me")}
+            name="aboutMe"
+            type="textarea"
+            fieldRef={aboutMeField}
+            onBlur={checkFields}
+          />
+          <Button my={8} onClick={onSubmit}>
+            {t("update")}
+          </Button>
+        </Form>
       </Modal>
     </>
   );

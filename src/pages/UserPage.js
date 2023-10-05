@@ -1,3 +1,4 @@
+import classes from "./css/userPage.module.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Body from "../components/Body";
@@ -12,15 +13,15 @@ import Quizzers from "../components/Quizzers.js";
 import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { Button, Divider, Grid, Group, Loader, Stack } from "@mantine/core";
+import { Button, Divider, Grid, Group, Loader, Stack, Text, Title } from "@mantine/core";
 
 export default function UserPage() {
   const { id } = useParams();
   // const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
-  const [editModal, setEditModal] = useState(false);
   const [avatarSize, setAvatarSize] = useState(128);
   const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
+  const [openedUser, { open: openUser, close: closeUser }] = useDisclosure(false);
   const api = useApi();
   // const flash = useFlash();
   const { t } = useTranslation();
@@ -65,17 +66,17 @@ export default function UserPage() {
   }, [width]);
 
   const editUser = () => {
-    setEditModal(true);
+    openUser();
     closeAvatar();
   };
 
   const changeAvatar = () => {
-    setEditModal(false);
     openAvatar();
+    closeUser();
   };
 
   const closeModal = () => {
-    setEditModal(false);
+    closeUser();
     closeAvatar();
     refreshUser();
   };
@@ -95,7 +96,7 @@ export default function UserPage() {
             <p>{t("user-not-found")}</p>
           ) : (
             <>
-              <EditUser modal={editModal} closeModal={closeModal} user={user} />
+              <EditUser opened={openedUser} close={closeModal} user={user} />
               <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
               <Grid>
                 <Grid.Col span="content" maw="100%">
@@ -103,17 +104,17 @@ export default function UserPage() {
                 </Grid.Col>
                 <Grid.Col span="auto">
                   <Stack>
-                    <h3 className="text-info-emphasis">
+                    <Title order={2}>
                       {user.name}{" "}
                       {user.id === loggedInUser.id ? (
-                        <span className="text-primary">({t("me")})</span>
+                        <span className={classes.me}>({t("me")})</span>
                       ) : null}{" "}
                       {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
-                    </h3>
+                    </Title>
                     {user.aboutMe && (
-                      <h5 className="text-info" style={{ whiteSpace: "pre-wrap" }}>
+                      <Text size="xl" fw={500} c="indigo.7" style={{ whiteSpace: "pre-wrap" }}>
                         {user.aboutMe}
-                      </h5>
+                      </Text>
                     )}
                     <Grid>
                       <Grid.Col span="content">
