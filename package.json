@@ -8,6 +8,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mantine/core": "^7.1.2",
+    "@mantine/form": "^7.1.2",
     "@mantine/hooks": "^7.1.2",
     "@mantine/notifications": "^7.1.2",
     "@tabler/icons-react": "^2.38.0",

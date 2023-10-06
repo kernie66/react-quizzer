@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { Form } from "reactstrap";
 import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
 import { useTranslation } from "react-i18next";
@@ -12,8 +11,9 @@ import useConfirm from "../hooks/useConfirm.js";
 import isValidUsername from "../helpers/isValidUsername.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { Button, Divider, Modal, Text, rem } from "@mantine/core";
+import { Button, Divider, Modal, Text, TextInput, Textarea, rem } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 
 export default function EditUser({ opened, close, user }) {
   const usernameField = useRef();
@@ -27,6 +27,17 @@ export default function EditUser({ opened, close, user }) {
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
 
+  const form = useForm({
+    initialValues: {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      aboutMe: user.aboutMe || "",
+    },
+    validate: {
+      name: (value) => (value.length < 2 ? "Name must have at least 2 characters" : null),
+    },
+  });
   /*  const onOpened = () => {
     usernameField.current.value = user.username;
     nameField.current.value = user.name;
@@ -278,7 +289,11 @@ export default function EditUser({ opened, close, user }) {
         title={<h5>{t("edit-quizzer-information")}</h5>}
       >
         <Divider mb={8} />
-        <Form onSubmit={onSubmit}>
+        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+          <TextInput label={t("name")} {...form.getInputProps("name")} />
+          <TextInput label={t("username")} {...form.getInputProps("username")} />
+          <TextInput label={t("email")} {...form.getInputProps("email")} />
+          <Textarea label={t("about-me")} {...form.getInputProps("aboutMe")} />
           <InputField
             label={t("name")}
             name="name"
@@ -310,10 +325,11 @@ export default function EditUser({ opened, close, user }) {
             fieldRef={aboutMeField}
             onBlur={checkFields}
           />
-          <Button my={8} onClick={onSubmit}>
+          <Button my={8} variant="light" type="submit">
             {t("update")}
           </Button>
-        </Form>
+          <Button onClick={onSubmit}>Ignore</Button>
+        </form>
       </Modal>
     </>
   );
