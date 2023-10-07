@@ -8,7 +8,9 @@ import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
 import isInvalidUsername from "../helpers/isInvalidUsername.js";
 import { showNotification } from "@mantine/notifications";
-import { IconArrowBackUp, IconCheck } from "@tabler/icons-react";
+import { IconArrowBackUp, IconCheck, IconExclamationMark } from "@tabler/icons-react";
+import { useSetState } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 import {
   Button,
   CloseButton,
@@ -20,22 +22,27 @@ import {
   Textarea,
   rem,
 } from "@mantine/core";
-import { useSetState } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { useEffect } from "react";
 
 export default function EditUser({ opened, close, user }) {
   const [confirmModalText, setConfirmModalText] = useSetState({});
+  const [_user, setUser] = useSetState(user);
   const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
 
+  useEffect(() => {
+    setUser(user);
+  }, [user]);
+
+  console.log("Edit user:", _user);
   const form = useForm({
     initialValues: {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      aboutMe: user.aboutMe || "",
+      name: _user.name,
+      username: _user.username,
+      email: _user.email,
+      aboutMe: _user.aboutMe || "",
     },
     validate: {
       name: (value) => (value.length < 2 ? t("please-enter-a-name") : null),
@@ -53,10 +60,10 @@ export default function EditUser({ opened, close, user }) {
     data: quizzers,
   } = useQuery(
     {
-      queryKey: ["quizzers", { excludeId: user.id }],
-      queryFn: () => fetchQuizzers(user.id),
+      queryKey: ["quizzers", { excludeId: _user.id }],
+      queryFn: () => fetchQuizzers(_user.id),
     },
-    [user.id],
+    [_user.id],
   );
 
   const checkUsername = async () => {
@@ -64,7 +71,7 @@ export default function EditUser({ opened, close, user }) {
 
     const newUsername = trim(form.values.username.toLowerCase());
     form.setFieldValue("username", newUsername);
-    if (newUsername && newUsername !== user.username) {
+    if (newUsername && newUsername !== _user.username) {
       const invalidUsername = isInvalidUsername(newUsername);
       usernameError = invalidUsername && t(invalidUsername);
 
@@ -84,7 +91,7 @@ export default function EditUser({ opened, close, user }) {
                 <br />
                 {t("from")}:&nbsp;
                 <Text span c="green" fw={500}>
-                  {user.username}
+                  {_user.username}
                 </Text>
                 <br />
                 {t("to")}:&nbsp;
@@ -99,7 +106,7 @@ export default function EditUser({ opened, close, user }) {
           });
           const confirm = await getConfirmation();
           if (!confirm) {
-            form.setFieldValue("username", user.username);
+            form.setFieldValue("username", _user.username);
           }
         }
       }
@@ -116,7 +123,7 @@ export default function EditUser({ opened, close, user }) {
 
     const newEmailAddress = trim(form.values.email.toLowerCase());
     form.setFieldValue("email", newEmailAddress);
-    if (newEmailAddress && newEmailAddress !== user.email) {
+    if (newEmailAddress && newEmailAddress !== _user.email) {
       if (!isValidEmail(newEmailAddress)) {
         emailError = t("please-enter-a-valid-email-address");
       } else {
@@ -137,7 +144,7 @@ export default function EditUser({ opened, close, user }) {
                 <br />
                 {t("from")}:&nbsp;
                 <Text span c="green" fw={500}>
-                  {user.email}
+                  {_user.email}
                 </Text>
                 <br />
                 {t("to")}:&nbsp;
@@ -152,7 +159,7 @@ export default function EditUser({ opened, close, user }) {
           });
           const confirm = await getConfirmation();
           if (!confirm) {
-            form.setFieldValue("email", user.email);
+            form.setFieldValue("email", _user.email);
           }
         }
       }
@@ -174,7 +181,7 @@ export default function EditUser({ opened, close, user }) {
 
       console.log("Dirty?", form.isDirty());
       if (form.isDirty()) {
-        const response = await api.put("/users/" + user.id, {
+        const response = await api.put("/users/" + _user.id, {
           name: form.values.name,
           email: form.values.email,
           aboutMe: form.values.aboutMe,
@@ -186,9 +193,21 @@ export default function EditUser({ opened, close, user }) {
             message: t("your-profile-has-been-updated"),
             icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
           });
+        } else {
+          showNotification({
+            title: form.values.name,
+            message: t("the-profile-could-not-be-updated"),
+            icon: <IconExclamationMark style={{ width: rem(18), height: rem(18) }} />,
+          });
         }
-        close();
+      } else {
+        showNotification({
+          title: form.values.name,
+          message: t("the-profile-was-not-changed"),
+          icon: <IconExclamationMark style={{ width: rem(18), height: rem(18) }} />,
+        });
       }
+      close();
     } catch (error) {
       showBoundary(error);
     }
@@ -220,8 +239,8 @@ export default function EditUser({ opened, close, user }) {
             rightSection={
               <IconArrowBackUp
                 aria-label="Undo input"
-                onClick={() => form.setFieldValue("name", user.name)}
-                style={{ display: form.values.name != user.name ? undefined : "none" }}
+                onClick={() => form.setFieldValue("name", _user.name)}
+                style={{ display: form.values.name != _user.name ? undefined : "none" }}
               />
             }
             data-autofocus
@@ -236,8 +255,8 @@ export default function EditUser({ opened, close, user }) {
             rightSection={
               <IconArrowBackUp
                 aria-label="Undo input"
-                onClick={() => form.setFieldValue("username", user.username)}
-                style={{ display: form.values.username != user.username ? undefined : "none" }}
+                onClick={() => form.setFieldValue("username", _user.username)}
+                style={{ display: form.values.username != _user.username ? undefined : "none" }}
               />
             }
           />
@@ -251,8 +270,8 @@ export default function EditUser({ opened, close, user }) {
             rightSection={
               <IconArrowBackUp
                 aria-label="Undo input"
-                onClick={() => form.setFieldValue("email", user.email)}
-                style={{ display: form.values.email != user.email ? undefined : "none" }}
+                onClick={() => form.setFieldValue("email", _user.email)}
+                style={{ display: form.values.email != _user.email ? undefined : "none" }}
               />
             }
           />
@@ -272,7 +291,7 @@ export default function EditUser({ opened, close, user }) {
             <Button type="submit" loading={isLoadingQuizzers}>
               {t("update")}
             </Button>
-            <Button variant="outline" onClick={onSubmit}>
+            <Button variant="outline" onClick={close}>
               {t("cancel")}
             </Button>
           </Group>
