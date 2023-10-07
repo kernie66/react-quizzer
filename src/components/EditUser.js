@@ -1,5 +1,3 @@
-import { useRef } from "react";
-import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
 import { useTranslation } from "react-i18next";
 import { useErrorBoundary } from "react-error-boundary";
@@ -10,17 +8,22 @@ import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
 import isValidUsername from "../helpers/isValidUsername.js";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
-import { Button, Divider, Modal, Text, TextInput, Textarea, rem } from "@mantine/core";
+import { IconArrowBackUp, IconCheck } from "@tabler/icons-react";
+import {
+  Button,
+  CloseButton,
+  Divider,
+  Group,
+  Modal,
+  Text,
+  TextInput,
+  Textarea,
+  rem,
+} from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 
 export default function EditUser({ opened, close, user }) {
-  const usernameField = useRef();
-  const nameField = useRef();
-  const emailField = useRef();
-  const aboutMeField = useRef();
-  const [userData, setUserData] = useSetState(user);
   const [confirmModalText, setConfirmModalText] = useSetState({});
   const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
@@ -35,35 +38,17 @@ export default function EditUser({ opened, close, user }) {
       aboutMe: user.aboutMe || "",
     },
     validate: {
-      name: (value) => (value.length < 2 ? "Name must have at least 2 characters" : null),
+      name: (value) => (value.length < 2 ? t("please-enter-a-name") : null),
     },
   });
-  /*  const onOpened = () => {
-    usernameField.current.value = user.username;
-    nameField.current.value = user.name;
-    emailField.current.value = user.email;
-    aboutMeField.current.value = user.aboutMe || "";
-    nameField.current.focus();
-    setUserData({
-      usernameError: undefined,
-      usernameValid: undefined,
-      emailError: undefined,
-      emailValid: undefined,
-    });
-    setConfirmModalText({
-      title: "",
-      message: "",
-      size: "sm",
-    });
-  };
-*/
+
   // Helper function with api parameter
   const fetchQuizzers = (id) => {
     return getQuizzers(api, id);
   };
 
   const {
-    //isLoading: isLoadingQuizzers,
+    isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
   } = useQuery(
@@ -75,15 +60,10 @@ export default function EditUser({ opened, close, user }) {
   );
 
   const checkUsername = async () => {
-    let usernameStatus, usernameValid;
+    let usernameStatus;
 
-    setUserData({
-      usernameError: usernameStatus,
-      usernameValid: usernameValid,
-    });
-
-    const newUsername = trim(usernameField.current.value.toLowerCase());
-    usernameField.current.value = newUsername;
+    const newUsername = trim(form.values.username.toLowerCase());
+    form.setFieldValue("username", newUsername);
     if (newUsername && newUsername !== user.username) {
       const validUsername = isValidUsername(newUsername);
       usernameStatus = validUsername && t(validUsername);
@@ -103,10 +83,14 @@ export default function EditUser({ opened, close, user }) {
                 {t("do-you-want-to-change-your-username")}
                 <br />
                 {t("from")}:&nbsp;
-                <span className="text-success fs-5">{user.username}</span>
+                <Text span c="green" fw={500}>
+                  {user.username}
+                </Text>
                 <br />
                 {t("to")}:&nbsp;
-                <span className="text-info fs-5">{newUsername}</span>
+                <Text span c="blue" fw={500}>
+                  {newUsername}
+                </Text>
               </Text>
             ),
             confirmText: t("confirm"),
@@ -114,41 +98,24 @@ export default function EditUser({ opened, close, user }) {
             size: "sm",
           });
           const confirm = await getConfirmation();
-          if (confirm) {
-            usernameValid = t("username-is-available");
-          } else {
-            usernameField.current.value = user.username;
+          if (!confirm) {
+            form.setFieldValue("username", user.username);
           }
         }
       }
-
-      setUserData({
-        usernameError: usernameStatus,
-        usernameValid: usernameValid,
-      });
-
-      if (!usernameStatus) {
-        setUserData({
-          username: usernameField.current.value,
-        });
-        return Promise.resolve("Username changed");
-      }
     } else {
-      usernameField.current.value = user.username;
+      usernameStatus = t("please-enter-a-username");
     }
-    return Promise.resolve("Username not changed");
+
+    form.setFieldError("username", usernameStatus);
+    return Promise.resolve("Username checked");
   };
 
   const checkEmail = async () => {
-    let emailStatus, emailValid;
+    let emailStatus;
 
-    setUserData({
-      emailError: emailStatus,
-      emailValid: emailValid,
-    });
-
-    const newEmailAddress = trim(emailField.current.value.toLowerCase());
-    emailField.current.value = newEmailAddress;
+    const newEmailAddress = trim(form.values.email.toLowerCase());
+    form.setFieldValue("email", newEmailAddress);
     if (newEmailAddress && newEmailAddress !== user.email) {
       if (!isValidEmail(newEmailAddress)) {
         emailStatus = t("please-enter-a-valid-email-address");
@@ -169,100 +136,51 @@ export default function EditUser({ opened, close, user }) {
                 {t("do-you-want-to-change-your-email")}
                 <br />
                 {t("from")}:&nbsp;
-                <span className="text-success fs-5">{user.email}</span>
+                <Text span c="green" fw={500}>
+                  {user.email}
+                </Text>
                 <br />
                 {t("to")}:&nbsp;
-                <span className="text-info fs-5">{newEmailAddress}</span>
+                <Text span c="blue" fw={500}>
+                  {newEmailAddress}
+                </Text>
               </Text>
             ),
             confirmText: t("confirm"),
             cancelText: t("cancel"),
             size: "",
           });
-          // const confirm = await getConfirmation();
-          if (confirm) {
-            emailValid = t("email-address-is-available");
-          } else {
-            emailField.current.value = user.email;
+          const confirm = await getConfirmation();
+          if (!confirm) {
+            form.setFieldValue("email", user.email);
           }
-        }
-
-        setUserData({
-          emailError: emailStatus,
-          emailValid: emailValid,
-        });
-
-        if (!emailStatus) {
-          setUserData({
-            email: emailField.current.value,
-          });
-          return Promise.resolve("Email changed");
         }
       }
     } else {
-      emailField.current.value = user.email;
+      emailStatus = t("please-enter-a-valid-email-address");
     }
+    form.setFieldError("email", emailStatus);
     return Promise.resolve("Email not changed");
   };
 
-  const checkFields = () => {
-    let newName = nameField.current.value;
-
-    if (!newName) {
-      newName = user.name;
-    }
-
-    setUserData({
-      name: newName,
-      aboutMe: aboutMeField.current.value,
-    });
-    nameField.current.value = newName;
-    return true;
-  };
-
-  const onSubmit = async (event) => {
-    event.preventDefault();
-
-    let usernameStatus = userData.usernameError;
-    let nameStatus = userData.nameError;
-    let emailStatus = userData.emailError;
-
+  const onSubmit = async () => {
     try {
-      const currentErrors = [usernameStatus, nameStatus, emailStatus, quizzerError];
+      const currentErrors = [quizzerError];
       let errors = sift(currentErrors).length !== 0;
-      if (!userData.name) {
-        nameStatus = t("please-enter-a-name");
-        errors = true;
-      }
-      if (!userData.username) {
-        usernameStatus = t("please-enter-a-username");
-        errors = true;
-      }
-      if (!userData.email) {
-        emailStatus = t("please-enter-a-valid-email-address");
-        errors = true;
-      }
 
       if (errors) {
-        setUserData({
-          usernameError: usernameStatus,
-          usernameValid: undefined,
-          nameError: nameStatus,
-          emailError: emailStatus,
-          emailValid: undefined,
-        });
         return;
       }
 
       const response = await api.put("/users/" + user.id, {
-        name: userData.name,
-        email: userData.email,
-        aboutMe: userData.aboutMe,
+        name: form.values.name,
+        email: form.values.email,
+        aboutMe: form.values.aboutMe,
       });
 
       if (response.ok) {
         showNotification({
-          title: userData.name,
+          title: form.values.name,
           message: t("your-profile-has-been-updated"),
           icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
         });
@@ -289,46 +207,71 @@ export default function EditUser({ opened, close, user }) {
         title={<h5>{t("edit-quizzer-information")}</h5>}
       >
         <Divider mb={8} />
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
-          <TextInput label={t("name")} {...form.getInputProps("name")} />
-          <TextInput label={t("username")} {...form.getInputProps("username")} />
-          <TextInput label={t("email")} {...form.getInputProps("email")} />
-          <Textarea label={t("about-me")} {...form.getInputProps("aboutMe")} />
-          <InputField
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <TextInput
             label={t("name")}
-            name="name"
-            fieldRef={nameField}
-            error={userData.nameError}
-            onBlur={checkFields}
+            {...form.getInputProps("name")}
+            withAsterisk
+            mb="md"
+            rightSectionPointerEvents="all"
+            rightSection={
+              <IconArrowBackUp
+                aria-label="Undo input"
+                onClick={() => form.setFieldValue("name", user.name)}
+                style={{ display: form.values.name != user.name ? undefined : "none" }}
+              />
+            }
           />
-          <InputField
+          <TextInput
             label={t("username")}
-            name="username"
-            fieldRef={usernameField}
-            error={userData.usernameError}
-            isValid={userData.usernameValid}
+            {...form.getInputProps("username")}
+            withAsterisk
+            mb="md"
             onBlur={checkUsername}
+            rightSectionPointerEvents="all"
+            rightSection={
+              <IconArrowBackUp
+                aria-label="Undo input"
+                onClick={() => form.setFieldValue("username", user.username)}
+                style={{ display: form.values.username != user.username ? undefined : "none" }}
+              />
+            }
           />
-          <InputField
+          <TextInput
             label={t("email")}
-            name="email"
-            type="email"
-            fieldRef={emailField}
-            error={userData.emailError}
-            isValid={userData.emailValid}
+            {...form.getInputProps("email")}
+            withAsterisk
+            mb="md"
             onBlur={checkEmail}
+            rightSectionPointerEvents="all"
+            rightSection={
+              <IconArrowBackUp
+                aria-label="Undo input"
+                onClick={() => form.setFieldValue("email", user.email)}
+                style={{ display: form.values.email != user.email ? undefined : "none" }}
+              />
+            }
           />
-          <InputField
+          <Textarea
             label={t("about-me")}
-            name="aboutMe"
-            type="textarea"
-            fieldRef={aboutMeField}
-            onBlur={checkFields}
+            {...form.getInputProps("aboutMe")}
+            rightSectionPointerEvents="all"
+            rightSection={
+              <CloseButton
+                aria-label="Clear input"
+                onClick={() => form.setFieldValue("aboutMe", "")}
+                style={{ display: form.values.aboutMe ? undefined : "none" }}
+              />
+            }
           />
-          <Button my={8} variant="light" type="submit">
-            {t("update")}
-          </Button>
-          <Button onClick={onSubmit}>Ignore</Button>
+          <Group justify="space-between" my={8}>
+            <Button type="submit" loading={isLoadingQuizzers}>
+              {t("update")}
+            </Button>
+            <Button variant="outline" onClick={onSubmit}>
+              {t("cancel")}
+            </Button>
+          </Group>
         </form>
       </Modal>
     </>

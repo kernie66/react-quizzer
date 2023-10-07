@@ -133,8 +133,12 @@ export default function UserPage() {
 
               {loggedIn === true && (
                 <Group mx={16}>
-                  <Button onClick={changeAvatar}>{t("change-avatar")}</Button>
-                  <Button onClick={editUser}>{t("update")}</Button>
+                  <Button variant="light" onClick={changeAvatar}>
+                    {t("change-avatar")}
+                  </Button>
+                  <Button variant="light" onClick={editUser}>
+                    {t("update")}
+                  </Button>
                 </Group>
               )}
               <Divider my={8} color="blue.6" size="sm" />
