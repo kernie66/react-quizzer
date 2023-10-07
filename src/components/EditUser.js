@@ -148,7 +148,7 @@ export default function EditUser({ opened, close, user }) {
             ),
             confirmText: t("confirm"),
             cancelText: t("cancel"),
-            size: "",
+            size: "md",
           });
           const confirm = await getConfirmation();
           if (!confirm) {
@@ -172,18 +172,21 @@ export default function EditUser({ opened, close, user }) {
         return;
       }
 
-      const response = await api.put("/users/" + user.id, {
-        name: form.values.name,
-        email: form.values.email,
-        aboutMe: form.values.aboutMe,
-      });
-
-      if (response.ok) {
-        showNotification({
-          title: form.values.name,
-          message: t("your-profile-has-been-updated"),
-          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+      console.log("Dirty?", form.isDirty());
+      if (form.isDirty()) {
+        const response = await api.put("/users/" + user.id, {
+          name: form.values.name,
+          email: form.values.email,
+          aboutMe: form.values.aboutMe,
         });
+
+        if (response.ok) {
+          showNotification({
+            title: form.values.name,
+            message: t("your-profile-has-been-updated"),
+            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+          });
+        }
         close();
       }
     } catch (error) {
@@ -221,6 +224,7 @@ export default function EditUser({ opened, close, user }) {
                 style={{ display: form.values.name != user.name ? undefined : "none" }}
               />
             }
+            data-autofocus
           />
           <TextInput
             label={t("username")}
@@ -264,7 +268,7 @@ export default function EditUser({ opened, close, user }) {
               />
             }
           />
-          <Group justify="space-between" my={8}>
+          <Group justify="space-between" my={8} pt={16}>
             <Button type="submit" loading={isLoadingQuizzers}>
               {t("update")}
             </Button>

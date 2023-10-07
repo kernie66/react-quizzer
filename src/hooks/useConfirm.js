@@ -1,21 +1,22 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import createPromise from "../helpers/createPromise.js";
+import { useDisclosure } from "@mantine/hooks";
+import { Button, Divider, Group, Modal } from "@mantine/core";
 
 const useConfirm = () => {
-  const [open, setOpen] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const [resolver, setResolver] = useState({ resolver: null });
 
   const getConfirmation = async () => {
-    setOpen(true);
+    open();
     const [promise, resolve] = await createPromise();
     setResolver({ resolve });
     return promise;
   };
 
   const onClose = async (status) => {
-    setOpen(false);
+    close();
     resolver.resolve(status);
   };
 
@@ -26,43 +27,20 @@ const useConfirm = () => {
     cancelText,
     confirmColor,
     cancelColor,
-    className,
-    buttonsComponent,
     size,
-    bodyComponent,
-    modalProps,
   }) => {
-    let buttonsContent = (
-      <>
-        {cancelText && (
-          <Button color={cancelColor} onClick={() => onClose(false)}>
+    return (
+      <Modal opened={opened} onClose={() => onClose(false)} size={size} centered title={title}>
+        <Divider mb={8} />
+        {message}
+        <Group justify="space-between" my={8} pt={16}>
+          <Button color={confirmColor} onClick={() => onClose(true)} data-autofocus>
+            {confirmText}
+          </Button>
+          <Button color={cancelColor} variant="outline" onClick={() => onClose(false)}>
             {cancelText}
           </Button>
-        )}{" "}
-        <Button color={confirmColor} onClick={() => onClose(true)}>
-          {confirmText}
-        </Button>
-      </>
-    );
-
-    if (buttonsComponent) {
-      const CustomComponent = buttonsComponent;
-      buttonsContent = <CustomComponent onClose={onClose} />;
-    }
-
-    let BodyComponent = bodyComponent;
-
-    return (
-      <Modal
-        size={size}
-        isOpen={open}
-        toggle={() => onClose(false)}
-        className={`reactstrap-confirm ${className}`}
-        {...modalProps}
-      >
-        {title && <ModalHeader toggle={() => onClose(false)}>{title || null}</ModalHeader>}
-        <ModalBody>{bodyComponent ? <BodyComponent /> : message}</ModalBody>
-        <ModalFooter>{buttonsContent}</ModalFooter>
+        </Group>
       </Modal>
     );
   };
@@ -72,7 +50,7 @@ const useConfirm = () => {
     title: "Warning!",
     confirmText: "Ok",
     cancelText: "Cancel",
-    confirmColor: "primary",
+    confirmColor: "",
     cancelColor: "",
     className: "",
     buttonsComponent: null,
