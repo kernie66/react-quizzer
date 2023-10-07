@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import getQuizzers from "../helpers/getQuizzers.js";
 import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
-import isValidUsername from "../helpers/isValidUsername.js";
+import isInvalidUsername from "../helpers/isInvalidUsername.js";
 import { showNotification } from "@mantine/notifications";
 import { IconArrowBackUp, IconCheck } from "@tabler/icons-react";
 import {
@@ -60,21 +60,21 @@ export default function EditUser({ opened, close, user }) {
   );
 
   const checkUsername = async () => {
-    let usernameStatus;
+    let usernameError;
 
     const newUsername = trim(form.values.username.toLowerCase());
     form.setFieldValue("username", newUsername);
     if (newUsername && newUsername !== user.username) {
-      const validUsername = isValidUsername(newUsername);
-      usernameStatus = validUsername && t(validUsername);
+      const invalidUsername = isInvalidUsername(newUsername);
+      usernameError = invalidUsername && t(invalidUsername);
 
-      if (!usernameStatus) {
+      if (!usernameError) {
         const checkUsername = quizzers.filter((quizzer) => {
           return quizzer.username === newUsername;
         });
 
         if (!isEmpty(checkUsername)) {
-          usernameStatus = t("username-already-registered");
+          usernameError = t("username-already-registered");
         } else {
           setConfirmModalText({
             title: t("update-username"),
@@ -104,30 +104,30 @@ export default function EditUser({ opened, close, user }) {
         }
       }
     } else {
-      usernameStatus = t("please-enter-a-username");
+      usernameError = t("please-enter-a-username");
     }
 
-    form.setFieldError("username", usernameStatus);
+    form.setFieldError("username", usernameError);
     return Promise.resolve("Username checked");
   };
 
   const checkEmail = async () => {
-    let emailStatus;
+    let emailError;
 
     const newEmailAddress = trim(form.values.email.toLowerCase());
     form.setFieldValue("email", newEmailAddress);
     if (newEmailAddress && newEmailAddress !== user.email) {
       if (!isValidEmail(newEmailAddress)) {
-        emailStatus = t("please-enter-a-valid-email-address");
+        emailError = t("please-enter-a-valid-email-address");
       } else {
         const checkEmailAddress = quizzers.filter((quizzer) => {
           return quizzer.email === newEmailAddress;
         });
 
         if (!isEmpty(checkEmailAddress)) {
-          emailStatus = t("email-address-already-registered");
+          emailError = t("email-address-already-registered");
         } else if (!isValidEmail(newEmailAddress)) {
-          emailStatus = t("please-enter-a-valid-email-address");
+          emailError = t("please-enter-a-valid-email-address");
         } else {
           setConfirmModalText({
             title: t("update-email"),
@@ -157,9 +157,9 @@ export default function EditUser({ opened, close, user }) {
         }
       }
     } else {
-      emailStatus = t("please-enter-a-valid-email-address");
+      emailError = t("please-enter-a-valid-email-address");
     }
-    form.setFieldError("email", emailStatus);
+    form.setFieldError("email", emailError);
     return Promise.resolve("Email not changed");
   };
 

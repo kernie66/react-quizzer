@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import InputField from "./InputField.js";
 import { useTranslation } from "react-i18next";
 import { useApi } from "../contexts/ApiProvider.js";
-import isValidUsername from "../helpers/isValidUsername.js";
+import isInvalidUsername from "../helpers/isInvalidUsername.js";
 
 export default function SetUsername({
   usernameValue,
@@ -23,7 +23,7 @@ export default function SetUsername({
       let userError,
         userValid = "";
 
-      const usernameCheck = isValidUsername(username);
+      const usernameCheck = isInvalidUsername(username);
       userError = t(usernameCheck);
 
       if (!userError) {

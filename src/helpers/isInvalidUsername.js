@@ -1,6 +1,6 @@
 import isValidEmail from "./isValidEmail.js";
 
-export default function isValidUsername(username) {
+export default function isInvalidUsername(username) {
   let usernameError;
   if (!username) {
     usernameError = "please-select-a-username";
