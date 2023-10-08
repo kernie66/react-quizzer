@@ -1,8 +1,6 @@
-import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Form, FormGroup, Modal, ModalBody, ModalHeader } from "reactstrap";
+// import { Button, Form, FormGroup, Modal, ModalBody, ModalHeader } from "reactstrap";
 import Body from "../components/Body";
-import InputField from "../components/InputField";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
 import { useApi } from "../contexts/ApiProvider.js";
@@ -10,12 +8,12 @@ import { Trans, useTranslation } from "react-i18next";
 import isValidEmail from "../helpers/isValidEmail.js";
 import { trim } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
+import { useDisclosure } from "@mantine/hooks";
+import { Button, Divider, Group, Modal, PasswordInput, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
 export default function LoginPage() {
-  const [formErrors, setFormErrors] = useState({});
-  const [modal, setModal] = useState(true);
-  const usernameField = useRef();
-  const passwordField = useRef();
+  const [opened, { open, close }] = useDisclosure(true);
   const { login } = useUser();
   const api = useApi();
   const { t } = useTranslation();
@@ -24,15 +22,17 @@ export default function LoginPage() {
   const location = useLocation();
   const { showBoundary } = useErrorBoundary();
 
-  const onOpened = () => {
-    usernameField.current.focus();
-  };
+  const form = useForm({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-  const onSubmit = async (ev) => {
+  const onSubmit = async () => {
     try {
-      ev.preventDefault();
-      const username = trim(usernameField.current.value.toLowerCase());
-      const password = passwordField.current.value;
+      const username = trim(form.values.username.toLowerCase());
+      const password = form.values.password;
 
       const errors = {};
       let userCheck = {};
@@ -53,7 +53,7 @@ export default function LoginPage() {
         errors.password = t("password-is-missing");
       }
       if (Object.keys(errors).length === 0) {
-        setModal(false);
+        close();
         flash(t("logging-in-username", { username }), "info", 2);
         const result = await login(username, password);
         console.log("Login result:", result);
@@ -63,7 +63,7 @@ export default function LoginPage() {
           } else {
             flash(t("server-error-when-logging-in"), "danger");
           }
-          setModal(true);
+          open();
         } else {
           let next = "/";
           if (location.state && location.state.next) {
@@ -72,7 +72,7 @@ export default function LoginPage() {
           navigate(next);
         }
       }
-      setFormErrors(errors);
+      form.setErrors(errors);
     } catch (error) {
       showBoundary(error);
     }
@@ -80,42 +80,40 @@ export default function LoginPage() {
 
   return (
     <Body>
-      <Modal isOpen={modal} onOpened={onOpened} fullscreen="sm" className="mt-0">
-        <Form onSubmit={onSubmit}>
-          <ModalHeader>{t("login")}</ModalHeader>
-          <ModalBody className="pt-0">
-            <FormGroup>
-              <InputField
-                label={t("username-or-email-address")}
-                name="username"
-                autoComplete="username"
-                fieldRef={usernameField}
-                error={formErrors.username}
-              />
-              <InputField
-                label={t("password")}
-                name="password"
-                autoComplete="current-password"
-                type="password"
-                fieldRef={passwordField}
-                error={formErrors.password}
-              />
-              <Button color="primary" className="mb-2">
-                {t("login")}
-              </Button>
-              <hr />
-              <p>
-                {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
-              </p>
-              <p>
-                <Trans i18nKey="forgot-password">
-                  Forgot your password? Request a <Link to="/reset-request">new password here</Link>
-                  .
-                </Trans>
-              </p>
-            </FormGroup>
-          </ModalBody>
-        </Form>
+      <Modal opened={opened} onClose={close} fullscreen="sm" title={<h5>{t("login")}</h5>}>
+        <Divider mb={8} />
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <TextInput
+            label={t("username-or-email-address")}
+            {...form.getInputProps("username")}
+            autoComplete="username"
+            withAsterisk
+            mb="md"
+            data-autofocus
+          />
+          <PasswordInput
+            label={t("password")}
+            {...form.getInputProps("password")}
+            name="password"
+            autoComplete="current-password"
+          />
+          <Group justify="space-between" my={8} pt={16}>
+            <Button type="submit">{t("login")}</Button>
+            <Button variant="outline" onClick={close}>
+              {t("cancel")}
+            </Button>
+          </Group>
+
+          <hr />
+          <p>
+            {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
+          </p>
+          <p>
+            <Trans i18nKey="forgot-password">
+              Forgot your password? Request a <Link to="/reset-request">new password here</Link>.
+            </Trans>
+          </p>
+        </form>
       </Modal>
     </Body>
   );

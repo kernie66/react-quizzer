@@ -191,12 +191,14 @@ export default function EditUser({ opened, close, user }) {
           showNotification({
             title: form.values.name,
             message: t("your-profile-has-been-updated"),
+            color: "green",
             icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
           });
         } else {
           showNotification({
             title: form.values.name,
             message: t("the-profile-could-not-be-updated"),
+            color: "red",
             icon: <IconExclamationMark style={{ width: rem(18), height: rem(18) }} />,
           });
         }
@@ -204,6 +206,7 @@ export default function EditUser({ opened, close, user }) {
         showNotification({
           title: form.values.name,
           message: t("the-profile-was-not-changed"),
+          color: "blue",
           icon: <IconExclamationMark style={{ width: rem(18), height: rem(18) }} />,
         });
       }
