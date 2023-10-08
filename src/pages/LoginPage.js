@@ -1,5 +1,4 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { Button, Form, FormGroup, Modal, ModalBody, ModalHeader } from "reactstrap";
 import Body from "../components/Body";
 import { useFlash } from "../contexts/FlashProvider";
 import { useUser } from "../contexts/UserProvider";
@@ -9,7 +8,7 @@ import isValidEmail from "../helpers/isValidEmail.js";
 import { trim } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
 import { useDisclosure } from "@mantine/hooks";
-import { Button, Divider, Group, Modal, PasswordInput, TextInput } from "@mantine/core";
+import { Button, Divider, Group, Modal, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 export default function LoginPage() {
@@ -80,7 +79,13 @@ export default function LoginPage() {
 
   return (
     <Body>
-      <Modal opened={opened} onClose={close} fullscreen="sm" title={<h5>{t("login")}</h5>}>
+      <Modal
+        opened={opened}
+        onClose={close}
+        fullscreen="sm"
+        title={<h5>{t("login")}</h5>}
+        yOffset="6rem"
+      >
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
@@ -94,25 +99,24 @@ export default function LoginPage() {
           <PasswordInput
             label={t("password")}
             {...form.getInputProps("password")}
-            name="password"
             autoComplete="current-password"
+            withAsterisk
           />
-          <Group justify="space-between" my={8} pt={16}>
+          <Group justify="space-between" my={8} pb={8} pt={16}>
             <Button type="submit">{t("login")}</Button>
             <Button variant="outline" onClick={close}>
               {t("cancel")}
             </Button>
           </Group>
-
-          <hr />
-          <p>
+          <Divider mb={8} />
+          <Text c="dimmed">
             {t("dont-have-an-account")} <Link to="/register">{t("register-here")}</Link>
-          </p>
-          <p>
+          </Text>
+          <Text c="dimmed">
             <Trans i18nKey="forgot-password">
               Forgot your password? Request a <Link to="/reset-request">new password here</Link>.
             </Trans>
-          </p>
+          </Text>
         </form>
       </Modal>
     </Body>

@@ -8,7 +8,7 @@
   "username-or-email-is-missing": "Användarnamn eller e-postadress saknas",
   "password-is-missing": "Lösenord saknas",
   "logging-in-username": "Loggar in {{ username }}",
-  "username-or-email-address": "Användarnamn eller e-mailadress",
+  "username-or-email-address": "Användarnamn eller e-postadress",
   "password": "Lösenord",
   "invalid-username-or-password": "Ogiltigt användarnamn eller lösenord",
   "login": "Logga in",
