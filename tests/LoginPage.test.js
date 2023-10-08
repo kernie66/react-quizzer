@@ -14,6 +14,7 @@ import MockAdapter from "axios-mock-adapter";
 import TestLogoutComponent from "./components/LoginPage.test/TestLogoutComponent.js";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MantineProvider } from "@mantine/core";
 
 const queryClient = new QueryClient();
 
@@ -55,20 +56,22 @@ function setup() {
 
 const renderLoginPage = () => {
   render(
-    <ErrorBoundary>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <FlashProvider>
-            <ApiProvider>
-              <UserProvider>
-                <TestLogoutComponent />
-                <LoginPage />
-              </UserProvider>
-            </ApiProvider>
-          </FlashProvider>
-        </QueryClientProvider>
-      </BrowserRouter>
-    </ErrorBoundary>,
+    <MantineProvider>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <FlashProvider>
+              <ApiProvider>
+                <UserProvider>
+                  <TestLogoutComponent />
+                  <LoginPage />
+                </UserProvider>
+              </ApiProvider>
+            </FlashProvider>
+          </QueryClientProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </MantineProvider>,
   );
 };
 

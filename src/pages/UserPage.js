@@ -112,7 +112,13 @@ export default function UserPage() {
                       {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
                     </Title>
                     {user.aboutMe && (
-                      <Text size="xl" fw={500} c="indigo.7" style={{ whiteSpace: "pre-wrap" }}>
+                      <Text
+                        size="xl"
+                        fw={500}
+                        my={8}
+                        c="indigo.7"
+                        style={{ whiteSpace: "pre-wrap" }}
+                      >
                         {user.aboutMe}
                       </Text>
                     )}
