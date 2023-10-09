@@ -1,4 +1,4 @@
-import { Button } from "reactstrap";
+import { Button } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 export default function getPasswordPopoverButtons() {
@@ -10,7 +10,7 @@ export default function getPasswordPopoverButtons() {
 
   const setPasswordPopoverButton = (color, text) => {
     return (
-      <Button id="popoverButton" outline size="sm" color={color} onClick={noAction}>
+      <Button id="popoverButton" variant="outline" size="sm" color={color} onClick={noAction}>
         {text}
       </Button>
     );

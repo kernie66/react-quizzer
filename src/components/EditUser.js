@@ -167,7 +167,7 @@ export default function EditUser({ opened, close, user }) {
       emailError = t("please-enter-a-valid-email-address");
     }
     form.setFieldError("email", emailError);
-    return Promise.resolve("Email not changed");
+    return Promise.resolve("Email checked");
   };
 
   const onSubmit = async () => {

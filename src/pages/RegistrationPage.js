@@ -1,6 +1,4 @@
-import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Form, FormGroup, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
 import Body from "../components/Body";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
@@ -11,66 +9,54 @@ import SetEmailAddress from "../components/SetEmailAddress.js";
 import { sift } from "radash";
 import SetPassword from "../components/SetPassword.js";
 import { useErrorBoundary } from "react-error-boundary";
+import { Button, Divider, Group, Modal } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 export default function RegistrationPage() {
-  const [modal, setModal] = useState(true);
-  const [usernameValue, setUsernameValue] = useState();
-  const [usernameError, setUsernameError] = useState();
-  const [emailAddressValue, setEmailAddressValue] = useState();
-  const [emailAddressError, setEmailAddressError] = useState();
-  const [passwordValue, setPasswordValue] = useState("");
-  const [passwordError, setPasswordError] = useState();
-  const [password2Value, setPassword2Value] = useState("");
-  const [password2Error, setPassword2Error] = useState();
-  const usernameField = useRef();
-  const passwordField = useRef();
-  const password2Field = useRef();
+  const [opened, { close }] = useDisclosure(true);
   const navigate = useNavigate();
   const api = useApi();
   const flash = useFlash();
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
+  const isMobile = useMediaQuery("(max-width: 50em)");
 
-  const onOpened = () => {
-    usernameField.current.focus();
-  };
+  const form = useForm({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      password2: "",
+    },
+  });
 
-  const onSubmit = async (event) => {
-    event.preventDefault();
-
+  const onSubmit = async () => {
     try {
-      const currentErrors = [usernameError, emailAddressError, passwordError, password2Error];
+      const currentErrors = [];
       console.log("Sift:", sift(currentErrors), currentErrors);
       let errors = sift(currentErrors).length !== 0;
       console.log("Errors:", errors);
-      if (!usernameValue) {
-        setUsernameError(t("please-select-a-username"));
-        errors = true;
+      if (form.values.password.length === 0) {
+        form.setFieldError("password", t("please-select-a-password"));
       }
-      if (!emailAddressValue) {
-        setEmailAddressError(t("please-enter-a-valid-email-address"));
-        errors = true;
-      }
-      if (!passwordValue) {
-        setPasswordError(t("please-select-a-password"));
-      }
-      if (!password2Value) {
-        setPassword2Error(t("please-repeat-the-password"));
+      if (form.values.password2.length === 0) {
+        form.setFieldError("password2", t("please-repeat-the-password"));
       }
 
       if (errors) {
         return;
       }
 
-      const name = getNameFromEmail(emailAddressValue);
+      const name = getNameFromEmail(form.values.email);
       const data = await api.register({
-        username: usernameValue,
+        username: form.values.username,
         name: name,
-        email: emailAddressValue,
-        password: passwordValue,
+        email: form.values.email,
+        password: form.values.password,
       });
       if (data.ok) {
-        setModal(false);
+        close();
         flash(t("you-have-successfully-registered"), "success");
         navigate("/login");
       }
@@ -80,57 +66,36 @@ export default function RegistrationPage() {
   };
 
   const cancel = () => {
+    close();
     navigate("/login");
   };
 
   return (
     <Body>
-      <Modal isOpen={modal} onOpened={onOpened} fullscreen="sm" className="mt-0">
-        <Form onSubmit={onSubmit}>
-          <ModalHeader className="py-2">{t("user-registration")}</ModalHeader>
-          <ModalBody className="pt-0">
-            <FormGroup>
-              <SetUsername
-                usernameValue={usernameValue}
-                setUsernameValue={setUsernameValue}
-                usernameError={usernameError}
-                setUsernameError={setUsernameError}
-                usernameField={usernameField}
-              />
-              <SetEmailAddress
-                emailAddressValue={emailAddressValue}
-                setEmailAddressValue={setEmailAddressValue}
-                emailAddressError={emailAddressError}
-                setEmailAddressError={setEmailAddressError}
-              />
-              <SetPassword
-                passwordValue={passwordValue}
-                setPasswordValue={setPasswordValue}
-                passwordError={passwordError}
-                setPasswordError={setPasswordError}
-                password2Value={password2Value}
-                setPassword2Value={setPassword2Value}
-                password2Error={password2Error}
-                setPassword2Error={setPassword2Error}
-                passwordField={passwordField}
-                password2Field={password2Field}
-                passwordUserInputs={[usernameValue, emailAddressValue, "Saab"]}
-              />
-              <Row className="justify-content-between mb-2">
-                <Col>
-                  <Button color="primary" className="submit me-auto">
-                    {t("register")}
-                  </Button>
-                </Col>
-                <Col>
-                  <Button color="secondary" onClick={cancel} className="float-end">
-                    {t("cancel")}
-                  </Button>
-                </Col>
-              </Row>
-            </FormGroup>
-          </ModalBody>
-        </Form>
+      <Modal
+        opened={opened}
+        onClose={close}
+        fullScreen={isMobile}
+        size="lg"
+        title={<h5>{t("user-registration")}</h5>}
+        yOffset="6rem"
+      >
+        <Divider mb={8} />
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <SetUsername form={form} />
+          <SetEmailAddress form={form} />
+          <SetPassword
+            form={form}
+            passwordUserInputs={[form.values.username, form.values.email, "Saab"]}
+          />
+          <Divider mb={8} />
+          <Group justify="space-between" my={8} pt={16}>
+            <Button type="submit">{t("register")}</Button>
+            <Button variant="outline" onClick={cancel}>
+              {t("cancel")}
+            </Button>
+          </Group>
+        </form>
       </Modal>
     </Body>
   );

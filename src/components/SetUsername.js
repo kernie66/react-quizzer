@@ -1,79 +1,47 @@
-import { useEffect, useState } from "react";
-import InputField from "./InputField.js";
 import { useTranslation } from "react-i18next";
 import { useApi } from "../contexts/ApiProvider.js";
 import isInvalidUsername from "../helpers/isInvalidUsername.js";
+import { TextInput } from "@mantine/core";
+import { trim } from "radash";
 
-export default function SetUsername({
-  usernameValue,
-  setUsernameValue,
-  usernameError,
-  setUsernameError,
-  usernameField,
-}) {
+export default function SetUsername({ form }) {
   const api = useApi();
   const { t } = useTranslation();
-  const [isValid, setIsValid] = useState("");
 
   // Check username
-  useEffect(() => {
-    let isActive = true;
+  const checkUsername = async () => {
+    let usernameError;
 
-    const checkUser = async (username) => {
-      let userError,
-        userValid = "";
+    const newUsername = trim(form.values.username.toLowerCase());
+    form.setFieldValue("username", newUsername);
+    if (newUsername) {
+      const invalidUsername = isInvalidUsername(newUsername);
+      usernameError = invalidUsername && t(invalidUsername);
 
-      const usernameCheck = isInvalidUsername(username);
-      userError = t(usernameCheck);
-
-      if (!userError) {
-        const existingUser = await api.get("/check", { username });
+      if (!usernameError) {
+        const existingUser = await api.get("/check", { username: newUsername });
         if (existingUser.status === 200) {
-          userError = t("username-already-registered");
-        } else if (existingUser.status === 404) {
-          userValid = t("username-is-available");
-        } else {
-          userError = t("cannot-validate-the-username-server-not-responding");
+          usernameError = t("username-already-registered");
+        } else if (existingUser.status !== 404) {
+          usernameError = t("cannot-validate-the-username-server-not-responding");
         }
       }
-      if (isActive) {
-        console.log(userError);
-        setUsernameError(userError);
-        if (!userError) {
-          setIsValid(userValid);
-        } else {
-          setIsValid("");
-        }
-      }
-    };
-
-    if (usernameValue !== undefined) {
-      try {
-        checkUser(usernameValue);
-        console.log("User error:", usernameError);
-      } catch (error) {
-        setUsernameError(t("cannot-validate-the-username-server-not-responding"));
-        console.log("Error checking username:", error);
-      }
+    } else {
+      usernameError = t("please-enter-a-username");
     }
 
-    return () => {
-      isActive = false;
-    };
-  }, [usernameValue]);
-
-  const onInput = (username) => {
-    setUsernameValue(username.toLowerCase());
+    form.setFieldError("username", usernameError);
+    return Promise.resolve("Username checked");
   };
 
   return (
-    <InputField
+    <TextInput
       label={t("username")}
-      name="username"
-      fieldRef={usernameField}
-      error={usernameError}
-      isValid={isValid}
-      onBlur={onInput}
+      {...form.getInputProps("username")}
+      withAsterisk
+      mb="md"
+      onBlur={checkUsername}
+      data-autoFocus
     />
   );
 }
