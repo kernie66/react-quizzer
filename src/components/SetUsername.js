@@ -41,7 +41,7 @@ export default function SetUsername({ form }) {
       withAsterisk
       mb="md"
       onBlur={checkUsername}
-      data-autoFocus
+      data-autofocus
     />
   );
 }

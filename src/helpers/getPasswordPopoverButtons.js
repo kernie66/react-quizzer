@@ -16,12 +16,12 @@ export default function getPasswordPopoverButtons() {
     );
   };
 
-  const shortScoreWord = setPasswordPopoverButton("secondary", t("too-short"));
-  const veryWeak = setPasswordPopoverButton("danger", t("very-weak"));
-  const weak = setPasswordPopoverButton("danger", t("weak"));
-  const okay = setPasswordPopoverButton("warning", t("almost"));
-  const good = setPasswordPopoverButton("info", t("good"));
-  const strong = setPasswordPopoverButton("success", t("strong"));
+  const shortScoreWord = setPasswordPopoverButton("gray", t("too-short"));
+  const veryWeak = setPasswordPopoverButton("red", t("very-weak"));
+  const weak = setPasswordPopoverButton("red", t("weak"));
+  const okay = setPasswordPopoverButton("yellow", t("almost"));
+  const good = setPasswordPopoverButton("indigo", t("good"));
+  const strong = setPasswordPopoverButton("green", t("strong"));
 
   const scoreWords = [veryWeak, weak, okay, good, strong];
 
