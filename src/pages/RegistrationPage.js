@@ -75,6 +75,8 @@ export default function RegistrationPage() {
       <Modal
         opened={opened}
         onClose={close}
+        closeOnEscape={false}
+        closeOnClickOutside={false}
         fullScreen={isMobile}
         size="lg"
         title={<h5>{t("user-registration")}</h5>}
