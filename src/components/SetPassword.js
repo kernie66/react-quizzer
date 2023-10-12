@@ -11,41 +11,57 @@ export default function SetPassword({ form }) {
   const [password, setPassword] = useState("");
   const [debouncedPassword] = useDebouncedValue(password, 200);
   const { t } = useTranslation();
-  const [passwordCheck, setPasswordCheck] = useSetState({});
+  const [passwordCheck, setPasswordCheck] = useSetState({
+    warning: "enter-5-characters-for-hints",
+    suggestions: [],
+    score: 0,
+  });
 
   useEffect(() => {
     (async () => {
-      const initialValues = await usePasswordStrength("");
-      initialValues.warning = "enter-5-characters-for-hints";
-      initialValues.suggestions = [];
-      setPasswordCheck(initialValues);
-      console.log("Init:", initialValues);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const zxcvbnResult = await usePasswordStrength(debouncedPassword);
-      if (password.length < 5) {
-        zxcvbnResult.warning = "enter-5-characters-for-hints";
-        zxcvbnResult.suggestions = [];
-      } else {
-        if (zxcvbnResult.feedback.warning || !isEmpty(zxcvbnResult.feedback.suggestions)) {
-          zxcvbnResult.warning = zxcvbnResult.feedback.warning;
-          zxcvbnResult.suggestions = zxcvbnResult.feedback.suggestions;
-        } else {
-          zxcvbnResult.warning = null;
-          zxcvbnResult.suggestions = [];
+      const zxcvbnResult = await usePasswordStrength(debouncedPassword, [
+        form.values.username,
+        form.values.email,
+        "Saab",
+        "Quizzer",
+      ]);
+      let tooltipText = "enter-5-characters-for-hints";
+      let suggestions = [];
+      const score = zxcvbnResult.score;
+      if (password.length >= 5) {
+        tooltipText = "password-is-not-good-enough";
+        if (zxcvbnResult.feedback.warning) {
+          tooltipText = zxcvbnResult.feedback.warning;
+        } else if (score === 3) {
+          tooltipText = "password-strength-is-sufficient";
+        } else if (score === 4) {
+          tooltipText = "password-strength-is-very-good";
+        }
+        if (!isEmpty(zxcvbnResult.feedback.suggestions)) {
+          suggestions = zxcvbnResult.feedback.suggestions;
         }
       }
       console.log("zxcvbnResult:", zxcvbnResult);
-      setPasswordCheck(zxcvbnResult);
+      setPasswordCheck({ warning: tooltipText, suggestions: suggestions, score: score });
     })();
   }, [debouncedPassword]);
 
   const updatePassword = async (event) => {
     const typedPassword = event.currentTarget.value;
     setPassword(typedPassword);
+  };
+
+  // Check password
+  const checkPassword = () => {
+    let passwordError;
+
+    tooltipClose();
+    if (password) {
+      if (passwordCheck.score < 3) {
+        passwordError = t("the-password-is-too-weak");
+      }
+    }
+    form.setFieldError("password", passwordError);
   };
 
   // Check password 2
@@ -65,7 +81,7 @@ export default function SetPassword({ form }) {
       <Popover
         opened={tooltipOpened}
         position="top-start"
-        offset={{ mainAxis: 8, crossAxis: 72 }}
+        offset={{ mainAxis: 8, crossAxis: 80 }}
         withArrow
         arrowSize={10}
       >
@@ -79,19 +95,19 @@ export default function SetPassword({ form }) {
             autoComplete="new-password"
             onChange={updatePassword}
             onFocus={tooltipOpen}
-            onBlur={tooltipClose}
+            onBlur={checkPassword}
           />
         </Popover.Target>
-        <Popover.Dropdown bg="indigo.1" color="dark">
+        <Popover.Dropdown bg="indigo.1" color="dark" my={4}>
           {passwordCheck.warning && (
-            <Text size="sm" my="xs" color={passwordCheck.warningColor}>
+            <Text size="sm" mb={8} color={passwordCheck.warningColor}>
               {t(`warnings.${passwordCheck.warning}`)}
             </Text>
           )}
           {!isEmpty(passwordCheck.suggestions) && (
             <>
-              <Divider label="Suggestions" labelPosition="left" />
-              <List size="sm" my="xs">
+              <Divider label={t("suggestions.suggestions")} labelPosition="left" />
+              <List size="sm" my={4}>
                 {passwordCheck.suggestions.map((suggestion) => (
                   <List.Item key={suggestion.id}>{t(`suggestions.${suggestion}`)}</List.Item>
                 ))}
