@@ -25,8 +25,6 @@ export default function SetEmailAddress({ form }) {
           emailError = t("cannot-validate-the-email-address-server-not-responding");
         }
       }
-    } else {
-      emailError = t("please-enter-a-valid-email-address");
     }
     form.setFieldError("email", emailError);
     return Promise.resolve("Email checked");

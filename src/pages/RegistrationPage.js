@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next";
 import getNameFromEmail from "../helpers/getNameFromEmail.js";
 import SetUsername from "../components/SetUsername.js";
 import SetEmailAddress from "../components/SetEmailAddress.js";
-import { sift } from "radash";
 import SetPassword from "../components/SetPassword.js";
+import { sift } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
 import { Button, Divider, Group, Modal } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -29,6 +29,12 @@ export default function RegistrationPage() {
       password: "",
       password2: "",
     },
+    validate: {
+      username: (value) => (value.length === 0 ? t("please-select-a-username") : null),
+      email: (value) => (value.length === 0 ? t("please-enter-a-valid-email-address") : null),
+      password: (value) => (value.length === 0 ? t("please-select-a-password") : null),
+      password2: (value) => (value.length === 0 ? t("please-repeat-the-password") : null),
+    },
   });
 
   const onSubmit = async () => {
@@ -37,12 +43,6 @@ export default function RegistrationPage() {
       console.log("Sift:", sift(currentErrors), currentErrors);
       let errors = sift(currentErrors).length !== 0;
       console.log("Errors:", errors);
-      if (form.values.password.length === 0) {
-        form.setFieldError("password", t("please-select-a-password"));
-      }
-      if (form.values.password2.length === 0) {
-        form.setFieldError("password2", t("please-repeat-the-password"));
-      }
 
       if (errors) {
         return;

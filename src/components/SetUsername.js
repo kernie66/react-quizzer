@@ -26,8 +26,6 @@ export default function SetUsername({ form }) {
           usernameError = t("cannot-validate-the-username-server-not-responding");
         }
       }
-    } else {
-      usernameError = t("please-enter-a-username");
     }
 
     form.setFieldError("username", usernameError);
