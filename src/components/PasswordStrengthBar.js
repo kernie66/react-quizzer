@@ -1,4 +1,4 @@
-import { Progress, Group, Button } from "@mantine/core";
+import { Progress, Group } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 
@@ -23,9 +23,6 @@ export default function PasswordStrengthBar({ strength }) {
   return (
     <Group gap={5} grow mt="xs" mb="md" align="start">
       {bars}
-      <Button variant="outline" size="xs">
-        Info
-      </Button>
     </Group>
   );
 }

@@ -79,7 +79,7 @@ export default function RegistrationPage() {
         closeOnClickOutside={false}
         fullScreen={isMobile}
         size="lg"
-        title={<h5>{t("user-registration")}</h5>}
+        title={t("user-registration")}
         yOffset="6rem"
       >
         <Divider mb={8} />

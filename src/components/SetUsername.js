@@ -29,7 +29,7 @@ export default function SetUsername({ form }) {
     }
 
     form.setFieldError("username", usernameError);
-    return Promise.resolve("Username checked");
+    return Promise.resolve(true);
   };
 
   return (

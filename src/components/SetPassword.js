@@ -1,10 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { Divider, List, PasswordInput, Popover, Text } from "@mantine/core";
+import { Divider, Group, List, PasswordInput, Popover, Text } from "@mantine/core";
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 // import PasswordStrengthBar from "./PasswordStrengthBar.js";
 import usePasswordStrength from "../hooks/usePasswordStrength.js";
 import { isEmpty } from "radash";
+import PasswordStrength from "./PasswordStrength.js";
+import PasswordStrengthBar from "./PasswordStrengthBar.js";
 
 export default function SetPassword({ form }) {
   const [tooltipOpened, { open: tooltipOpen, close: tooltipClose }] = useDisclosure(false);
@@ -46,7 +48,7 @@ export default function SetPassword({ form }) {
     })();
   }, [debouncedPassword]);
 
-  const updatePassword = async (event) => {
+  const updatePassword = (event) => {
     const typedPassword = event.currentTarget.value;
     setPassword(typedPassword);
   };
@@ -78,49 +80,60 @@ export default function SetPassword({ form }) {
 
   return (
     <div>
-      <Popover
-        opened={tooltipOpened}
-        position="top-start"
-        offset={{ mainAxis: 8, crossAxis: 80 }}
-        withArrow
-        arrowSize={10}
-      >
-        <Popover.Target>
-          <PasswordInput
-            label={t("password")}
-            {...form.getInputProps("password")}
-            value={password}
-            withAsterisk
-            mb="md"
-            autoComplete="new-password"
-            onChange={updatePassword}
-            onFocus={tooltipOpen}
-            onBlur={checkPassword}
-          />
-        </Popover.Target>
-        <Popover.Dropdown bg="indigo.1" color="dark" my={4}>
-          {passwordCheck.warning && (
-            <Text size="sm" mb={8} color={passwordCheck.warningColor}>
-              {t(`warnings.${passwordCheck.warning}`)}
-            </Text>
-          )}
-          {!isEmpty(passwordCheck.suggestions) && (
-            <>
-              <Divider label={t("suggestions.suggestions")} labelPosition="left" />
-              <List size="sm" my={4}>
-                {passwordCheck.suggestions.map((suggestion) => (
-                  <List.Item key={suggestion.id}>{t(`suggestions.${suggestion}`)}</List.Item>
-                ))}
-              </List>
-            </>
-          )}
-        </Popover.Dropdown>
-      </Popover>
+      <Group>
+        <Popover
+          opened={tooltipOpened}
+          position="top-start"
+          offset={24}
+          withArrow
+          arrowSize={12}
+          zIndex={1000}
+        >
+          <Popover.Target>
+            <PasswordInput
+              label={t("password")}
+              {...form.getInputProps("password")}
+              value={password}
+              withAsterisk
+              mb="md"
+              mr="auto"
+              w="80%"
+              autoComplete="new-password"
+              onChange={updatePassword}
+              onFocus={tooltipOpen}
+              onBlur={checkPassword}
+            />
+          </Popover.Target>
+          <Popover.Dropdown bg="red.1" color="dark" my={4}>
+            {passwordCheck.warning && (
+              <Text size="sm" mb={8} color={passwordCheck.warningColor}>
+                {t(`warnings.${passwordCheck.warning}`)}
+              </Text>
+            )}
+            {!isEmpty(passwordCheck.suggestions) && (
+              <>
+                <Divider label={t("suggestions.suggestions")} labelPosition="left" />
+                <List size="sm" my={4}>
+                  {passwordCheck.suggestions.map((suggestion, index) => (
+                    <List.Item key={index}>{t(`suggestions.${suggestion}`)}</List.Item>
+                  ))}
+                </List>
+              </>
+            )}
+          </Popover.Dropdown>
+        </Popover>
+        <PasswordStrength password={debouncedPassword} />
+      </Group>
+      <PasswordStrengthBar strength={passwordCheck.score} />
+      <Text>
+        Password: {password}, Debounced: {debouncedPassword}{" "}
+      </Text>
       <PasswordInput
         label={t("repeat-password")}
         {...form.getInputProps("password2")}
         withAsterisk
         mb="md"
+        w="80%"
         autoComplete="new-password"
         onBlur={checkPassword2}
       />
