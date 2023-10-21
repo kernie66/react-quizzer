@@ -151,5 +151,25 @@
     "year": "{base} year",
     "years": "{base} years",
     "centuries": "centuries"
+  },
+  "of-4": "(of 4)",
+  "number-of-guesses": "Number of guesses:",
+  "crack-times": "Crack times:",
+  "score": "Score",
+  "info": "Info",
+  "numbers": {
+    "million_one": "{{count}} million",
+    "million_other": "{{count}} millions",
+    "billion_one": "{{count}} billion",
+    "billion_other": "{{count}} billions",
+    "quadrillion_one": "{{count}} quadrillion",
+    "quadrillion_other": "{{count}} quadrillions",
+    "quintillion_one": "{{count}} quintillion",
+    "quintillion_other": "{{count}} quintillions",
+    "septillion_one": "{{count}} septillion",
+    "septillion_other": "{{count}} septillions",
+    "octillion_one": "{{count}} octillion",
+    "octillion_other": "{{count}} octillions",
+    "undefined": "Extremely many"
   }
 }

@@ -3,7 +3,7 @@ import { Divider, Group, List, PasswordInput, Popover, Text } from "@mantine/cor
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 // import PasswordStrengthBar from "./PasswordStrengthBar.js";
-import usePasswordStrength from "../hooks/usePasswordStrength.js";
+import getPasswordStrength from "../helpers/getPasswordStrength.js";
 import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.js";
 import PasswordStrengthBar from "./PasswordStrengthBar.js";
@@ -18,15 +18,11 @@ export default function SetPassword({ form }) {
     suggestions: [],
     score: 0,
   });
+  const userInputs = [form.values.username, form.values.email, "Saab", "Quizzer"];
 
   useEffect(() => {
     (async () => {
-      const zxcvbnResult = await usePasswordStrength(debouncedPassword, [
-        form.values.username,
-        form.values.email,
-        "Saab",
-        "Quizzer",
-      ]);
+      const zxcvbnResult = await getPasswordStrength(debouncedPassword, userInputs);
       let tooltipText = "enter-5-characters-for-hints";
       let suggestions = [];
       const score = zxcvbnResult.score;
@@ -122,12 +118,9 @@ export default function SetPassword({ form }) {
             )}
           </Popover.Dropdown>
         </Popover>
-        <PasswordStrength password={debouncedPassword} />
+        <PasswordStrength password={debouncedPassword} passwordUserInputs={userInputs} />
       </Group>
       <PasswordStrengthBar strength={passwordCheck.score} />
-      <Text>
-        Password: {password}, Debounced: {debouncedPassword}{" "}
-      </Text>
       <PasswordInput
         label={t("repeat-password")}
         {...form.getInputProps("password2")}

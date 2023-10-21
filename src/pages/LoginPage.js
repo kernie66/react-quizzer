@@ -79,13 +79,7 @@ export default function LoginPage() {
 
   return (
     <Body>
-      <Modal
-        opened={opened}
-        onClose={close}
-        fullscreen="sm"
-        title={<h5>{t("login")}</h5>}
-        yOffset="6rem"
-      >
+      <Modal opened={opened} onClose={close} fullscreen="sm" title={t("login")} yOffset="6rem">
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput

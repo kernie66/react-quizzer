@@ -86,10 +86,7 @@ export default function RegistrationPage() {
         <form onSubmit={form.onSubmit(onSubmit)}>
           <SetUsername form={form} />
           <SetEmailAddress form={form} />
-          <SetPassword
-            form={form}
-            passwordUserInputs={[form.values.username, form.values.email, "Saab"]}
-          />
+          <SetPassword form={form} />
           <Divider mb={8} />
           <Group justify="space-between" my={8} pt={16}>
             <Button type="submit">{t("register")}</Button>

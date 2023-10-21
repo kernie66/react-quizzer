@@ -151,5 +151,26 @@
     "year": "år",
     "years": "åratal",
     "centuries": "århundraden"
+  },
+  "info": "Info",
+  "score": "Poäng",
+  "of-4": "(av 4)",
+  "number-of-guesses": "Antal gissningar:",
+  "crack-times": "Tid för att knäcka:",
+  "numbers": {
+    "million_one": "{{count}} miljon",
+    "million_other": "{{count}} miljoner",
+    "billion_one": "{{count}} miljard",
+    "billion_other": "{{count}} miljarder",
+    "quadrillion_one": "{{count}} biljon",
+    "quadrillion_other": "{{count}} biljoner",
+    "quintillion_one": "{{count}} biljard",
+    "quintillion_other": "{{count}} biljarder",
+    "septillion_one": "{{count}} triljon",
+    "septillion_other": "{{count}} triljoner",
+    "octillion_one": "{{count}} triljard",
+    "octillion_other": "{{count}} triljarder",
+    "undefined": "Extremt många"
   }
+
 }

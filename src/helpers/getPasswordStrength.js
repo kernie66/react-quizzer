@@ -54,16 +54,17 @@ const options = {
 };
 zxcvbnOptions.setOptions(options);
 */
+let loaded = false;
 
-const usePasswordStrength = async (password) => {
-  if (!sessionStorage.getItem("zxcvbnOptions")) {
+const getPasswordStrength = async (password) => {
+  if (!loaded) {
     const options = await loadOptions();
     zxcvbnOptions.setOptions(options);
-    sessionStorage.setItem("zxcvbnOptions", "Loaded");
-    console.info("Password dictionaries loaded...");
+    loaded = true;
+    console.log("Password dictionaries loaded...");
   }
   const response = await zxcvbnAsync(password);
   return response;
 };
 
-export default usePasswordStrength;
+export default getPasswordStrength;

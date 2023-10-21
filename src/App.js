@@ -22,7 +22,7 @@ import { lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Container } from "@mantine/core";
+import { Container, Title } from "@mantine/core";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
@@ -38,7 +38,9 @@ function logErrorToService(error, info) {
 function ErrorFallback({ error }) {
   return (
     <div role="alert">
-      <p>Something went wrong:</p>
+      <Title order={3} mt={64}>
+        Something went wrong:
+      </Title>
       <pre style={{ color: "red" }}>{error.message}</pre>
     </div>
   );
@@ -54,56 +56,58 @@ export default function App() {
               <ApiProvider>
                 <UserProvider>
                   <Header />
-                  <Container fluid="md" className="p-0 MainBody">
-                    <Routes>
-                      <Route
-                        path="/login"
-                        element={
-                          <PublicRoute>
-                            <LoginPage />
-                          </PublicRoute>
-                        }
-                      />
-                      <Route
-                        path="/register"
-                        element={
-                          <PublicRoute>
-                            <RegistrationPage />
-                          </PublicRoute>
-                        }
-                      />
-                      <Route
-                        path="/reset-request"
-                        element={
-                          <PublicRoute>
-                            <ResetRequestPage />
-                          </PublicRoute>
-                        }
-                      />
-                      <Route
-                        path="/reset"
-                        element={
-                          <PublicRoute>
-                            <ResetPage />
-                          </PublicRoute>
-                        }
-                      />
-                      <Route
-                        path="*"
-                        element={
-                          <PrivateRoute>
-                            <Routes>
-                              <Route path="/" element={<QuizPage />} />
-                              <Route path="/explore" element={<ExplorePage />} />
-                              <Route path="/user/:id" element={<UserPage />} />
-                              <Route path="/password" element={<ChangePasswordPage />} />
-                              <Route path="*" element={<Navigate to="/" />} />
-                            </Routes>
-                          </PrivateRoute>
-                        }
-                      />
-                    </Routes>
-                  </Container>
+                  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
+                    <Container fluid="md" className="p-0 MainBody">
+                      <Routes>
+                        <Route
+                          path="/login"
+                          element={
+                            <PublicRoute>
+                              <LoginPage />
+                            </PublicRoute>
+                          }
+                        />
+                        <Route
+                          path="/register"
+                          element={
+                            <PublicRoute>
+                              <RegistrationPage />
+                            </PublicRoute>
+                          }
+                        />
+                        <Route
+                          path="/reset-request"
+                          element={
+                            <PublicRoute>
+                              <ResetRequestPage />
+                            </PublicRoute>
+                          }
+                        />
+                        <Route
+                          path="/reset"
+                          element={
+                            <PublicRoute>
+                              <ResetPage />
+                            </PublicRoute>
+                          }
+                        />
+                        <Route
+                          path="*"
+                          element={
+                            <PrivateRoute>
+                              <Routes>
+                                <Route path="/" element={<QuizPage />} />
+                                <Route path="/explore" element={<ExplorePage />} />
+                                <Route path="/user/:id" element={<UserPage />} />
+                                <Route path="/password" element={<ChangePasswordPage />} />
+                                <Route path="*" element={<Navigate to="/" />} />
+                              </Routes>
+                            </PrivateRoute>
+                          }
+                        />
+                      </Routes>
+                    </Container>
+                  </ErrorBoundary>
                 </UserProvider>
               </ApiProvider>
             </FlashProvider>
