@@ -76,7 +76,7 @@ export default function SetPassword({ form }) {
 
   return (
     <div>
-      <Group>
+      <Group align="flex-start">
         <Popover
           opened={tooltipOpened}
           position="top-start"
