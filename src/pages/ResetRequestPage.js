@@ -1,48 +1,72 @@
-import { useRef, useState } from "react";
-import { useApi } from "../contexts/ApiProvider";
-import { useFlash } from "../contexts/FlashProvider";
-import Body from "../components/Body";
-import { Button, Form, Modal, ModalBody, ModalHeader } from "reactstrap";
-import InputField from "../components/InputField";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { trim } from "radash";
+import { useEffect, useState } from "react";
+import { useApi } from "../contexts/ApiProvider";
+import Body from "../components/Body";
+import { useNavigate } from "react-router-dom";
+import { useDisclosure } from "@mantine/hooks";
+import { Button, Divider, Group, Modal, rem } from "@mantine/core";
+import SetEmailAddress from "../components/SetEmailAddress.js";
+import { useForm } from "@mantine/form";
+import { useErrorBoundary } from "react-error-boundary";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export default function ResetRequestPage() {
-  const [formErrors, setFormErrors] = useState({});
-  const [modal, setModal] = useState(true);
+  const [opened, { close }] = useDisclosure(true);
+  //const [formErrors, setFormErrors] = useState({});
+  //const [modal, setModal] = useState(true);
   const [resetURL, setResetURL] = useState();
   const [language, setLanguage] = useState("en");
-  const emailField = useRef();
   const api = useApi();
-  const flash = useFlash();
   const { i18n } = useTranslation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { showBoundary } = useErrorBoundary();
 
-  const onOpened = () => {
+  const form = useForm({
+    initialValues: {
+      email: "",
+    },
+    validate: {
+      email: (value) => (value.length === 0 ? t("please-enter-a-valid-email-address") : null),
+    },
+  });
+
+  useEffect(() => {
     const languageCode = i18n.resolvedLanguage;
     setLanguage(languageCode.split("-")[0]);
     const currentURL = window.location.href;
     setResetURL(currentURL.replace("/reset-request", "/reset"));
-    emailField.current.focus();
-  };
+  }, []);
 
-  const onSubmit = async (ev) => {
-    ev.preventDefault();
-    const newEmailAddress = trim(emailField.current.value.toLowerCase());
-    emailField.current.value = newEmailAddress;
-    const response = await api.post("/auth/request-reset", {
-      email: newEmailAddress,
-      resetURL: resetURL,
-      language: language,
-    });
-    if (!response.ok) {
-      flash("Couldn't request a password request", "warn");
-    } else {
-      emailField.current.value = "";
-      setFormErrors({});
-      setModal(false);
-      flash("You will receive an email with instructions " + "to reset your password", "info");
+  const onSubmit = async () => {
+    try {
+      const response = await api.post("/auth/request-reset", {
+        email: form.values.email,
+        resetURL: resetURL,
+        language: language,
+      });
+      if (response.ok) {
+        close();
+        showNotification({
+          title: t("reset-password"),
+          message: t("you-will-receive-an-email-with-instructions-to-reset-your-password"),
+          color: "green",
+          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+          autoClose: 5000,
+        });
+        navigate("/login");
+      } else {
+        showNotification({
+          title: t("reset-password"),
+          message: t("couldnt-request-a-password-reset"),
+          color: "red",
+          icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      showBoundary(error);
     }
   };
 
@@ -52,22 +76,25 @@ export default function ResetRequestPage() {
 
   return (
     <Body>
-      <Modal isOpen={modal} onOpened={onOpened} toggle={cancelRequest} fullscreen="sm">
-        <ModalHeader toggle={cancelRequest}>Request password reset</ModalHeader>
-        <ModalBody className="pt-0">
-          <Form onSubmit={onSubmit}>
-            <InputField
-              label="Email"
-              name="email"
-              type="email"
-              fieldRef={emailField}
-              error={formErrors.email}
-            />
-            <Button color="primary" type="submit">
-              Reset password
+      <Modal
+        opened={opened}
+        onClose={cancelRequest}
+        closeOnEscape={false}
+        centered
+        fullscreen="sm"
+        title={t("request-password-reset")}
+      >
+        <Divider mb={8} />
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <SetEmailAddress form={form} focus={true} newUser={false} />
+          <Divider mb={8} />
+          <Group justify="space-between" my={8} pt={16}>
+            <Button type="submit">{t("reset-password")}</Button>
+            <Button variant="outline" onClick={cancelRequest}>
+              {t("cancel")}
             </Button>
-          </Form>
-        </ModalBody>
+          </Group>
+        </form>
       </Modal>
     </Body>
   );

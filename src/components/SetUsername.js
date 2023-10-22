@@ -4,7 +4,7 @@ import isInvalidUsername from "../helpers/isInvalidUsername.js";
 import { TextInput } from "@mantine/core";
 import { trim } from "radash";
 
-export default function SetUsername({ form }) {
+export default function SetUsername({ form, focus = true }) {
   const api = useApi();
   const { t } = useTranslation();
 
@@ -39,7 +39,7 @@ export default function SetUsername({ form }) {
       withAsterisk
       mb="md"
       onBlur={checkUsername}
-      data-autofocus
+      data-autofocus={focus}
     />
   );
 }

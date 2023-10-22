@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Divider, Flex, Modal, Select, Text, rem } from "@mantine/core";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconExclamationCircle, IconX } from "@tabler/icons-react";
 import { useSetState } from "@mantine/hooks";
 
 export default function ChangeAvatar({ user, opened, close }) {
@@ -61,6 +61,7 @@ export default function ChangeAvatar({ user, opened, close }) {
         title: userData.name,
         message: t("the-profile-was-not-changed"),
         color: "blue",
+        icon: <IconExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
       });
     }
     close();

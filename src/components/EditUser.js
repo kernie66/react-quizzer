@@ -8,7 +8,7 @@ import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
 import isInvalidUsername from "../helpers/isInvalidUsername.js";
 import { showNotification } from "@mantine/notifications";
-import { IconArrowBackUp, IconCheck, IconExclamationMark } from "@tabler/icons-react";
+import { IconArrowBackUp, IconCheck, IconExclamationCircle, IconX } from "@tabler/icons-react";
 import { useSetState } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import {
@@ -199,7 +199,7 @@ export default function EditUser({ opened, close, user }) {
             title: form.values.name,
             message: t("the-profile-could-not-be-updated"),
             color: "red",
-            icon: <IconExclamationMark style={{ width: rem(18), height: rem(18) }} />,
+            icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
           });
         }
       } else {
@@ -207,7 +207,7 @@ export default function EditUser({ opened, close, user }) {
           title: form.values.name,
           message: t("the-profile-was-not-changed"),
           color: "blue",
-          icon: <IconExclamationMark style={{ width: rem(18), height: rem(18) }} />,
+          icon: <IconExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
         });
       }
       close();
@@ -225,12 +225,7 @@ export default function EditUser({ opened, close, user }) {
         cancelText={confirmModalText.cancelText}
         size={confirmModalText.size}
       />
-      <Modal
-        opened={opened}
-        onClose={close}
-        centered
-        title={<h5>{t("edit-quizzer-information")}</h5>}
-      >
+      <Modal opened={opened} onClose={close} centered title={t("edit-quizzer-information")}>
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput

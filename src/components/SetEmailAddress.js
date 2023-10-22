@@ -4,13 +4,14 @@ import isValidEmail from "../helpers/isValidEmail.js";
 import { TextInput } from "@mantine/core";
 import { trim } from "radash";
 
-export default function SetEmailAddress({ form }) {
+export default function SetEmailAddress({ form, focus = false, newUser = true }) {
   const api = useApi();
   const { t } = useTranslation();
 
   // Check email address
   const checkEmail = async () => {
     let emailError;
+    const validStatus = [200, 404];
 
     const newEmailAddress = trim(form.values.email.toLowerCase());
     form.setFieldValue("email", newEmailAddress);
@@ -19,9 +20,11 @@ export default function SetEmailAddress({ form }) {
         emailError = t("please-enter-a-valid-email-address");
       } else {
         const existingEmail = await api.get("/check", { email: newEmailAddress });
-        if (existingEmail.status === 200) {
+        if (newUser && existingEmail.status === 200) {
           emailError = t("email-address-already-registered-did-you-forget-your-password");
-        } else if (existingEmail.status !== 404) {
+        } else if (!newUser && existingEmail.status === 404) {
+          emailError = t("email-address-not-registered");
+        } else if (!validStatus.includes(existingEmail.status)) {
           emailError = t("cannot-validate-the-email-address-server-not-responding");
         }
       }
@@ -37,6 +40,7 @@ export default function SetEmailAddress({ form }) {
       withAsterisk
       mb="md"
       onBlur={checkEmail}
+      data-autofocus={focus}
     />
   );
 }

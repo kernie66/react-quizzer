@@ -171,5 +171,10 @@
     "octillion_one": "{{count}} octillion",
     "octillion_other": "{{count}} octillions",
     "undefined": "Extremely many"
-  }
+  },
+  "email-address-not-registered": "Email address not registered for any quizzer",
+  "reset-password": "Reset password",
+  "request-password-reset": "Request password reset",
+  "you-will-receive-an-email-with-instructions-to-reset-your-password": "You will receive an email with instructions to reset your password",
+  "couldnt-request-a-password-reset": "Couldn't request a password reset"
 }
