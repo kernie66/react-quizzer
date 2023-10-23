@@ -118,21 +118,20 @@ export default function SetPassword({ form, focus = false }) {
               )}
             </Popover.Dropdown>
           </Popover>
+          <PasswordStrengthBar strength={passwordCheck.score} />
+          <PasswordInput
+            label={t("repeat-password")}
+            {...form.getInputProps("password2")}
+            withAsterisk
+            mb="md"
+            autoComplete="new-password"
+            onBlur={checkPassword2}
+          />
         </Grid.Col>
         <Grid.Col span="content" pt="2rem">
           <PasswordStrength password={debouncedPassword} passwordUserInputs={userInputs} />
         </Grid.Col>
       </Grid>
-      <PasswordStrengthBar strength={passwordCheck.score} />
-      <PasswordInput
-        label={t("repeat-password")}
-        {...form.getInputProps("password2")}
-        withAsterisk
-        mb="md"
-        w="80%"
-        autoComplete="new-password"
-        onBlur={checkPassword2}
-      />
     </>
   );
 }
