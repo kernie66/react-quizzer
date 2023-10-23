@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { useDisclosure } from "@mantine/hooks";
 import { Button, Divider, List, Popover, ScrollArea, Text } from "@mantine/core";
 import getPasswordStrength from "../helpers/getPasswordStrength.js";
-import PasswordStrengthBar from "./PasswordStrengthBar.js";
 import { useQuery } from "@tanstack/react-query";
 import bigNumbersToText from "../helpers/bigNumbersToText.js";
 
@@ -40,9 +39,8 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
 
   return (
     <Popover opened={popoverOpened} position="top-center">
-      <PasswordStrengthBar strength={passwordStrength.score} />
       <Popover.Target>
-        <Button variant="outline" size="sm" onClick={popoverToggle} mt="1.5rem">
+        <Button variant="outline" size="sm" onClick={popoverToggle} mx={8}>
           {t("info")}
         </Button>
       </Popover.Target>

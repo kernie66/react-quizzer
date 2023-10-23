@@ -1,75 +1,72 @@
-import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Form } from "reactstrap";
 import Body from "../components/Body";
-import InputField from "../components/InputField";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
+import { useForm } from "@mantine/form";
+import { Button, Divider, Group, Title } from "@mantine/core";
+import SetPassword from "../components/SetPassword.js";
 
 export default function ResetPage() {
-  const [formErrors, setFormErrors] = useState({});
-  const passwordField = useRef();
-  const password2Field = useRef();
   const api = useApi();
   const flash = useFlash();
   const navigate = useNavigate();
   const { search } = useLocation();
   const token = new URLSearchParams(search).get("token");
   const userId = new URLSearchParams(search).get("id");
+  const { t } = useTranslation();
+
+  const form = useForm({
+    initialValues: {
+      password: "",
+      password2: "",
+    },
+    validate: {
+      password: (value) => (value.length === 0 ? t("please-select-a-password") : null),
+      password2: (value) => (value.length === 0 ? t("please-repeat-the-password") : null),
+    },
+  });
 
   useEffect(() => {
     if (!token) {
-      navigate("/");
-    } else {
-      passwordField.current.focus();
+      navigate("/login");
     }
   }, [token, navigate]);
 
-  const onSubmit = async (ev) => {
-    ev.preventDefault();
-    if (passwordField.current.value !== password2Field.current.value) {
-      setFormErrors({
-        password2: "New passwords don't match",
-      });
+  const onSubmit = async () => {
+    const response = await api.put("/auth/reset-password", {
+      userId,
+      token,
+      password: form.values.password,
+    });
+    if (response.ok) {
+      flash("Your password has been successfully reset", "success");
+      navigate("/login");
     } else {
-      const response = await api.put("/auth/reset-password", {
-        userId,
-        token,
-        password: passwordField.current.value,
-      });
-      if (response.ok) {
-        setFormErrors({});
-        flash("Your password has been successfully reset", "success");
-        navigate("/login");
-      } else {
-        flash("Password could not be reset. Please try again.", "danger");
-        navigate("/reset-request");
-      }
+      flash("Password could not be reset. Please try again.", "danger");
+      navigate("/reset-request");
     }
+  };
+
+  const cancel = () => {
+    navigate("/login");
   };
 
   return (
     <Body>
-      <h1>Reset your password</h1>
-      <Form onSubmit={onSubmit}>
-        <InputField
-          label="New password"
-          name="password"
-          type="password"
-          fieldRef={passwordField}
-          error={formErrors.password}
-        />
-        <InputField
-          label="Repeat password"
-          name="password"
-          type="password"
-          fieldRef={password2Field}
-          error={formErrors.password2}
-        />
-        <Button color="primary" type="submit">
-          Update
-        </Button>
-      </Form>
+      <Title>{t("reset-your-password")}</Title>
+      <Divider mb={8} />
+      <form onSubmit={form.onSubmit(onSubmit)}>
+        <SetPassword form={form} focus={true} />
+        <Divider mb={8} />
+        <Group justify="space-between" my={8} pt={16}>
+          <Button type="submit">{t("register")}</Button>
+          <Button variant="outline" onClick={cancel}>
+            {t("cancel")}
+          </Button>
+        </Group>
+      </form>
     </Body>
   );
 }

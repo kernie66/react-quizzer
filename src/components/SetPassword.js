@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { Divider, Group, List, PasswordInput, Popover, Text } from "@mantine/core";
+import { Divider, Grid, List, PasswordInput, Popover, Text } from "@mantine/core";
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-// import PasswordStrengthBar from "./PasswordStrengthBar.js";
 import getPasswordStrength from "../helpers/getPasswordStrength.js";
 import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.js";
@@ -75,51 +74,55 @@ export default function SetPassword({ form, focus = false }) {
   };
 
   return (
-    <div>
-      <Group align="flex-start">
-        <Popover
-          opened={tooltipOpened}
-          position="top-start"
-          offset={24}
-          withArrow
-          arrowSize={12}
-          zIndex={1000}
-        >
-          <Popover.Target>
-            <PasswordInput
-              label={t("password")}
-              {...form.getInputProps("password")}
-              value={password}
-              withAsterisk
-              mb="md"
-              mr="auto"
-              autoComplete="new-password"
-              onChange={updatePassword}
-              onFocus={tooltipOpen}
-              onBlur={checkPassword}
-              data-autofocus={focus}
-            />
-          </Popover.Target>
-          <Popover.Dropdown bg="red.1" color="dark" my={4}>
-            {passwordCheck.warning && (
-              <Text size="sm" mb={8} color={passwordCheck.warningColor}>
-                {t(`warnings.${passwordCheck.warning}`)}
-              </Text>
-            )}
-            {!isEmpty(passwordCheck.suggestions) && (
-              <>
-                <Divider label={t("suggestions.suggestions")} labelPosition="left" />
-                <List size="sm" my={4}>
-                  {passwordCheck.suggestions.map((suggestion, index) => (
-                    <List.Item key={index}>{t(`suggestions.${suggestion}`)}</List.Item>
-                  ))}
-                </List>
-              </>
-            )}
-          </Popover.Dropdown>
-        </Popover>
-        <PasswordStrength password={debouncedPassword} passwordUserInputs={userInputs} />
-      </Group>
+    <>
+      <Grid align="flex-start" justify="flex-start">
+        <Grid.Col span="auto">
+          <Popover
+            opened={tooltipOpened}
+            position="top-start"
+            offset={24}
+            withArrow
+            arrowSize={12}
+            zIndex={1000}
+          >
+            <Popover.Target>
+              <PasswordInput
+                label={t("password")}
+                {...form.getInputProps("password")}
+                value={password}
+                withAsterisk
+                mb="md"
+                mr="auto"
+                autoComplete="new-password"
+                onChange={updatePassword}
+                onFocus={tooltipOpen}
+                onBlur={checkPassword}
+                data-autofocus={focus}
+              />
+            </Popover.Target>
+            <Popover.Dropdown bg="red.1" color="dark" my={4}>
+              {passwordCheck.warning && (
+                <Text size="sm" mb={8} color={passwordCheck.warningColor}>
+                  {t(`warnings.${passwordCheck.warning}`)}
+                </Text>
+              )}
+              {!isEmpty(passwordCheck.suggestions) && (
+                <Popover.Dropdown>
+                  <Divider label={t("suggestions.suggestions")} labelPosition="left" />
+                  <List size="sm" my={4}>
+                    {passwordCheck.suggestions.map((suggestion, index) => (
+                      <List.Item key={index}>{t(`suggestions.${suggestion}`)}</List.Item>
+                    ))}
+                  </List>
+                </Popover.Dropdown>
+              )}
+            </Popover.Dropdown>
+          </Popover>
+        </Grid.Col>
+        <Grid.Col span="content" pt="2rem">
+          <PasswordStrength password={debouncedPassword} passwordUserInputs={userInputs} />
+        </Grid.Col>
+      </Grid>
       <PasswordStrengthBar strength={passwordCheck.score} />
       <PasswordInput
         label={t("repeat-password")}
@@ -130,6 +133,6 @@ export default function SetPassword({ form, focus = false }) {
         autoComplete="new-password"
         onBlur={checkPassword2}
       />
-    </div>
+    </>
   );
 }

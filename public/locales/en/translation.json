@@ -176,5 +176,6 @@
   "reset-password": "Reset password",
   "request-password-reset": "Request password reset",
   "you-will-receive-an-email-with-instructions-to-reset-your-password": "You will receive an email with instructions to reset your password",
-  "couldnt-request-a-password-reset": "Couldn't request a password reset"
+  "couldnt-request-a-password-reset": "Couldn't request a password reset",
+  "reset-your-password": "Reset your password"
 }
