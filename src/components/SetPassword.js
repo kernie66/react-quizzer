@@ -8,7 +8,7 @@ import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.js";
 import PasswordStrengthBar from "./PasswordStrengthBar.js";
 
-export default function SetPassword({ form }) {
+export default function SetPassword({ form, focus = false }) {
   const [tooltipOpened, { open: tooltipOpen, close: tooltipClose }] = useDisclosure(false);
   const [password, setPassword] = useState("");
   const [debouncedPassword] = useDebouncedValue(password, 200);
@@ -18,7 +18,7 @@ export default function SetPassword({ form }) {
     suggestions: [],
     score: 0,
   });
-  const userInputs = [form.values.username, form.values.email, "Saab", "Quizzer"];
+  const userInputs = [form.values.username, form.values.email, "Saab", "Quizzer", "lösenord"];
 
   useEffect(() => {
     (async () => {
@@ -93,11 +93,11 @@ export default function SetPassword({ form }) {
               withAsterisk
               mb="md"
               mr="auto"
-              w="80%"
               autoComplete="new-password"
               onChange={updatePassword}
               onFocus={tooltipOpen}
               onBlur={checkPassword}
+              data-autofocus={focus}
             />
           </Popover.Target>
           <Popover.Dropdown bg="red.1" color="dark" my={4}>
