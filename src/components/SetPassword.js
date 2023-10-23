@@ -107,14 +107,14 @@ export default function SetPassword({ form, focus = false }) {
                 </Text>
               )}
               {!isEmpty(passwordCheck.suggestions) && (
-                <Popover.Dropdown>
+                <>
                   <Divider label={t("suggestions.suggestions")} labelPosition="left" />
                   <List size="sm" my={4}>
                     {passwordCheck.suggestions.map((suggestion, index) => (
                       <List.Item key={index}>{t(`suggestions.${suggestion}`)}</List.Item>
                     ))}
                   </List>
-                </Popover.Dropdown>
+                </>
               )}
             </Popover.Dropdown>
           </Popover>
