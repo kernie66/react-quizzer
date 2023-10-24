@@ -177,5 +177,9 @@
   "request-password-reset": "Begär lösenordsåterställning",
   "you-will-receive-an-email-with-instructions-to-reset-your-password": "Du kommer att få ett e-postmeddelande med instruktioner för att återställa ditt lösenord",
   "couldnt-request-a-password-reset": "Det gick inte att begära en lösenordsåterställning",
-  "reset-your-password": "Återställ ditt lösenord"
+  "reset-your-password": "Återställ ditt lösenord",
+  "restore": "Återställ",
+  "enter-a-new-password-for-your-user": "Ange ett nytt lösenord för din användare",
+  "password-could-not-be-reset-please-try-again": "Lösenordet kunde inte återställas. \nVar god försök igen.",
+  "your-password-has-been-successfully-reset": "Ditt lösenord har återställts"
 }

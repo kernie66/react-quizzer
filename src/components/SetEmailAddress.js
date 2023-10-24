@@ -41,6 +41,7 @@ export default function SetEmailAddress({ form, focus = false, newUser = true })
       mb="md"
       onBlur={checkEmail}
       data-autofocus={focus}
+      className="SetEmailAddress"
     />
   );
 }

@@ -40,7 +40,13 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
   return (
     <Popover opened={popoverOpened} position="top-center">
       <Popover.Target>
-        <Button variant="outline" size="sm" onClick={popoverToggle} mx={8}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={popoverToggle}
+          mx={8}
+          className="PasswordStrength"
+        >
           {t("info")}
         </Button>
       </Popover.Target>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useApi } from "../contexts/ApiProvider";
 import Body from "../components/Body";
 import { useNavigate } from "react-router-dom";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Button, Divider, Group, Modal, rem } from "@mantine/core";
 import SetEmailAddress from "../components/SetEmailAddress.js";
 import { useForm } from "@mantine/form";
@@ -22,6 +22,7 @@ export default function ResetRequestPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
+  const isMobile = useMediaQuery("(max-width: 50em)");
 
   const form = useForm({
     initialValues: {
@@ -81,7 +82,7 @@ export default function ResetRequestPage() {
         onClose={cancelRequest}
         closeOnEscape={false}
         centered
-        fullscreen="sm"
+        fullScreen={isMobile}
         title={t("request-password-reset")}
       >
         <Divider mb={8} />

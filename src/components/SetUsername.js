@@ -40,6 +40,7 @@ export default function SetUsername({ form, focus = true }) {
       mb="md"
       onBlur={checkUsername}
       data-autofocus={focus}
+      className="SetUsername"
     />
   );
 }

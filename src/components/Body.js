@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 
 export default function Body({ sidebar, children }) {
   return (
-    <Container fluid bg="blue.0" className="Body" p={0}>
+    <Container fluid bg="blue.0" className="Body" p={0} mt={64}>
       {sidebar && <Sidebar className="LeftSidebar" />}
       <Container fluid mx={{ base: 0, md: 16 }} px={0} className="Content">
         {children}

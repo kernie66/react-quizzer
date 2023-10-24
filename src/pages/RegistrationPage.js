@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Body from "../components/Body";
 import { useApi } from "../contexts/ApiProvider";
-import { useFlash } from "../contexts/FlashProvider";
 import { useTranslation } from "react-i18next";
 import getNameFromEmail from "../helpers/getNameFromEmail.js";
 import SetUsername from "../components/SetUsername.js";
@@ -9,15 +8,16 @@ import SetEmailAddress from "../components/SetEmailAddress.js";
 import SetPassword from "../components/SetPassword.js";
 import { sift } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
-import { Button, Divider, Group, Modal } from "@mantine/core";
+import { Button, Divider, Group, Modal, rem } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export default function RegistrationPage() {
   const [opened, { close }] = useDisclosure(true);
   const navigate = useNavigate();
   const api = useApi();
-  const flash = useFlash();
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
   const isMobile = useMediaQuery("(max-width: 50em)");
@@ -57,8 +57,22 @@ export default function RegistrationPage() {
       });
       if (data.ok) {
         close();
-        flash(t("you-have-successfully-registered"), "success");
+        showNotification({
+          title: t("user-registration"),
+          message: t("you-have-successfully-registered"),
+          color: "green",
+          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+          autoClose: 5000,
+        });
         navigate("/login");
+      } else {
+        showNotification({
+          title: t("user-registration"),
+          message: "Registration of new user failed on server, please try again",
+          color: "red",
+          icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+          autoClose: 5000,
+        });
       }
     } catch (error) {
       showBoundary(error);
@@ -81,6 +95,7 @@ export default function RegistrationPage() {
         size="lg"
         title={t("user-registration")}
         yOffset="6rem"
+        mb="xs"
       >
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>

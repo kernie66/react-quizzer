@@ -46,6 +46,7 @@ export default function SetPassword({ form, focus = false }) {
   const updatePassword = (event) => {
     const typedPassword = event.currentTarget.value;
     setPassword(typedPassword);
+    tooltipOpen();
   };
 
   // Check password
@@ -75,7 +76,7 @@ export default function SetPassword({ form, focus = false }) {
 
   return (
     <>
-      <Grid align="flex-start" justify="flex-start">
+      <Grid align="flex-start" justify="flex-start" className="SetPassword">
         <Grid.Col span="auto">
           <Popover
             opened={tooltipOpened}
@@ -95,7 +96,6 @@ export default function SetPassword({ form, focus = false }) {
                 mr="auto"
                 autoComplete="new-password"
                 onChange={updatePassword}
-                onFocus={tooltipOpen}
                 onBlur={checkPassword}
                 data-autofocus={focus}
               />

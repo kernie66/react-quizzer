@@ -21,7 +21,7 @@ export default function PasswordStrengthBar({ strength }) {
   }, [strength]);
 
   return (
-    <Group gap={5} grow mt="xs" mb="md" align="start">
+    <Group gap={5} grow mt="xs" mb="md" align="start" className="PasswordStrengthBar">
       {bars}
     </Group>
   );
