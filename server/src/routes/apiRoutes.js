@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { createUser, deleteUser, getUsers, updateUser } from "../controllers/users.js";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updatePassword,
+  updateUser,
+} from "../controllers/users.js";
 import {
   addQuestion,
   createQuiz,
@@ -33,14 +39,15 @@ apiRouter.get("/login", (req, res) => {
 apiRouter.post("/users", createUser);
 apiRouter.get("/users", getUsers);
 apiRouter.get("/users/:id", getUsers);
-apiRouter.put("/users", updateUser);
+apiRouter.put("/users/:id/password", updatePassword);
 apiRouter.put("/users/:id", updateUser);
+apiRouter.put("/users", updateUser);
 apiRouter.delete("/users/:id", deleteUser);
 
 apiRouter.post("/quizzes", createQuiz);
-apiRouter.get("/quizzes", getQuizzes);
-apiRouter.get("/quizzes/:id", getQuizzes);
 apiRouter.get("/quizzes/:id/author", getQuizAuthor);
+apiRouter.get("/quizzes/:id", getQuizzes);
+apiRouter.get("/quizzes", getQuizzes);
 apiRouter.post("/quizzes/:id/addQuestion", addQuestion);
 apiRouter.delete("/quizzes/:id", deleteQuiz);
 

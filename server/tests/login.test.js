@@ -1,7 +1,7 @@
 import request from "supertest";
 import { app } from "../src/app.js";
 import { db, testDbConnection } from "../src/db/db.config.js";
-import { Sarah } from "./user.data.js";
+import { Sarah, Sarah2 } from "./user.data.js";
 
 // const request = supertest();
 const thisDb = db;
@@ -32,16 +32,24 @@ describe("Register and login", () => {
   it("should login user Sarah", async () => {
     const res = await request(app).post("/api/auth/login").send(Sarah);
     accessToken = res.body.accessToken;
-    console.log(accessToken);
     refreshToken = res.body.refreshToken;
-    console.log(refreshToken);
     expect(res.statusCode).toEqual(200);
+    expect(accessToken.length).toEqual(220);
+    expect(refreshToken.length).toEqual(163);
   }, 1000);
 
   it("should be allowed access to API root", async () => {
     const res = await request(app).get("/api/").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
   }, 1000);
+
+  it("should change password for user Sarah", async () => {
+    const res = await request(app)
+      .put("/api/users/1/password")
+      .auth(accessToken, { type: "bearer" })
+      .send({ oldPassword: Sarah.password, newPassword: Sarah2.password });
+    expect(res.statusCode).toEqual(201);
+  });
 
   it("should log out user Sarah", async () => {
     const res = await request(app).delete("/api/auth/logout").auth(accessToken, { type: "bearer" });
@@ -53,14 +61,20 @@ describe("Register and login", () => {
     expect(res.statusCode).toEqual(401);
   }, 1000);
 
-  it("should login user Sarah with email", async () => {
+  it("should login user Sarah with email and new password", async () => {
     const res = await request(app)
       .post("/api/auth/login")
-      .send({ username: Sarah.email.toLowerCase(), password: Sarah.password });
+      .send({ username: Sarah2.email.toLowerCase(), password: Sarah2.password });
     accessToken = res.body.accessToken;
-    console.log(accessToken);
     refreshToken = res.body.refreshToken;
-    console.log(refreshToken);
+    expect(res.statusCode).toEqual(200);
+    expect(accessToken.length).toEqual(220);
+    expect(refreshToken.length).toEqual(163);
+  }, 1000);
+
+  // Finally log out Sarah again, which also adds a final delay for the database to clean up
+  it("should log out user Sarah again", async () => {
+    const res = await request(app).delete("/api/auth/logout").auth(accessToken, { type: "bearer" });
     expect(res.statusCode).toEqual(200);
   }, 1000);
 });

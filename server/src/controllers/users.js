@@ -4,7 +4,7 @@ import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import bcrypt from "bcrypt";
 import { isEmpty, pick } from "radash";
-import { GeneralError, NotFound } from "../utils/errorHandler.js";
+import { GeneralError, NotFound, Unauthorized } from "../utils/errorHandler.js";
 
 /* ==========================================================
 This function looks for one or more matching users. The users
@@ -183,6 +183,44 @@ export const checkUser = async (req, res, next) => {
       throw new NotFound("No matching user found.");
     }
   } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePassword = async (req, res, next) => {
+  try {
+    if (req.params.id) {
+      const userId = parseInt(req.params.id);
+      if (!isNaN(userId)) {
+        const user = await User.findByPk(userId);
+        if (!isEmpty(user)) {
+          const oldPassword = req.body.oldPassword;
+          const newPassword = req.body.newPassword;
+          const userPassword = user.dataValues.hashedPassword;
+          if (oldPassword && userPassword) {
+            const passwordsMatch = await bcrypt.compare(oldPassword, userPassword);
+            logger.debug("Passwords match:", passwordsMatch);
+            if (passwordsMatch && newPassword) {
+              const hashCost = 10;
+
+              const hashedPassword = await bcrypt.hash(newPassword, hashCost);
+              user.hashedPassword = hashedPassword;
+              await user.save();
+              res.status(201).json({ success: "User password updated" });
+            } else {
+              throw new Unauthorized("Wrong password");
+            }
+          } else {
+            throw new NotFound("Password missing");
+          }
+        } else {
+          throw new NotFound("User not found");
+        }
+      }
+    }
+    throw new NotFound("No user ID in request");
+  } catch (error) {
+    logger.error("Update password:", error);
     next(error);
   }
 };

@@ -183,5 +183,6 @@
   "enter-a-new-password-for-your-user": "Enter a new password for your user",
   "restore": "Restore",
   "please-enter-your-current-password": "Please enter your current password",
-  "your-password-has-been-updated": "Your password has been updated"
+  "your-password-has-been-updated": "Your password has been updated",
+  "please-enter-a-different-password-than-the-current": "Please enter a different password than the current"
 }
