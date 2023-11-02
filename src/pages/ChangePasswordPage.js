@@ -1,17 +1,17 @@
 import Body from "../components/Body";
 import { useApi } from "../contexts/ApiProvider";
-import { useFlash } from "../contexts/FlashProvider";
 import SetPassword from "../components/SetPassword.js";
 import { useTranslation } from "react-i18next";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { Button, Divider, Group, Modal, PasswordInput, Text } from "@mantine/core";
+import { Button, Divider, Group, Modal, PasswordInput, Text, rem } from "@mantine/core";
 import { useUser } from "../contexts/UserProvider.js";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export default function ChangePasswordPage() {
   const [opened, { close }] = useDisclosure(true);
   const api = useApi();
-  const flash = useFlash();
   const { t } = useTranslation();
   const isMobile = useMediaQuery("(max-width: 50em)");
   const { user } = useUser();
@@ -22,34 +22,74 @@ export default function ChangePasswordPage() {
       password: "",
       password2: "",
     },
-    validate: {
+    /*    validate: {
       oldPassword: (value) => (value.length === 0 ? t("please-enter-your-current-password") : null),
       password: (value, values) =>
         value.length === 0
           ? t("please-select-a-password")
-          : value === values.password
+          : value === values.oldPassword
           ? t("please-enter-a-different-password-than-the-current")
           : null,
       password2: (value) => (value.length === 0 ? t("please-repeat-the-password") : null),
-    },
+    }, */
+    validate: (values) => ({
+      oldPassword: values.oldPassword.length === 0 ? t("please-enter-your-current-password") : null,
+      password:
+        values.password.length === 0
+          ? `Values: ${values.password}` // t("please-select-a-password")
+          : values.password === values.oldPassword
+          ? t("please-enter-a-different-password-than-the-current")
+          : null,
+      password2: values.password2.length === 0 ? t("please-repeat-the-password") : null,
+    }),
   });
 
   const onSubmit = async () => {
-    const response = await api.put(`/api/users/${user.id}/password`, {
+    console.log("Passwords:", form.values);
+    const response = await api.put(`/users/${user.id}/password`, {
       oldPassword: form.values.oldPassword,
       newPassword: form.values.password,
     });
-    if (response.ok) {
-      flash(t("your-password-has-been-updated"), "success");
+    if (response.status === 201) {
+      showNotification({
+        title: t("change-password"),
+        message: t("your-password-has-been-updated"),
+        color: "green",
+        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+        autoClose: 5000,
+      });
       close();
       //        navigate("/me");
+    } else if (response.status === 200) {
+      console.log("Response:", response);
+      switch (response.data.error) {
+        case "Wrong password":
+          form.setFieldError("oldPassword", t("invalid-password"));
+          break;
+        case "Password missing":
+          form.setFieldError("oldPassword", t("please-enter-your-current-password"));
+          break;
+        case "User not found":
+          form.setFieldError("oldPassword", t("user-not-found"));
+          break;
+        default:
+          form.setFieldError("oldPassword", t("unknown-response-from-server"));
+          break;
+      }
     } else {
       console.log("Error");
+      showNotification({
+        title: t("change-password"),
+        message: t("password-could-not-be-changed-please-try-again"),
+        color: "red",
+        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+      });
     }
   };
 
   const cancel = () => {
-    close();
+    console.log(form.values);
+    // close();
   };
 
   return (

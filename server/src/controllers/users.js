@@ -4,7 +4,7 @@ import dbCreateUser from "../db/db.createUser.js";
 import { logger } from "../logger/logger.js";
 import bcrypt from "bcrypt";
 import { isEmpty, pick } from "radash";
-import { GeneralError, NotFound, Unauthorized } from "../utils/errorHandler.js";
+import { GeneralError, NotFound } from "../utils/errorHandler.js";
 
 /* ==========================================================
 This function looks for one or more matching users. The users
@@ -188,6 +188,7 @@ export const checkUser = async (req, res, next) => {
 };
 
 export const updatePassword = async (req, res, next) => {
+  let errorResponse;
   try {
     if (req.params.id) {
       const userId = parseInt(req.params.id);
@@ -206,19 +207,20 @@ export const updatePassword = async (req, res, next) => {
               const hashedPassword = await bcrypt.hash(newPassword, hashCost);
               user.hashedPassword = hashedPassword;
               await user.save();
-              res.status(201).json({ success: "User password updated" });
+              return res.status(201).json({ success: "User password updated" });
             } else {
-              throw new Unauthorized("Wrong password");
+              errorResponse = "Wrong password";
             }
           } else {
-            throw new NotFound("Password missing");
+            errorResponse = "Password missing";
           }
         } else {
-          throw new NotFound("User not found");
+          errorResponse = "User not found";
         }
+        return res.status(200).json({ error: errorResponse });
       }
+      throw new NotFound("No user ID in request");
     }
-    throw new NotFound("No user ID in request");
   } catch (error) {
     logger.error("Update password:", error);
     next(error);

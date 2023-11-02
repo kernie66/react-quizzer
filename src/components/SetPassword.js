@@ -55,6 +55,7 @@ export default function SetPassword({ form, focus = false }) {
 
     tooltipClose();
     if (password) {
+      form.setValues({ password: password });
       if (passwordCheck.score < 3) {
         passwordError = t("the-password-is-too-weak");
       }

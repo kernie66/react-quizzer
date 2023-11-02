@@ -183,5 +183,8 @@
   "password-could-not-be-reset-please-try-again": "Lösenordet kunde inte återställas. \nVar god försök igen.",
   "your-password-has-been-successfully-reset": "Ditt lösenord har återställts",
   "please-enter-your-current-password": "Ange ditt nuvarande lösenord",
-  "please-enter-a-different-password-than-the-current": "Ange ett annat lösenord än det nuvarande"
+  "please-enter-a-different-password-than-the-current": "Ange ett annat lösenord än det nuvarande",
+  "your-password-has-been-updated": "Ditt lösenord har uppdaterats",
+  "unknown-response-from-server": "Okänt svar från servern",
+  "password-could-not-be-changed-please-try-again": "Lösenordet kunde inte ändras, försök igen"
 }

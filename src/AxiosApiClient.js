@@ -15,7 +15,7 @@ export default class AxiosApiClient {
         baseURL: options.baseURL,
       });
     } catch (error) {
-      console.log("Error:", error);
+      console.log("Request error:", error);
       response = {
         ok: false,
         status: 500,
