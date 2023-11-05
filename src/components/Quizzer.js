@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import TimeAgo from "./TimeAgo";
 import { useTranslation } from "react-i18next";
 import QuizzerAvatar from "./QuizzerAvatar.js";
-import { Flex, Stack, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
 
   return (
-    <Flex justify="flex-start" className="Quizzer">
-      <Text pr="1rem">
+    <Group className="Quizzer" mb="xs">
+      <Text pr="0.5rem">
         <QuizzerAvatar user={quizzer} size={48} />
       </Text>
-      <Stack gap={4} mb="sm">
+      <div>
         <Text>
           <Link to={"/user/" + quizzer.id} className="text-info-emphasis text-decoration-none">
             {quizzer.name}
@@ -36,7 +36,7 @@ export default memo(function Quizzer({ quizzer }) {
         <Text c="blue">
           {t("email")}: {quizzer.email}
         </Text>
-      </Stack>
-    </Flex>
+      </div>
+    </Group>
   );
 });
