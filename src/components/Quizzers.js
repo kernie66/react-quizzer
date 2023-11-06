@@ -4,7 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import Quizzer from "./Quizzer.js";
 import { useTranslation } from "react-i18next";
 import getQuizzers from "../helpers/getQuizzers.js";
-import { Affix, Alert, Button, Divider, Loader, Text, Transition, rem } from "@mantine/core";
+import {
+  Affix,
+  Alert,
+  Button,
+  Divider,
+  Loader,
+  ScrollArea,
+  Text,
+  Transition,
+  rem,
+} from "@mantine/core";
 import { IconArrowUp, IconInfoCircle } from "@tabler/icons-react";
 import { useWindowScroll } from "@mantine/hooks";
 
@@ -49,14 +59,14 @@ export default function Quizzers({ currentId }) {
               </Text>
             </>
           ) : (
-            <>
+            <ScrollArea type="always" offsetScrollbars>
               {quizzers.length === 0 ? (
                 <Text>{t("there-are-no-quizzers-registered-yet")}</Text>
               ) : (
                 quizzers.map((quizzer) => (
                   <>
                     <Quizzer key={quizzer.id} quizzer={quizzer} />
-                    <Divider key={quizzer.id} mb={4} />
+                    <Divider mb={4} />
                   </>
                 ))
               )}
@@ -75,7 +85,7 @@ export default function Quizzers({ currentId }) {
                   </Transition>
                 </Affix>
               ) : null}
-            </>
+            </ScrollArea>
           )}
         </>
       )}

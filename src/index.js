@@ -20,10 +20,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import LogRocket from "logrocket";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
 });
+
+LogRocket.init("iyyx8v/quizzer_dev");
 
 if (typeof window !== "undefined") {
   console.log("Runs when the app starts");
