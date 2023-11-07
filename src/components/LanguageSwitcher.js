@@ -1,6 +1,6 @@
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Media } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import { Avatar, UnstyledButton } from "@mantine/core";
 
 const flagIcons = { sv: "/Swedish large.png", en: "/English large.png" };
 
@@ -26,13 +26,8 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <Dropdown inNavbar className="ps-2" toggle={changeLanguage}>
-      <DropdownToggle nav>
-        <Media src={flagIcon} width="32" height="32" />
-      </DropdownToggle>
-      <DropdownMenu>
-        <DropdownItem>Change language</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+    <UnstyledButton pl={2} onClick={changeLanguage}>
+      <Avatar src={flagIcon} size={32} />
+    </UnstyledButton>
   );
 }
