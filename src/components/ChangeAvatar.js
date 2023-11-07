@@ -68,7 +68,7 @@ export default function ChangeAvatar({ user, opened, close }) {
   };
 
   return (
-    <Modal opened={opened} onClose={close} centered title={<h5>{t("change-avatar")}</h5>}>
+    <Modal opened={opened} onClose={close} centered title={t("change-avatar")}>
       <Divider mb={8} />
       <Flex gap="md">
         <QuizzerAvatar user={userData} size={64} />
