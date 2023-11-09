@@ -4,7 +4,7 @@ import { Avatar, UnstyledButton } from "@mantine/core";
 
 const flagIcons = { sv: "/Swedish large.png", en: "/English large.png" };
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher(props) {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState(i18n.resolvedLanguage);
   const [flagIcon, setFlagIcon] = useState();
@@ -26,7 +26,7 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <UnstyledButton pl={2} onClick={changeLanguage}>
+    <UnstyledButton onClick={changeLanguage} {...props}>
       <Avatar src={flagIcon} size={32} />
     </UnstyledButton>
   );

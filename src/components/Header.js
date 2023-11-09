@@ -40,7 +40,7 @@ export default function Header() {
             <OnlineStatus />
           </div>
           <UserMenu />
-          <LanguageSwitcher />
+          <LanguageSwitcher ml={8} />
         </div>
       </Container>
     </Navbar>

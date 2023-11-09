@@ -9,7 +9,7 @@ export default function QuizPage() {
   }, []);
 
   return (
-    <Body sidebar>
+    <Body>
       <h3>Quiz info placeholder</h3>
       <Checkbox label="Ready to play some quiz" />
       <Button color="pink">
