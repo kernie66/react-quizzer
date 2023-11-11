@@ -12,7 +12,9 @@ export default function ShowWindowSize() {
 
   useEffect(() => {
     const updateDimension = () => {
-      setScreenSize(getCurrentDimension());
+      const currentScreenSize = getCurrentDimension();
+      console.log(`Screen size: ${currentScreenSize.width} x ${currentScreenSize.height}`);
+      setScreenSize(currentScreenSize);
     };
     window.addEventListener("resize", updateDimension);
 

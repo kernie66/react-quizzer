@@ -8,6 +8,7 @@ import { useUser } from "../contexts/UserProvider.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function ChangePasswordPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -84,40 +85,42 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={cancel}
-      closeOnEscape={false}
-      centered
-      fullScreen={isMobile}
-      size="lg"
-      title={t("change-password")}
-      mb="xs"
-    >
-      <Divider mb={8} />
-      <Text mb={16} fw={500}>
-        {t("enter-a-new-password-for-your-user")}
-      </Text>
-      <form onSubmit={form.onSubmit(onSubmit)}>
-        <PasswordInput
-          label={t("old-password")}
-          {...form.getInputProps("oldPassword")}
-          withAsterisk
-          mb="md"
-          data-autofocus
-          autoComplete="current-password"
-          className="CurrentPassword"
-          w="84%"
-        />
-        <SetPassword form={form} focus={false} />
+    <QuizzerShell>
+      <Modal
+        opened={opened}
+        onClose={cancel}
+        closeOnEscape={false}
+        centered
+        fullScreen={isMobile}
+        size="lg"
+        title={t("change-password")}
+        mb="xs"
+      >
         <Divider mb={8} />
-        <Group justify="space-between" my={8} pt={16}>
-          <Button type="submit">{t("update")}</Button>
-          <Button variant="outline" onClick={cancel}>
-            {t("cancel")}
-          </Button>
-        </Group>
-      </form>
-    </Modal>
+        <Text mb={16} fw={500}>
+          {t("enter-a-new-password-for-your-user")}
+        </Text>
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <PasswordInput
+            label={t("old-password")}
+            {...form.getInputProps("oldPassword")}
+            withAsterisk
+            mb="md"
+            data-autofocus
+            autoComplete="current-password"
+            className="CurrentPassword"
+            w="84%"
+          />
+          <SetPassword form={form} focus={false} />
+          <Divider mb={8} />
+          <Group justify="space-between" my={8} pt={16}>
+            <Button type="submit">{t("update")}</Button>
+            <Button variant="outline" onClick={cancel}>
+              {t("cancel")}
+            </Button>
+          </Group>
+        </form>
+      </Modal>
+    </QuizzerShell>
   );
 }

@@ -11,6 +11,7 @@ import {
   Divider,
   Loader,
   ScrollArea,
+  Stack,
   Text,
   Transition,
   rem,
@@ -65,10 +66,10 @@ export default function Quizzers({ currentId }) {
                   <Text>{t("there-are-no-quizzers-registered-yet")}</Text>
                 ) : (
                   quizzers.map((quizzer) => (
-                    <>
-                      <Quizzer key={quizzer.id} quizzer={quizzer} />
+                    <Stack gap={0} key={quizzer.id}>
+                      <Quizzer quizzer={quizzer} />
                       <Divider mb={4} />
-                    </>
+                    </Stack>
                   ))
                 )}
               </ScrollArea>

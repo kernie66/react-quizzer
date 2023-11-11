@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Body from "../components/Body";
+// import Body from "../components/Body";
 import { useUser } from "../contexts/UserProvider";
 import { useApi } from "../contexts/ApiProvider.js";
 import { Trans, useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import { Button, Divider, Group, Modal, PasswordInput, Text, TextInput, rem } fr
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function LoginPage() {
   const [opened, { open, close }] = useDisclosure(true);
@@ -90,7 +91,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Body>
+    <QuizzerShell>
       <Modal opened={opened} onClose={close} fullscreen="sm" title={t("login")} yOffset="6rem">
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
@@ -125,6 +126,6 @@ export default function LoginPage() {
           </Text>
         </form>
       </Modal>
-    </Body>
+    </QuizzerShell>
   );
 }

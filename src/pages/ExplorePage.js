@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import Body from "../components/Body";
 import Quizzers from "../components/Quizzers.js";
+import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function ExplorePage() {
   useEffect(() => {
@@ -8,9 +8,9 @@ export default function ExplorePage() {
   }, []);
 
   return (
-    <Body sidebar>
+    <QuizzerShell>
       <h1>Explore</h1>
       <Quizzers content="explore" />
-    </Body>
+    </QuizzerShell>
   );
 }

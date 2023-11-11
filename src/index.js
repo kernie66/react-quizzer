@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 // TODO: Note: Replace ^[theme]^ (examples: darkly, slate, cosmo, spacelab, and superhero. See https://bootswatch.com/ for current theme names.)
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import "./services/i18n";
-import "./index.css";
+// import "./index.css";
 // core styles are required for all packages
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -20,13 +20,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import LogRocket from "logrocket";
+// import LogRocket from "logrocket";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
-LogRocket.init("iyyx8v/quizzer_dev");
+// LogRocket.init("iyyx8v/quizzer_dev");
 
 if (typeof window !== "undefined") {
   console.log("Runs when the app starts");

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Body from "../components/Body";
 import { useApi } from "../contexts/ApiProvider";
 import { useForm } from "@mantine/form";
 import { Button, Divider, Group, Modal, Text, rem } from "@mantine/core";
@@ -9,6 +8,7 @@ import SetPassword from "../components/SetPassword.js";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function ResetPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -70,7 +70,7 @@ export default function ResetPage() {
   };
 
   return (
-    <Body>
+    <QuizzerShell>
       <Modal
         opened={opened}
         onClose={cancel}
@@ -96,6 +96,6 @@ export default function ResetPage() {
           </Group>
         </form>
       </Modal>
-    </Body>
+    </QuizzerShell>
   );
 }

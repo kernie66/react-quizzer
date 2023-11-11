@@ -3,7 +3,7 @@ import "./App.scss";
 
 // import Container from 'reactstrap/Container';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Header from "./components/Header";
+// import Header from "./components/Header";
 import QuizPage from "./pages/QuizPage";
 import ExplorePage from "./pages/ExplorePage";
 import LoginPage from "./pages/LoginPage";
@@ -55,7 +55,6 @@ export default function App() {
             <FlashProvider>
               <ApiProvider>
                 <UserProvider>
-                  <Header />
                   <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
                     <Container fluid="md" className="p-0 MainBody">
                       <Routes>

@@ -1,48 +1,56 @@
-import { Navbar, NavbarBrand } from "reactstrap";
-import { Container } from "reactstrap";
+import { Burger, Group, Stack, Text, UnstyledButton } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import OnlineStatus from "./OnlineStatus.js";
 import UserMenu from "./UserMenu.js";
 import LanguageSwitcher from "./LanguageSwitcher.js";
 import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
-import ShowWindowSize from "./ShowWindowSize.js";
+import { Link } from "react-router-dom";
+import { useDisclosure, useNetwork, useViewportSize } from "@mantine/hooks";
+import { IconWifi, IconWifiOff } from "@tabler/icons-react";
 
 export default function Header() {
-  const user = useUser();
+  const { user } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [opened, { toggle }] = useDisclosure();
+  const { height, width } = useViewportSize();
+  const networkStatus = useNetwork();
   const { t } = useTranslation();
 
   useEffect(() => {
     if (user && user.isAdmin) {
       setIsAdmin(true);
+      console.log("Current user is admin");
     } else {
       setIsAdmin(false);
+      console.log("Current user is not admin");
     }
   }, [user]);
 
+  useEffect(() => {
+    console.log("Network status:", networkStatus);
+  }, [networkStatus]);
+
   return (
-    <Navbar color="light" light fixed="top" className="Header border-bottom py-1">
-      <Container fluid="md">
-        <div
-          className="d-flex flex-row justify-content-between align-items-center"
-          style={{ minHeight: "36px" }}
-        >
-          <NavbarBrand href="/" className="pt-0 fs-4 me-auto">
+    <Group h="100%" px="md">
+      <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+      <Group justify="space-between" style={{ flex: 1 }}>
+        <UnstyledButton component={Link} to="/">
+          <Text size="xl" fw={500}>
             {t("app-name")}
-          </NavbarBrand>
+          </Text>
+        </UnstyledButton>
+        <Group ml="xl" gap="xs" visibleFrom="sm">
           {isAdmin && (
-            <div className="pe-4 my-0 fs-6">
-              <ShowWindowSize />
-            </div>
+            <Stack gap={0} pr={8}>
+              <Text size="xs">X: {width}</Text>
+              <Text size="xs">Y: {height}</Text>
+            </Stack>
           )}
-          <div className="pe-4 my-0">
-            <OnlineStatus />
-          </div>
+          {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
           <UserMenu />
-          <LanguageSwitcher ml={8} />
-        </div>
-      </Container>
-    </Navbar>
+          <LanguageSwitcher />
+        </Group>
+      </Group>
+    </Group>
   );
 }

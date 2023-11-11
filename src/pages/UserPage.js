@@ -1,7 +1,7 @@
 import classes from "./css/userPage.module.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Body from "../components/Body";
+// import Body from "../components/Body";
 import EditUser from "../components/EditUser";
 import { useApi } from "../contexts/ApiProvider";
 import { useUser } from "../contexts/UserProvider";
@@ -14,6 +14,7 @@ import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { Button, Divider, Grid, Group, Loader, Stack, Text, Title } from "@mantine/core";
+import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -82,7 +83,7 @@ export default function UserPage() {
   };
 
   return (
-    <Body>
+    <QuizzerShell>
       {isLoadingUser ? (
         <>
           <div className="text-secondary align-items-center">
@@ -153,6 +154,6 @@ export default function UserPage() {
           )}
         </>
       )}
-    </Body>
+    </QuizzerShell>
   );
 }

@@ -2,10 +2,11 @@ import { Link, useLocation } from "react-router-dom";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
 // import { useState } from "react";
-import { Avatar, Group, Loader, Menu, NavLink, UnstyledButton, rem } from "@mantine/core";
+import { Avatar, Group, Loader, Menu, NavLink, rem } from "@mantine/core";
 import {
   IconBug,
   IconChevronDown,
+  IconHome,
   IconLogout,
   IconPasswordUser,
   IconUser,
@@ -26,14 +27,22 @@ export default function UserMenu() {
           {user !== null && (
             <Menu trigger="hover" position="bottom-end">
               <Menu.Target>
-                <UnstyledButton>
-                  <Group gap={0}>
-                    <Avatar src={user.avatarUrl + "&s=32"} size={32} />
-                    <IconChevronDown style={{ width: rem(14), height: rem(14) }} />
-                  </Group>
-                </UnstyledButton>
+                <Group gap={0}>
+                  <Avatar src={user.avatarUrl + "&s=32"} size={32} />
+                  <IconChevronDown style={{ width: rem(14), height: rem(14) }} />
+                </Group>
               </Menu.Target>
               <Menu.Dropdown>
+                <Menu.Item>
+                  <NavLink
+                    label="Start page"
+                    leftSection={<IconHome style={{ width: rem(14), height: rem(14) }} />}
+                    active={location.pathname === "/"}
+                    component={Link}
+                    to={"/"}
+                    p={0}
+                  />
+                </Menu.Item>
                 <Menu.Item>
                   <NavLink
                     label={t("profile")}
@@ -85,7 +94,6 @@ export default function UserMenu() {
                   <NavLink
                     label={t("logout")}
                     leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
-                    component="button"
                     onClick={logout}
                     p={0}
                   />

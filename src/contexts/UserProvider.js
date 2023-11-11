@@ -24,16 +24,20 @@ export default function UserProvider({ children }) {
       if (api.isAuthenticated()) {
         let response;
         // Check if the login is still valid
-        response = await api.checkLoggedIn();
-        if (response.ok) {
-          const userId = api.getUserId();
-          console.log("User:", userId);
-          response = await api.get("/users/" + userId);
-          console.log("Current user:", response.data[0]);
-          userData = response.ok ? response.data[0] : null;
-          updateUserQuery(userData);
-        } else {
-          api.removeLogin();
+        try {
+          response = await api.checkLoggedIn();
+          if (response.ok) {
+            const userId = api.getUserId();
+            console.log("User:", userId);
+            response = await api.get("/users/" + userId);
+            console.log("Current user:", response.data[0]);
+            userData = response.ok ? response.data[0] : null;
+            updateUserQuery(userData);
+          } else {
+            api.removeLogin();
+          }
+        } catch (error) {
+          console.error("Error checking login:", error);
         }
       }
       setUser(userData);
