@@ -1,7 +1,6 @@
 import classes from "./css/userPage.module.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import Body from "../components/Body";
 import EditUser from "../components/EditUser";
 import { useApi } from "../contexts/ApiProvider";
 import { useUser } from "../contexts/UserProvider";
@@ -18,16 +17,14 @@ import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function UserPage() {
   const { id } = useParams();
-  // const [user, setUser] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [avatarSize, setAvatarSize] = useState(128);
   const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
   const [openedUser, { open: openUser, close: closeUser }] = useDisclosure(false);
   const api = useApi();
-  // const flash = useFlash();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
-  const { width, height } = useViewportSize();
+  const { width } = useViewportSize();
   //  const { showBoundary } = useErrorBoundary();
 
   const getUser = async (id) => {
@@ -127,12 +124,7 @@ export default function UserPage() {
                       <Grid.Col span="content">
                         <UserInfo user={user} />
                       </Grid.Col>
-                      <Grid.Col span={2}>
-                        Wins
-                        <p>
-                          Width: {width}, Height: {height}
-                        </p>
-                      </Grid.Col>
+                      <Grid.Col span={2}>Wins</Grid.Col>
                     </Grid>
                   </Stack>
                 </Grid.Col>

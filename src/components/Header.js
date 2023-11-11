@@ -5,8 +5,8 @@ import LanguageSwitcher from "./LanguageSwitcher.js";
 import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDisclosure, useNetwork, useViewportSize } from "@mantine/hooks";
-import { IconWifi, IconWifiOff } from "@tabler/icons-react";
+import { useDisclosure, useFullscreen, useNetwork, useViewportSize } from "@mantine/hooks";
+import { IconWifi, IconWifiOff, IconWindowMaximize, IconWindowMinimize } from "@tabler/icons-react";
 
 export default function Header() {
   const { user } = useUser();
@@ -14,6 +14,7 @@ export default function Header() {
   const [opened, { toggle }] = useDisclosure();
   const { height, width } = useViewportSize();
   const networkStatus = useNetwork();
+  const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -49,6 +50,13 @@ export default function Header() {
           {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
           <UserMenu />
           <LanguageSwitcher />
+          <UnstyledButton onClick={fullscreenToggle}>
+            {fullscreen ? (
+              <IconWindowMinimize size={32} stroke={0.75} />
+            ) : (
+              <IconWindowMaximize size={32} stroke={0.75} />
+            )}
+          </UnstyledButton>
         </Group>
       </Group>
     </Group>
