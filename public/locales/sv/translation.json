@@ -186,5 +186,6 @@
   "please-enter-a-different-password-than-the-current": "Ange ett annat lösenord än det nuvarande",
   "your-password-has-been-updated": "Ditt lösenord har uppdaterats",
   "unknown-response-from-server": "Okänt svar från servern",
-  "password-could-not-be-changed-please-try-again": "Lösenordet kunde inte ändras, försök igen"
+  "password-could-not-be-changed-please-try-again": "Lösenordet kunde inte ändras, försök igen",
+  "start-page": "Startsida"
 }

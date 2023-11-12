@@ -18,7 +18,7 @@ import "@mantine/notifications/styles.css";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { MantineProvider, createTheme } from "@mantine/core";
+import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 // import LogRocket from "logrocket";
 
@@ -36,7 +36,8 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <React.Suspense fallback="Loading...">
-      <MantineProvider theme={theme}>
+      <ColorSchemeScript defaultColorScheme="auto" />
+      <MantineProvider theme={theme} defaultColorScheme="auto">
         <Notifications />
         <App />
       </MantineProvider>

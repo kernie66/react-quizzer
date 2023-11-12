@@ -1,4 +1,5 @@
 import { zxcvbnOptions, zxcvbnAsync } from "@zxcvbn-ts/core";
+import { matcherPwnedFactory } from "@zxcvbn-ts/matcher-pwned";
 // import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 // import * as zxcvbnEnPackage from "@zxcvbn-ts/language-en";
 // import * as zxcvbnFiPackage from "@zxcvbn-ts/language-fi";
@@ -58,6 +59,10 @@ let loaded = false;
 
 const getPasswordStrength = async (password) => {
   if (!loaded) {
+    // optional
+    const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
+    zxcvbnOptions.addMatcher("pwned", matcherPwned);
+
     const options = await loadOptions();
     zxcvbnOptions.setOptions(options);
     loaded = true;
