@@ -1,4 +1,3 @@
-// import { Button, Form, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { useApi } from "../contexts/ApiProvider";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,7 +9,7 @@ import { useSetState } from "@mantine/hooks";
 
 export default function ChangeAvatar({ user, opened, close }) {
   const api = useApi();
-  const [userData, setUserData] = useSetState(user); // useState(user);
+  const [userData, setUserData] = useSetState(user);
   const [avatarType, setAvatarType] = useState(user.avatarType);
   const { t } = useTranslation();
 

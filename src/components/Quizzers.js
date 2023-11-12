@@ -1,4 +1,3 @@
-// import { Alert, Col, Container, Row, Spinner } from "reactstrap";
 import { useApi } from "../contexts/ApiProvider";
 import { useQuery } from "@tanstack/react-query";
 import Quizzer from "./Quizzer.js";

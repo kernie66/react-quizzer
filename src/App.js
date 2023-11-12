@@ -1,16 +1,10 @@
 import "./App.scss";
-// import "bootswatch/dist/quartz/bootstrap.min.css";
-
-// import Container from 'reactstrap/Container';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-// import Header from "./components/Header";
-import QuizPage from "./pages/QuizPage";
+import MainPage from "./pages/MainPage.js";
 import ExplorePage from "./pages/ExplorePage";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
-// import { Container } from "reactstrap";
 import ApiProvider from "./contexts/ApiProvider";
-// import RegistrationPage from "./pages/RegistrationPage";
 import FlashProvider from "./contexts/FlashProvider";
 import UserProvider from "./contexts/UserProvider";
 import PublicRoute from "./components/PublicRoute";
@@ -95,7 +89,7 @@ export default function App() {
                           element={
                             <PrivateRoute>
                               <Routes>
-                                <Route path="/" element={<QuizPage />} />
+                                <Route path="/" element={<MainPage />} />
                                 <Route path="/explore" element={<ExplorePage />} />
                                 <Route path="/user/:id" element={<UserPage />} />
                                 <Route path="/password" element={<ChangePasswordPage />} />

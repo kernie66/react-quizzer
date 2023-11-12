@@ -5,7 +5,7 @@ import { IconBrandMantine } from "@tabler/icons-react";
 import QuizzerShell from "../components/QuizzerShell.js";
 import OnlineStatus from "../components/OnlineStatus.js";
 
-export default function QuizPage() {
+export default function MainPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
