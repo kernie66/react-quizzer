@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import TimeAgo from "./TimeAgo.js";
 import { useInterval } from "@mantine/hooks";
 import { useEffect, useState } from "react";
+import { List, ThemeIcon, rem } from "@mantine/core";
+import { IconAt, IconClockHour2 } from "@tabler/icons-react";
 
 export default function UserInfo({ user }) {
   const { t } = useTranslation();
@@ -14,14 +16,21 @@ export default function UserInfo({ user }) {
   }, [update]);
 
   return (
-    <ul className="list-unstyled">
-      <li>
+    <List
+      spacing="xs"
+      icon={
+        <ThemeIcon color="teal" size={24} radius="xl">
+          <IconClockHour2 style={{ width: rem(16), height: rem(16) }} />
+        </ThemeIcon>
+      }
+    >
+      <List.Item>
         {t("quizzer-since")}: <TimeAgo isoDate={user.createdAt} />
-      </li>
-      <li>
+      </List.Item>
+      <List.Item>
         {t("last-login")}: <TimeAgo isoDate={user.lastSeen} />
-      </li>
-      <li>
+      </List.Item>
+      <List.Item>
         {user.lastPlayed ? (
           <span>
             {t("last-played")}: <TimeAgo isoDate={user.lastPlayed} />
@@ -29,8 +38,8 @@ export default function UserInfo({ user }) {
         ) : (
           <span>{t("never-played")}</span>
         )}
-      </li>
-      <li>
+      </List.Item>
+      <List.Item>
         {user.lastHosted ? (
           <span>
             {t("last-hosted")}: <TimeAgo isoDate={user.lastHosted} />
@@ -38,10 +47,17 @@ export default function UserInfo({ user }) {
         ) : (
           <span>{t("never-hosted")}</span>
         )}
-      </li>
-      <li className="pt-1 text-info">
+      </List.Item>
+      <List.Item
+        c="blue.6"
+        icon={
+          <ThemeIcon size={24} radius="xl">
+            <IconAt style={{ width: rem(16), height: rem(16) }} />
+          </ThemeIcon>
+        }
+      >
         {t("email")}: {user.email}
-      </li>
-    </ul>
+      </List.Item>
+    </List>
   );
 }

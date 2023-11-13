@@ -12,7 +12,7 @@ import Quizzers from "../components/Quizzers.js";
 import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { Button, Divider, Grid, Group, Loader, Stack, Text, Title } from "@mantine/core";
+import { Button, Divider, Group, Loader, Stack, Text, Title } from "@mantine/core";
 import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function UserPage() {
@@ -96,39 +96,25 @@ export default function UserPage() {
             <>
               <EditUser opened={openedUser} close={closeModal} user={user} />
               <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
-              <Grid>
-                <Grid.Col span="content" maw="100%">
-                  <QuizzerAvatar user={user} size={avatarSize} />
-                </Grid.Col>
-                <Grid.Col span="auto">
-                  <Stack>
-                    <Title order={2}>
-                      {user.name}{" "}
-                      {user.id === loggedInUser.id ? (
-                        <span className={classes.me}>({t("me")})</span>
-                      ) : null}{" "}
-                      {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
-                    </Title>
-                    {user.aboutMe && (
-                      <Text
-                        size="xl"
-                        fw={500}
-                        my={8}
-                        c="indigo.7"
-                        style={{ whiteSpace: "pre-wrap" }}
-                      >
-                        {user.aboutMe}
-                      </Text>
-                    )}
-                    <Grid>
-                      <Grid.Col span="content">
-                        <UserInfo user={user} />
-                      </Grid.Col>
-                      <Grid.Col span={2}>Wins</Grid.Col>
-                    </Grid>
-                  </Stack>
-                </Grid.Col>
-              </Grid>
+              <Group align="start" mb="sm">
+                <QuizzerAvatar user={user} size={avatarSize} />
+                <Stack gap="xs">
+                  <Title order={2}>
+                    {user.name}{" "}
+                    {user.id === loggedInUser.id ? (
+                      <span className={classes.me}>({t("me")})</span>
+                    ) : null}{" "}
+                    {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
+                  </Title>
+                  {user.aboutMe && (
+                    <Text size="xl" fw={500} my={8} c="indigo.7" style={{ whiteSpace: "pre-wrap" }}>
+                      {user.aboutMe}
+                    </Text>
+                  )}
+                  <UserInfo user={user} />
+                </Stack>
+                <Text>Wins</Text>
+              </Group>
 
               {loggedIn === true && (
                 <Group mx={16}>

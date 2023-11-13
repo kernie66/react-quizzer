@@ -36,8 +36,8 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <React.Suspense fallback="Loading...">
-      <ColorSchemeScript defaultColorScheme="auto" />
-      <MantineProvider theme={theme} defaultColorScheme="auto">
+      <ColorSchemeScript defaultColorScheme="light" />
+      <MantineProvider theme={theme} defaultColorScheme="light">
         <Notifications />
         <App />
       </MantineProvider>
