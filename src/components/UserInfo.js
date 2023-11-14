@@ -3,7 +3,7 @@ import TimeAgo from "./TimeAgo.js";
 import { useInterval } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { List, ThemeIcon, rem } from "@mantine/core";
-import { IconAt, IconClockHour2 } from "@tabler/icons-react";
+import { IconAt, IconClockHour2, IconGhost, IconPacman } from "@tabler/icons-react";
 
 export default function UserInfo({ user }) {
   const { t } = useTranslation();
@@ -30,7 +30,13 @@ export default function UserInfo({ user }) {
       <List.Item>
         {t("last-login")}: <TimeAgo isoDate={user.lastSeen} />
       </List.Item>
-      <List.Item>
+      <List.Item
+        icon={
+          <ThemeIcon color="teal" size={24} radius="xl">
+            <IconPacman style={{ width: rem(16), height: rem(16) }} />
+          </ThemeIcon>
+        }
+      >
         {user.lastPlayed ? (
           <span>
             {t("last-played")}: <TimeAgo isoDate={user.lastPlayed} />
@@ -39,7 +45,13 @@ export default function UserInfo({ user }) {
           <span>{t("never-played")}</span>
         )}
       </List.Item>
-      <List.Item>
+      <List.Item
+        icon={
+          <ThemeIcon color="teal" size={24} radius="xl">
+            <IconGhost style={{ width: rem(16), height: rem(16) }} />
+          </ThemeIcon>
+        }
+      >
         {user.lastHosted ? (
           <span>
             {t("last-hosted")}: <TimeAgo isoDate={user.lastHosted} />

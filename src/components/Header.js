@@ -1,4 +1,4 @@
-import { Burger, Group, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Burger, Group, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import UserMenu from "./UserMenu.js";
 import LanguageSwitcher from "./LanguageSwitcher.js";
@@ -6,7 +6,7 @@ import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFullscreen, useNetwork, useViewportSize } from "@mantine/hooks";
-import { IconWifi, IconWifiOff, IconWindowMaximize, IconWindowMinimize } from "@tabler/icons-react";
+import { IconMaximize, IconMinimize, IconWifi, IconWifiOff } from "@tabler/icons-react";
 
 export default function Header({ opened, toggle }) {
   const { user } = useUser();
@@ -51,12 +51,15 @@ export default function Header({ opened, toggle }) {
         </Group>
       </Group>
       <LanguageSwitcher />
-      <UnstyledButton onClick={fullscreenToggle}>
-        {fullscreen ? (
-          <IconWindowMinimize size={32} stroke={0.75} />
-        ) : (
-          <IconWindowMaximize size={32} stroke={0.75} />
-        )}
+      <UnstyledButton onClick={fullscreenToggle} ml={8}>
+        <ThemeIcon
+          variant="gradient"
+          size={32}
+          radius="xl"
+          gradient={{ from: "blue", to: "yellow", deg: 320 }}
+        >
+          {fullscreen ? <IconMinimize size={24} /> : <IconMaximize size={24} />}
+        </ThemeIcon>
       </UnstyledButton>
     </Group>
   );
