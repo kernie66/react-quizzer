@@ -36,7 +36,6 @@ export default function EditUser({ opened, close, user }) {
     setUser(user);
   }, [user]);
 
-  console.log("Edit user:", _user);
   const form = useForm({
     initialValues: {
       name: _user.name,

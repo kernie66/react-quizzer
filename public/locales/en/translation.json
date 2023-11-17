@@ -187,5 +187,6 @@
   "please-enter-a-different-password-than-the-current": "Please enter a different password than the current",
   "unknown-response-from-server": "Unknown response from server",
   "password-could-not-be-changed-please-try-again": "Password could not be changed, please try again",
-  "start-page": "Start page"
+  "start-page": "Start page",
+  "server-error": "Server error"
 }

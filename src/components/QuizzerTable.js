@@ -10,18 +10,18 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "@mantine/core";
 import i18next from "i18next";
 
-const columnHelper = createColumnHelper();
-const columns = [
-  columnHelper.accessor("name", {
-    header: i18next.t("name"),
-  }),
-  columnHelper.accessor("email", {
-    header: i18next.t("email"),
-  }),
-];
-
 export default function QuizzerTable() {
   const api = useApi();
+
+  const columnHelper = createColumnHelper();
+  const columns = [
+    columnHelper.accessor("name", {
+      header: i18next.t("name"),
+    }),
+    columnHelper.accessor("email", {
+      header: i18next.t("email"),
+    }),
+  ];
 
   const getQuizzers = async () => {
     const response = await api.get("/users");

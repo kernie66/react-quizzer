@@ -10,8 +10,6 @@ export default function UserMenu() {
   const menuItems = quizzerMenuItems(1);
   const [avatarImage, setAvatarImage] = useState(null);
 
-  console.log("User:", user);
-
   useShallowEffect(() => {
     if (user && user.avatarUrl) {
       setAvatarImage(user.avatarUrl + "&s=32");

@@ -20,8 +20,6 @@
     "@zxcvbn-ts/language-fi": "^3.0.2",
     "@zxcvbn-ts/matcher-pwned": "^3.0.4",
     "axios": "^1.4.0",
-    "bootstrap": "^5.2.0",
-    "bootswatch": "^5.2.0",
     "i18next": "^23.1.0",
     "i18next-browser-languagedetector": "^7.0.2",
     "i18next-http-backend": "^2.2.1",
@@ -36,9 +34,7 @@
     "react-router": "^6.14.2",
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
-    "reactstrap": "^9.1.2",
     "serve": "^14.0.0",
-    "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

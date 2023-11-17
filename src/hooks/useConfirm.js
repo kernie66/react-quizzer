@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { useState } from "react";
 import createPromise from "../helpers/createPromise.js";
 import { useDisclosure } from "@mantine/hooks";
@@ -59,6 +59,7 @@ const useConfirm = () => {
     modalProps: {},
   };
 
+  /*
   ConfirmModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     message: PropTypes.node,
@@ -73,6 +74,8 @@ const useConfirm = () => {
     bodyComponent: PropTypes.func,
     modalProps: PropTypes.object,
   };
+  */
+
   return [getConfirmation, ConfirmModal];
 };
 

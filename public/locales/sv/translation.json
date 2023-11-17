@@ -187,5 +187,6 @@
   "your-password-has-been-updated": "Ditt lösenord har uppdaterats",
   "unknown-response-from-server": "Okänt svar från servern",
   "password-could-not-be-changed-please-try-again": "Lösenordet kunde inte ändras, försök igen",
-  "start-page": "Startsida"
+  "start-page": "Startsida",
+  "server-error": "Serverfel"
 }

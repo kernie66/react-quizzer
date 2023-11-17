@@ -5,7 +5,6 @@ import ExplorePage from "./pages/ExplorePage";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import ApiProvider from "./contexts/ApiProvider";
-import FlashProvider from "./contexts/FlashProvider";
 import UserProvider from "./contexts/UserProvider";
 import PublicRoute from "./components/PublicRoute";
 import PrivateRoute from "./components/PrivateRoute";
@@ -46,64 +45,62 @@ export default function App() {
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
         <BrowserRouter>
           <QueryClientProvider client={queryClient}>
-            <FlashProvider>
-              <ApiProvider>
-                <UserProvider>
-                  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
-                    <Container fluid="md" className="p-0 MainBody">
-                      <Routes>
-                        <Route
-                          path="/login"
-                          element={
-                            <PublicRoute>
-                              <LoginPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/register"
-                          element={
-                            <PublicRoute>
-                              <RegistrationPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset-request"
-                          element={
-                            <PublicRoute>
-                              <ResetRequestPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset"
-                          element={
-                            <PublicRoute>
-                              <ResetPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="*"
-                          element={
-                            <PrivateRoute>
-                              <Routes>
-                                <Route path="/" element={<MainPage />} />
-                                <Route path="/explore" element={<ExplorePage />} />
-                                <Route path="/user/:id" element={<UserPage />} />
-                                <Route path="/password" element={<ChangePasswordPage />} />
-                                <Route path="*" element={<Navigate to="/" />} />
-                              </Routes>
-                            </PrivateRoute>
-                          }
-                        />
-                      </Routes>
-                    </Container>
-                  </ErrorBoundary>
-                </UserProvider>
-              </ApiProvider>
-            </FlashProvider>
+            <ApiProvider>
+              <UserProvider>
+                <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
+                  <Container fluid="md" className="p-0 MainBody">
+                    <Routes>
+                      <Route
+                        path="/login"
+                        element={
+                          <PublicRoute>
+                            <LoginPage />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="/register"
+                        element={
+                          <PublicRoute>
+                            <RegistrationPage />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="/reset-request"
+                        element={
+                          <PublicRoute>
+                            <ResetRequestPage />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="/reset"
+                        element={
+                          <PublicRoute>
+                            <ResetPage />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="*"
+                        element={
+                          <PrivateRoute>
+                            <Routes>
+                              <Route path="/" element={<MainPage />} />
+                              <Route path="/explore" element={<ExplorePage />} />
+                              <Route path="/user/:id" element={<UserPage />} />
+                              <Route path="/password" element={<ChangePasswordPage />} />
+                              <Route path="*" element={<Navigate to="/" />} />
+                            </Routes>
+                          </PrivateRoute>
+                        }
+                      />
+                    </Routes>
+                  </Container>
+                </ErrorBoundary>
+              </UserProvider>
+            </ApiProvider>
             <ReactQueryDevtools />
           </QueryClientProvider>
         </BrowserRouter>
