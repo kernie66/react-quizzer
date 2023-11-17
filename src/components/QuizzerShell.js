@@ -19,14 +19,18 @@ export default function QuizzerShell({ children }) {
         <Header opened={opened} toggle={toggle} />
       </AppShell.Header>
       <AppShell.Navbar py="md" px="md">
-        {menuItems.startPage}
-        {menuItems.profile}
-        {user.isAdmin && <>{menuItems.administer}</>}
-        <Divider />
-        {menuItems.reportIssue}
-        <Divider />
-        {menuItems.changePassword}
-        {menuItems.logoutUser}
+        {user ? (
+          <>
+            {menuItems.startPage}
+            {menuItems.profile}
+            {user.isAdmin && <>{menuItems.administer}</>}
+            <Divider />
+            {menuItems.reportIssue}
+            <Divider />
+            {menuItems.changePassword}
+            {menuItems.logoutUser}
+          </>
+        ) : null}
       </AppShell.Navbar>
       <AppShell.Main bg="blue.1">{children}</AppShell.Main>
     </AppShell>

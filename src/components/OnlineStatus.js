@@ -1,9 +1,11 @@
 // import { useNetwork } from "@mantine/hooks";
 import { IconWifi, IconWifiOff } from "@tabler/icons-react";
 import { useState, useEffect } from "react";
+import useNetworkStatus from "../hooks/useNetworkStatus.js";
 
 export default function OnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const networkState = useNetworkStatus();
   // const networkStatus = useNetwork();
 
   useEffect(() => {
@@ -24,7 +26,12 @@ export default function OnlineStatus() {
     };
   }, []);
 
-  return <div>{isOnline ? <IconWifi color="green" /> : <IconWifiOff color="red" />}</div>;
+  return (
+    <>
+      <div>{isOnline ? <IconWifi color="green" /> : <IconWifiOff color="red" />}</div>
+      <div>{networkState.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}</div>
+    </>
+  );
 }
 
 // {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}

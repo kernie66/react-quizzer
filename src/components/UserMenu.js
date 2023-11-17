@@ -1,5 +1,5 @@
 import { useUser } from "../contexts/UserProvider";
-import { Avatar, Group, Loader, Menu, rem } from "@mantine/core";
+import { Avatar, Group, Menu, rem } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import { quizzerMenuItems } from "../helpers/quizzerMenuItems.js";
 
@@ -7,10 +7,24 @@ export default function UserMenu() {
   const { user } = useUser();
   const menuItems = quizzerMenuItems(1);
 
+  console.log("User:", user);
+
   return (
     <>
-      {user === undefined ? (
-        <Loader color="blue" size="sm" type="bars" mr="1rem" />
+      {!user ? (
+        <Menu trigger="hover" position="bottom-end">
+          <Menu.Target>
+            <Group gap={0}>
+              <Avatar size={32} />
+              <IconChevronDown style={{ width: rem(14), height: rem(14) }} />
+            </Group>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item>{menuItems.loginUser}</Menu.Item>
+            <Menu.Divider />
+            <Menu.Item>{menuItems.reportIssue}</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       ) : (
         <>
           {user !== null && (

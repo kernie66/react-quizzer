@@ -28,7 +28,7 @@ export default function UserProvider({ children }) {
           response = await api.checkLoggedIn();
           if (response.ok) {
             const userId = api.getUserId();
-            console.log("User:", userId);
+            console.log("User ID:", userId);
             response = await api.get("/users/" + userId);
             console.log("Current user:", response.data[0]);
             userData = response.ok ? response.data[0] : null;

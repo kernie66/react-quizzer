@@ -4,6 +4,7 @@ import { Button, Checkbox, ColorInput, ColorPicker } from "@mantine/core";
 import { IconBrandMantine } from "@tabler/icons-react";
 import QuizzerShell from "../components/QuizzerShell.js";
 import OnlineStatus from "../components/OnlineStatus.js";
+import QuizzerTable from "../components/QuizzerTable.js";
 
 export default function MainPage() {
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function MainPage() {
       <ColorInput />
       <ColorPicker />
       <OnlineStatus />
+      <QuizzerTable />
     </QuizzerShell>
   );
 }

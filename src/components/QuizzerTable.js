@@ -7,15 +7,16 @@ import {
 import { useApi } from "../contexts/ApiProvider.js";
 import { alphabetical } from "radash";
 import { useQuery } from "@tanstack/react-query";
-import { Table } from "reactstrap";
+import { Table } from "@mantine/core";
+import i18next from "i18next";
 
 const columnHelper = createColumnHelper();
 const columns = [
   columnHelper.accessor("name", {
-    header: "Name",
+    header: i18next.t("name"),
   }),
   columnHelper.accessor("email", {
-    header: "Email",
+    header: i18next.t("email"),
   }),
 ];
 
@@ -56,33 +57,31 @@ export default function QuizzerTable() {
         <>Loading</>
       ) : (
         <>
-          <Table striped bordered hover>
-            <table>
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <Table striped highlightOnHover>
+            <Table.Thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <Table.Tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <Table.Th key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </Table.Th>
+                  ))}
+                </Table.Tr>
+              ))}
+            </Table.Thead>
+            <Table.Tbody>
+              {table.getRowModel().rows.map((row) => (
+                <Table.Tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <Table.Td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Table.Td>
+                  ))}
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
           </Table>
         </>
       )}
