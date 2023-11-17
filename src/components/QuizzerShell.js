@@ -19,7 +19,13 @@ export default function QuizzerShell({ children }) {
         <Header opened={opened} toggle={toggle} />
       </AppShell.Header>
       <AppShell.Navbar py="md" px="md">
-        {user ? (
+        {!user ? (
+          <>
+            {menuItems.loginUser}
+            <Divider />
+            {menuItems.reportIssue}
+          </>
+        ) : (
           <>
             {menuItems.startPage}
             {menuItems.profile}
@@ -30,7 +36,7 @@ export default function QuizzerShell({ children }) {
             {menuItems.changePassword}
             {menuItems.logoutUser}
           </>
-        ) : null}
+        )}
       </AppShell.Navbar>
       <AppShell.Main bg="blue.1">{children}</AppShell.Main>
     </AppShell>
