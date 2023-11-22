@@ -1,6 +1,8 @@
 import { createLogger, format, transports } from "winston";
 import "winston-daily-rotate-file";
 import pkg from "winston-format-pretty-console";
+import { emailOptions } from "../utils/sendEmail.js";
+import Mail from "winston-mail-lite";
 
 const prettyConsoleFormat = pkg;
 
@@ -8,6 +10,17 @@ const fileRotateTransport = new transports.DailyRotateFile({
   filename: "logs/quizzer-rotate-%DATE%.log",
   datePattern: "YYYY-MM-DD",
   maxFiles: "14d",
+});
+
+const transportOptions = emailOptions;
+const messageOptions = {
+  from: '"Quizzer Admin" <admin@kernie.net>',
+  to: '"Quizzer Admin" <admin@kernie.net>',
+  subject: "Quizzer Winston logger",
+};
+const emailTransport = new Mail({
+  transportOptions: transportOptions,
+  messageOptions: messageOptions,
 });
 
 export const logger = createLogger({
@@ -32,8 +45,12 @@ export const logger = createLogger({
     }),
     // new transports.File({ filename: 'logs/quizzer-combined.log' }),
     fileRotateTransport,
+    //    emailTransport,
   ],
-  exceptionHandlers: [new transports.File({ filename: "logs/quizzer-exceptions.log" })],
+  exceptionHandlers: [
+    new transports.File({ filename: "logs/quizzer-exceptions.log" }),
+    emailTransport,
+  ],
   rejectionHandlers: [new transports.File({ filename: "logs/quizzer-rejections.log" })],
 });
 

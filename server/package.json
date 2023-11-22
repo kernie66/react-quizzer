@@ -53,6 +53,7 @@
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1",
     "winston-format-pretty-console": "^1.2.2",
+    "winston-mail-lite": "^1.0.16",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {

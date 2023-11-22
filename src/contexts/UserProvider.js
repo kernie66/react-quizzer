@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { useApi } from "./ApiProvider";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { useErrorBoundary } from "react-error-boundary";
 
 const UserContext = createContext();
 
@@ -10,6 +11,7 @@ export default function UserProvider({ children }) {
   const api = useApi();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { showBoundary } = useErrorBoundary();
 
   const updateUserQuery = (userData) => {
     if (userData) {
@@ -38,6 +40,7 @@ export default function UserProvider({ children }) {
           }
         } catch (error) {
           console.error("Error checking login:", error);
+          showBoundary(error);
         }
       }
       setUser(userData);

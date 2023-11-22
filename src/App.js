@@ -15,39 +15,22 @@ import { lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Container, Title } from "@mantine/core";
+import { Container } from "@mantine/core";
+import { BasicErrorFallback, logErrorToService } from "./helpers/errorHandlers.js";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
 const queryClient = new QueryClient();
 
-// Error logging function
-function logErrorToService(error, info) {
-  // Use your preferred error logging service
-  console.error("Caught an error:", error, info);
-}
-
-// Error boundary render function
-function ErrorFallback({ error }) {
-  return (
-    <div role="alert">
-      <Title order={3} mt={64}>
-        Something went wrong:
-      </Title>
-      <pre style={{ color: "red" }}>{error.message}</pre>
-    </div>
-  );
-}
-
 export default function App() {
   return (
     <Container fluid className="App" mx={{ base: 0, md: 16 }} px={{ base: 8, md: 16 }}>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
+      <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
         <BrowserRouter>
           <QueryClientProvider client={queryClient}>
             <ApiProvider>
               <UserProvider>
-                <ErrorBoundary FallbackComponent={ErrorFallback} onError={logErrorToService}>
+                <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
                   <Container fluid="md" className="p-0 MainBody">
                     <Routes>
                       <Route
