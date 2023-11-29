@@ -10,7 +10,9 @@ let server = app.listen(apiPort, () => {
   logger.info(`Server running on port ${apiPort}`);
 });
 
-const io = new Server(server);
+const io = new Server(server, {
+  path: "/websocket/",
+});
 
 io.on("connection", (socket) => {
   console.log("on connection", socket.id);
