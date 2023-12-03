@@ -49,7 +49,7 @@ export const logger = createLogger({
   ],
   exceptionHandlers: [
     new transports.File({ filename: "logs/quizzer-exceptions.log" }),
-    emailTransport,
+    // emailTransport,
   ],
   rejectionHandlers: [new transports.File({ filename: "logs/quizzer-rejections.log" })],
 });
