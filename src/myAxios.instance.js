@@ -45,6 +45,10 @@ myAxios.interceptors.response.use(
           const refreshToken = localStorage.getItem("refreshToken");
           if (refreshToken) {
             const response = await myAxios.post("/auth/refresh-token", { refreshToken });
+            // Check if refresh token valid, otherwise login again
+            if (response.status !== 200) {
+              throw new Error(response.statusText);
+            }
 
             const tokens = response.data;
             localStorage.setItem("accessToken", tokens.accessToken);
