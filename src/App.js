@@ -18,7 +18,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Container } from "@mantine/core";
 import { BasicErrorFallback, logErrorToService } from "./helpers/errorHandlers.js";
 import SSEProvider from "./contexts/SSEProvider.js";
-// import SocketProvider from "./contexts/SocketProvider.js";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 

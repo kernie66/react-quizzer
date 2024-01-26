@@ -1,0 +1,30 @@
+version: '3.2'
+services:
+  client:
+    build: .
+    image: react-quizzer
+    env_file: .env_docker
+    ports:
+      - "3010:80"
+    networks:
+      - quizzer-net
+    restart: always
+  server:
+    build: ./server
+    image: react-quizzer-api
+    env_file:
+      - ./server/.env_docker
+    volumes:
+      - /app/node_modules
+      - ./server/config:/app/config
+      - ./server/models:/app/models
+      - ./server/src:/app/src
+      - ./server/templates:/app/templates
+      - ./server/tests:/app/tests
+    ports:
+      - "3011:3011"
+    networks:
+      - quizzer-net
+    restart: always
+networks:
+  quizzer-net:

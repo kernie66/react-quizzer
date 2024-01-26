@@ -7,10 +7,11 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@mantine/core": "^7.1.2",
-    "@mantine/form": "^7.1.2",
-    "@mantine/hooks": "^7.1.2",
-    "@mantine/notifications": "^7.1.2",
+    "@mantine/core": "^7.4.0",
+    "@mantine/form": "^7.4.0",
+    "@mantine/hooks": "^7.4.0",
+    "@mantine/notifications": "^7.4.0",
+    "@react-nano/use-event-source": "^0.13.0",
     "@tabler/icons-react": "^2.38.0",
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-table": "^8.9.3",
@@ -44,7 +45,9 @@
     "test": "node node_modules/.bin/jest --detectOpenHandles",
     "test-original": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "npm run build && (cd server && nodemon server)"
+    "start": "npm run build && (cd server && nodemon server)",
+    "deploy": "npm run build && docker-compose build && docker-compose up -d",
+    "down": "docker-compose down"
   },
   "eslintConfig": {
     "extends": [
