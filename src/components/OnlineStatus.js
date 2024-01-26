@@ -7,22 +7,23 @@ import { useState } from "react";
 export default function OnlineStatus() {
   const [data, setData] = useState();
   const networkStatus = useNetwork();
-  const { eventSource } = useSSE();
+  const { globalEventSource } = useSSE();
 
   useEventSourceListener(
-    eventSource,
+    globalEventSource,
     ["ping"],
     (event) => {
       const eventData = JSON.parse(event.data);
-      setData(eventData.message);
+      setData(eventData);
     },
     [setData],
   );
+
   return (
     <>
       <div>
         {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
-        {data}
+        {data?.message}: {data?.id}
       </div>
     </>
   );

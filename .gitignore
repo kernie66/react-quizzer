@@ -106,3 +106,6 @@ dist
 
 # React build directory
 build/
+
+# Docker specific test
+postgresql/

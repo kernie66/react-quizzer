@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFullscreen, useNetwork, useViewportSize } from "@mantine/hooks";
 import { IconMaximize, IconMinimize, IconWifi, IconWifiOff } from "@tabler/icons-react";
+import ConnectedUsers from "./ConnectedUsers.js";
 
 export default function Header({ opened, toggle }) {
   const { user } = useUser();
@@ -17,12 +18,17 @@ export default function Header({ opened, toggle }) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (user && user.isAdmin) {
-      setIsAdmin(true);
-      console.log("Current user is admin");
+    if (user) {
+      if (user.isAdmin) {
+        setIsAdmin(true);
+        console.log("Current user is admin");
+      } else {
+        setIsAdmin(false);
+        console.log("Current user is not admin");
+      }
     } else {
       setIsAdmin(false);
-      console.log("Current user is not admin");
+      console.log("No current user");
     }
   }, [user]);
 
@@ -46,6 +52,7 @@ export default function Header({ opened, toggle }) {
               <Text size="xs">Y: {height}</Text>
             </Stack>
           )}
+          <ConnectedUsers />
           {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
           <UserMenu navbar />
         </Group>

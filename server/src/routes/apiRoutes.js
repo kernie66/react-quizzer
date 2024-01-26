@@ -26,6 +26,7 @@ import {
   disconnectGame,
   getPlayers,
 } from "../controllers/games.js";
+import { getClients } from "../controllers/userSSE.js";
 
 export const apiRouter = Router();
 apiRouter.get("/", (req, res) => {
@@ -35,6 +36,8 @@ apiRouter.get("/", (req, res) => {
 apiRouter.get("/login", (req, res) => {
   res.status(200).json({ success: `User ${req.user.username} already logged in...` });
 });
+
+apiRouter.get("/clients", getClients);
 
 apiRouter.post("/users", createUser);
 apiRouter.get("/users", getUsers);

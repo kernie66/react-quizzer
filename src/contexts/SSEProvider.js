@@ -14,27 +14,41 @@ const SSEContext = createContext();
 export default function SSEProvider({ children }) {
   const { t } = useTranslation();
   const { user } = useUser();
-  const [eventSource, eventSourceStatus] = useEventSource(endpoint + `/${user.id}`, false);
+  const [eventSource, eventSourceStatus] = useEventSource(endpoint + `/${user?.id}`, false);
+  const [globalEventSource, globalEventSourceStatus] = useEventSource(endpoint, false);
 
   const onError = useCallback(() => {
-    showNotification({
-      title: t("server-error"),
-      message: "Error connecting to the server sent events",
-      color: "red",
-      icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
-      autoClose: 5000,
-    });
+    if (user) {
+      showNotification({
+        title: t("server-error"),
+        message: "Error connecting to the server sent events",
+        color: "red",
+        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+        autoClose: 8000,
+      });
+    }
   }, [t]);
 
   useEffect(() => {
-    console.log("SSE status changed to:", eventSourceStatus);
+    console.log("User SSE status changed to:", eventSourceStatus);
     if (eventSourceStatus === "error") {
       onError();
     }
   }, [eventSourceStatus]);
 
+  useEffect(() => {
+    console.log("Global SSE status changed to:", globalEventSourceStatus);
+    if (globalEventSourceStatus === "error") {
+      onError();
+    }
+  }, [globalEventSourceStatus]);
+
   return (
-    <SSEContext.Provider value={{ eventSource, eventSourceStatus }}>{children}</SSEContext.Provider>
+    <SSEContext.Provider
+      value={{ eventSource, eventSourceStatus, globalEventSource, globalEventSourceStatus }}
+    >
+      {children}
+    </SSEContext.Provider>
   );
 }
 
