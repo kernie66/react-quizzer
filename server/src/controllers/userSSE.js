@@ -3,6 +3,7 @@ import { Token, User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import { Unauthorized } from "../utils/errorHandler.js";
 import { clients } from "../app.js";
+import { clientsSSE } from "../eventsSSE/initSSE.js";
 
 //let clients = [];
 
@@ -73,6 +74,7 @@ export const connectSSE = async (req, res, next) => {
 
     clients.push(newClient);
     logger.debug("Clients:", clients.length);
+    clientsSSE();
 
     logger.info(`${user.username} - Connection opened`);
 

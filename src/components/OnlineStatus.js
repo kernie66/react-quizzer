@@ -5,7 +5,7 @@ import { useEventSourceListener } from "@react-nano/use-event-source";
 import { useState } from "react";
 
 export default function OnlineStatus() {
-  const [data, setData] = useState();
+  const [pingCount, setPingCount] = useState("-");
   const networkStatus = useNetwork();
   const { globalEventSource } = useSSE();
 
@@ -14,16 +14,17 @@ export default function OnlineStatus() {
     ["ping"],
     (event) => {
       const eventData = JSON.parse(event.data);
-      setData(eventData);
+      console.log("Event data:", eventData);
+      setPingCount(eventData);
     },
-    [setData],
+    [setPingCount],
   );
 
   return (
     <>
       <div>
-        {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
-        {data?.message}: {data?.id}
+        {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />} Ping:{" "}
+        {pingCount}
       </div>
     </>
   );

@@ -11,13 +11,13 @@ export default function ConnectedUsers() {
 
   useEventSourceListener(
     globalEventSource,
-    ["ping"],
+    ["clients"],
     (event) => {
       let newIcon;
       const eventData = JSON.parse(event.data);
-      if (eventData.clients) {
-        setClients(eventData.clients);
-        if (eventData.clients === 1) {
+      if (eventData) {
+        setClients(eventData);
+        if (eventData === 1) {
           newIcon = <IconUser color="green" />;
         } else {
           newIcon = <IconUsers color="green" />;

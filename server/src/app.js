@@ -19,6 +19,7 @@ import { checkLoggedIn } from "./middleware/checkLoggedIn.js";
 import { checkAdmin } from "./middleware/checkAdmin.js";
 import { handleErrors } from "./middleware/handleErrors.js";
 import { NotFound } from "./utils/errorHandler.js";
+import sse from "better-sse";
 // import sendEmail from "./utils/sendEmail.js";
 
 const invalidPathHandler = () => {
@@ -27,6 +28,8 @@ const invalidPathHandler = () => {
 
 export const app = express();
 export const clients = [];
+export const globalChannel = sse.createChannel();
+initSSE();
 
 logger.debug("Source location:", new URL(import.meta.url).pathname);
 const publicPath = setPath("../public/server");
@@ -42,6 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 import "./auth/passportConfig.js";
+import { initSSE } from "./eventsSSE/initSSE.js";
 
 app.use(morgan("dev"));
 app.get("/api/check", checkUser);
