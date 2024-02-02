@@ -64,7 +64,7 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-error-boundary: ^4.0.12
-  react-i18next: ^13.5.0
+  react-i18next: ^14.0.1
   react-password-strength-bar: ^0.4.1
   react-router: ^6.22.0
   react-router-dom: ^6.22.0
@@ -103,7 +103,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-error-boundary: 4.0.12_react@18.2.0
-  react-i18next: 13.5.0_cof35yfxyoc7e2zmqyhaglsmqm
+  react-i18next: 14.0.1_cof35yfxyoc7e2zmqyhaglsmqm
   react-password-strength-bar: 0.4.1_biqbaboplfbrettd7655fr4n2y
   react-router: 6.22.0_react@18.2.0
   react-router-dom: 6.22.0_biqbaboplfbrettd7655fr4n2y
@@ -9923,8 +9923,8 @@ packages:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
     dev: false
 
-  /react-i18next/13.5.0_cof35yfxyoc7e2zmqyhaglsmqm:
-    resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
+  /react-i18next/14.0.1_cof35yfxyoc7e2zmqyhaglsmqm:
+    resolution: {integrity: sha512-TMV8hFismBmpMdIehoFHin/okfvgjFhp723RYgIqB4XyhDobVMyukyM3Z8wtTRmajyFMZrBl/OaaXF2P6WjUAw==}
     peerDependencies:
       i18next: '>= 23.2.3'
       react: '>= 16.8.0'
