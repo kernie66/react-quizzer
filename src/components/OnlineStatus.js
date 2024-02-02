@@ -12,10 +12,8 @@ export default function OnlineStatus() {
   useEventSourceListener(
     globalEventSource,
     ["ping"],
-    (event) => {
-      const eventData = JSON.parse(event.data);
-      console.log("Event data:", eventData);
-      setPingCount(eventData);
+    ({ data }) => {
+      setPingCount(data);
     },
     [setPingCount],
   );

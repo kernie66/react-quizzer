@@ -20,6 +20,9 @@ export const connectGlobalSSE = async (req, res) => {
   */
 
   const globalSession = await sse.createSession(req, res);
+  globalSession.on("disconnected", () => {
+    logger.info("Global SSE disconnected event");
+  });
   globalChannel.register(globalSession);
   logger.info("Global SSE connected");
   // If compression middleware is used, then res.flash()

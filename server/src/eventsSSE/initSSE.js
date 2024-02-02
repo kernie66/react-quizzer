@@ -8,9 +8,19 @@ export const initSSE = () => {
   // Send a subsequent message every five seconds
   const pingTask = cron.schedule("*/5 * * * * *", () => {
     globalChannel.broadcast(counter, "ping");
-    logger.debug("Ping (SSE):", counter);
+    // logger.debug("Ping (SSE):", counter);
     counter += 1;
   });
+
+  globalChannel
+    .on("session-registered", (session) => {
+      logger.debug("Added connected sessions:", globalChannel.sessionCount);
+      logger.info("Session", session.req);
+      console.log(session.req.hostname);
+    })
+    .on("session-deregistered", () => {
+      logger.debug("Removed connected sessions:", globalChannel.sessionCount);
+    });
 };
 
 export const clientsSSE = () => {

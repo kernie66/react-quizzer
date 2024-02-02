@@ -32,7 +32,7 @@ myAxios.interceptors.response.use(
   async (error) => {
     console.log("error:", error);
     console.log("error.code:", error.code);
-    if (error.code !== "ERR_NETWORK") {
+    if (error.code !== "ERR_NETWORK" && error.code !== "ECONNABORTED") {
       console.log("Intercepting response status:", error.response.status);
       const originalRequest = error.config;
       console.log("Intercepting response:", originalRequest);

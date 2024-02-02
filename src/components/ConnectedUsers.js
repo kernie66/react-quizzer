@@ -12,12 +12,11 @@ export default function ConnectedUsers() {
   useEventSourceListener(
     globalEventSource,
     ["clients"],
-    (event) => {
+    ({ data }) => {
       let newIcon;
-      const eventData = JSON.parse(event.data);
-      if (eventData) {
-        setClients(eventData);
-        if (eventData === 1) {
+      if (data) {
+        setClients(data);
+        if (data === 1) {
           newIcon = <IconUser color="green" />;
         } else {
           newIcon = <IconUsers color="green" />;
