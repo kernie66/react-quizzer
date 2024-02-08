@@ -5,7 +5,7 @@ import { useSSE } from "../contexts/SSEProvider.js";
 import { useState } from "react";
 
 export default function ConnectedUsers() {
-  const [clients, setClients] = useState(0);
+  const [clients, setClients] = useState(77);
   const [userIcon, setUserIcon] = useState(<IconUserOff color="red" />);
   const { globalEventSource } = useSSE();
 
@@ -23,11 +23,12 @@ export default function ConnectedUsers() {
         }
       } else {
         setClients(0);
+        console.log("No user data from SSE")
         newIcon = <IconUserOff color="red" />;
       }
       setUserIcon(newIcon);
     },
-    [setClients],
+    [],
   );
 
   return (

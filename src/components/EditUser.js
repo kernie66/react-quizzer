@@ -62,7 +62,7 @@ export default function EditUser({ opened, close, user }) {
       queryKey: ["quizzers", { excludeId: _user.id }],
       queryFn: () => fetchQuizzers(_user.id),
     },
-    [_user.id],
+    //[_user.id],
   );
 
   const checkUsername = async () => {

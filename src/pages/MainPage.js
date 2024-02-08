@@ -56,6 +56,7 @@ export default function MainPage() {
       <ColorPicker />
       <OnlineStatus />
       <Text>Number of connected players: {clients}</Text>
+      <Text>Local storage: {localStorage.getItem("userData")}</Text>
       <QuizzerTable />
     </QuizzerShell>
   );

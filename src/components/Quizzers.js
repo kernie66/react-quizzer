@@ -39,8 +39,8 @@ export default function Quizzers({ currentId }) {
     {
       queryKey: ["quizzers", { excludeId: currentId }],
       queryFn: () => fetchQuizzers(currentId),
-    },
-    [currentId],
+    }
+    //[currentId],
   );
 
   return (
