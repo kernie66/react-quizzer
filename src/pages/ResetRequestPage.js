@@ -9,7 +9,6 @@ import { useForm } from "@mantine/form";
 import { useErrorBoundary } from "react-error-boundary";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function ResetRequestPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -76,7 +75,7 @@ export default function ResetRequestPage() {
   };
 
   return (
-    <QuizzerShell>
+    <>
       <Modal
         opened={opened}
         onClose={cancelRequest}
@@ -97,6 +96,6 @@ export default function ResetRequestPage() {
           </Group>
         </form>
       </Modal>
-    </QuizzerShell>
+    </>
   );
 }

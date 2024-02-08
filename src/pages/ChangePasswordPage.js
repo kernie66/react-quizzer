@@ -8,7 +8,6 @@ import { useUser } from "../contexts/UserProvider.js";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function ChangePasswordPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -30,8 +29,8 @@ export default function ChangePasswordPage() {
         values.password.length === 0
           ? `Values: ${values.password}` // t("please-select-a-password")
           : values.password === values.oldPassword
-          ? t("please-enter-a-different-password-than-the-current")
-          : null,
+            ? t("please-enter-a-different-password-than-the-current")
+            : null,
       password2: values.password2.length === 0 ? t("please-repeat-the-password") : null,
     }),
   });
@@ -85,7 +84,7 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <QuizzerShell>
+    <>
       <Modal
         opened={opened}
         onClose={cancel}
@@ -121,6 +120,6 @@ export default function ChangePasswordPage() {
           </Group>
         </form>
       </Modal>
-    </QuizzerShell>
+    </>
   );
 }

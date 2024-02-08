@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { useFullscreen, useNetwork, useViewportSize } from "@mantine/hooks";
 import { IconMaximize, IconMinimize, IconWifi, IconWifiOff } from "@tabler/icons-react";
 import ConnectedUsers from "./ConnectedUsers.js";
+import { useSSE } from "../contexts/SSEProvider.js";
+import { useEventSourceListener } from "@react-nano/use-event-source";
 
 export default function Header({ opened, toggle }) {
   const { user } = useUser();
@@ -16,6 +18,22 @@ export default function Header({ opened, toggle }) {
   const networkStatus = useNetwork();
   const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
+  const [clients, setClients] = useState(77);
+  const { globalEventSource } = useSSE();
+
+  useEventSourceListener(
+    globalEventSource,
+    ["clients"],
+    ({ data }) => {
+      if (data) {
+        setClients(data);
+      } else {
+        setClients(0);
+        console.log("No user data from SSE");
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (user) {
@@ -52,7 +70,7 @@ export default function Header({ opened, toggle }) {
               <Text size="xs">Y: {height}</Text>
             </Stack>
           )}
-          <ConnectedUsers />
+          <ConnectedUsers clients={clients} />
           {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
           <UserMenu navbar />
         </Group>

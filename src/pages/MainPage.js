@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Checkbox, ColorInput, ColorPicker, Text } from "@mantine/core";
 import { IconBrandMantine } from "@tabler/icons-react";
-//import { useEventSource, useEventSourceListener } from "@react-nano/use-event-source";
-import QuizzerShell from "../components/QuizzerShell.js";
 import OnlineStatus from "../components/OnlineStatus.js";
 import QuizzerTable from "../components/QuizzerTable.js";
 import { useApi } from "../contexts/ApiProvider.js";
@@ -45,7 +43,7 @@ export default function MainPage() {
   }, []);
 
   return (
-    <QuizzerShell>
+    <>
       <h3>Quiz info placeholder</h3>
       <Checkbox label="Ready to play some quiz" />
       <Button color="pink">
@@ -58,6 +56,6 @@ export default function MainPage() {
       <Text>Number of connected players: {clients}</Text>
       <Text>Local storage: {localStorage.getItem("userData")}</Text>
       <QuizzerTable />
-    </QuizzerShell>
+    </>
   );
 }

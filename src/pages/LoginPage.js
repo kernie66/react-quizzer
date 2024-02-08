@@ -1,4 +1,3 @@
-import QuizzerShell from "../components/QuizzerShell.js";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserProvider";
 import { useApi } from "../contexts/ApiProvider.js";
@@ -90,7 +89,7 @@ export default function LoginPage() {
   };
 
   return (
-    <QuizzerShell>
+    <>
       <Modal opened={opened} onClose={close} fullscreen="sm" title={t("login")} yOffset="6rem">
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
@@ -125,6 +124,6 @@ export default function LoginPage() {
           </Text>
         </form>
       </Modal>
-    </QuizzerShell>
+    </>
   );
 }

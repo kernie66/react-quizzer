@@ -12,7 +12,6 @@ import { useForm } from "@mantine/form";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function RegistrationPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -85,7 +84,7 @@ export default function RegistrationPage() {
   };
 
   return (
-    <QuizzerShell>
+    <>
       <Modal
         opened={opened}
         onClose={close}
@@ -111,6 +110,6 @@ export default function RegistrationPage() {
           </Group>
         </form>
       </Modal>
-    </QuizzerShell>
+    </>
   );
 }

@@ -18,6 +18,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Container } from "@mantine/core";
 import { BasicErrorFallback, logErrorToService } from "./helpers/errorHandlers.js";
 import SSEProvider from "./contexts/SSEProvider.js";
+import QuizzerShell from "./components/QuizzerShell.js";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
@@ -37,54 +38,56 @@ export default function App() {
                 <SSEProvider>
                   <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
                     <Container fluid="md" className="p-0 MainBody">
-                      <Routes>
-                        <Route
-                          path="/login"
-                          element={
-                            <PublicRoute>
-                              <LoginPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/register"
-                          element={
-                            <PublicRoute>
-                              <RegistrationPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset-request"
-                          element={
-                            <PublicRoute>
-                              <ResetRequestPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset"
-                          element={
-                            <PublicRoute>
-                              <ResetPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="*"
-                          element={
-                            <PrivateRoute>
-                              <Routes>
-                                <Route path="/" element={<MainPage />} />
-                                <Route path="/explore" element={<ExplorePage />} />
-                                <Route path="/user/:id" element={<UserPage />} />
-                                <Route path="/password" element={<ChangePasswordPage />} />
-                                <Route path="*" element={<Navigate to="/" />} />
-                              </Routes>
-                            </PrivateRoute>
-                          }
-                        />
-                      </Routes>
+                      <QuizzerShell>
+                        <Routes>
+                          <Route
+                            path="/login"
+                            element={
+                              <PublicRoute>
+                                <LoginPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/register"
+                            element={
+                              <PublicRoute>
+                                <RegistrationPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/reset-request"
+                            element={
+                              <PublicRoute>
+                                <ResetRequestPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/reset"
+                            element={
+                              <PublicRoute>
+                                <ResetPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="*"
+                            element={
+                              <PrivateRoute>
+                                <Routes>
+                                  <Route path="/" element={<MainPage />} />
+                                  <Route path="/explore" element={<ExplorePage />} />
+                                  <Route path="/user/:id" element={<UserPage />} />
+                                  <Route path="/password" element={<ChangePasswordPage />} />
+                                  <Route path="*" element={<Navigate to="/" />} />
+                                </Routes>
+                              </PrivateRoute>
+                            }
+                          />
+                        </Routes>
+                      </QuizzerShell>
                     </Container>
                   </ErrorBoundary>
                 </SSEProvider>

@@ -1,35 +1,21 @@
 import { Badge, Group } from "@mantine/core";
-import { useEventSourceListener } from "@react-nano/use-event-source";
 import { IconUser, IconUserOff, IconUsers } from "@tabler/icons-react";
-import { useSSE } from "../contexts/SSEProvider.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ConnectedUsers() {
-  const [clients, setClients] = useState(77);
+export default function ConnectedUsers({ clients }) {
   const [userIcon, setUserIcon] = useState(<IconUserOff color="red" />);
-  const { globalEventSource } = useSSE();
 
-  useEventSourceListener(
-    globalEventSource,
-    ["clients"],
-    ({ data }) => {
-      let newIcon;
-      if (data) {
-        setClients(data);
-        if (data === 1) {
-          newIcon = <IconUser color="green" />;
-        } else {
-          newIcon = <IconUsers color="green" />;
-        }
+  useEffect(() => {
+    let newIcon = <IconUserOff color="red" />;
+    if (clients) {
+      if (clients === 1) {
+        newIcon = <IconUser color="green" />;
       } else {
-        setClients(0);
-        console.log("No user data from SSE")
-        newIcon = <IconUserOff color="red" />;
+        newIcon = <IconUsers color="green" />;
       }
-      setUserIcon(newIcon);
-    },
-    [],
-  );
+    }
+    setUserIcon(newIcon);
+  }, [clients]);
 
   return (
     <Group gap={4}>

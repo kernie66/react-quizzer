@@ -13,7 +13,6 @@ import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { Button, Divider, Group, Loader, Stack, Text, Title } from "@mantine/core";
-import QuizzerShell from "../components/QuizzerShell.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -80,7 +79,7 @@ export default function UserPage() {
   };
 
   return (
-    <QuizzerShell>
+    <>
       {isLoadingUser ? (
         <>
           <div className="text-secondary align-items-center">
@@ -132,6 +131,6 @@ export default function UserPage() {
           )}
         </>
       )}
-    </QuizzerShell>
+    </>
   );
 }
