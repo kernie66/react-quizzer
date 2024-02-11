@@ -3,7 +3,7 @@ import TimeAgo from "./TimeAgo.js";
 import { useInterval } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { List, ThemeIcon, rem } from "@mantine/core";
-import { IconAt, IconClockHour2, IconGhost, IconPacman } from "@tabler/icons-react";
+import { TbAt, TbClockHour2, TbGhost, TbPacman } from "react-icons/tb";
 
 export default function UserInfo({ user }) {
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ export default function UserInfo({ user }) {
       spacing="xs"
       icon={
         <ThemeIcon color="teal" size={24} radius="xl">
-          <IconClockHour2 style={{ width: rem(16), height: rem(16) }} />
+          <TbClockHour2 style={{ width: rem(16), height: rem(16) }} />
         </ThemeIcon>
       }
     >
@@ -33,7 +33,7 @@ export default function UserInfo({ user }) {
       <List.Item
         icon={
           <ThemeIcon color="teal" size={24} radius="xl">
-            <IconPacman style={{ width: rem(16), height: rem(16) }} />
+            <TbPacman style={{ width: rem(16), height: rem(16) }} />
           </ThemeIcon>
         }
       >
@@ -48,7 +48,7 @@ export default function UserInfo({ user }) {
       <List.Item
         icon={
           <ThemeIcon color="teal" size={24} radius="xl">
-            <IconGhost style={{ width: rem(16), height: rem(16) }} />
+            <TbGhost style={{ width: rem(16), height: rem(16) }} />
           </ThemeIcon>
         }
       >
@@ -64,7 +64,7 @@ export default function UserInfo({ user }) {
         c="blue.6"
         icon={
           <ThemeIcon size={24} radius="xl">
-            <IconAt style={{ width: rem(16), height: rem(16) }} />
+            <TbAt style={{ width: rem(16), height: rem(16) }} />
           </ThemeIcon>
         }
       >

@@ -15,7 +15,7 @@ import {
   Transition,
   rem,
 } from "@mantine/core";
-import { IconArrowUp, IconInfoCircle } from "@tabler/icons-react";
+import { TbArrowUp, TbInfoCircle } from "react-icons/tb";
 import { useWindowScroll } from "@mantine/hooks";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
@@ -25,7 +25,7 @@ export default function Quizzers({ currentId }) {
   const { t } = useTranslation();
   const [scroll, scrollTo] = useWindowScroll();
 
-  const icon = <IconInfoCircle />;
+  const icon = <TbInfoCircle />;
 
   const fetchQuizzers = (id) => {
     return getQuizzers(api, id);
@@ -39,7 +39,7 @@ export default function Quizzers({ currentId }) {
     {
       queryKey: ["quizzers", { excludeId: currentId }],
       queryFn: () => fetchQuizzers(currentId),
-    }
+    },
     //[currentId],
   );
 
@@ -77,7 +77,7 @@ export default function Quizzers({ currentId }) {
                   <Transition transition="slide-up" mounted={scroll.y > 0}>
                     {(transitionStyles) => (
                       <Button
-                        leftSection={<IconArrowUp style={{ width: rem(16), height: rem(16) }} />}
+                        leftSection={<TbArrowUp style={{ width: rem(16), height: rem(16) }} />}
                         style={transitionStyles}
                         onClick={() => scrollTo({ y: 0 })}
                       >

@@ -3,15 +3,15 @@ import { useTranslation } from "react-i18next";
 // import { useState } from "react";
 import { NavLink, rem } from "@mantine/core";
 import {
-  IconBug,
-  //IconChevronDown,
-  IconHome,
-  IconLogin,
-  IconLogout,
-  IconPasswordUser,
-  IconUser,
-  IconUserShield,
-} from "@tabler/icons-react";
+  TbBug,
+  //TbChevronDown,
+  TbHome,
+  TbLogin,
+  TbLogout,
+  TbPasswordUser,
+  TbUser,
+  TbUserShield,
+} from "react-icons/tb";
 import { useUser } from "../contexts/UserProvider.js";
 
 export const quizzerMenuItems = (padding = 0) => {
@@ -22,7 +22,7 @@ export const quizzerMenuItems = (padding = 0) => {
   const startPage = (
     <NavLink
       label={t("start-page")}
-      leftSection={<IconHome style={{ width: rem(14), height: rem(14) }} />}
+      leftSection={<TbHome style={{ width: rem(14), height: rem(14) }} />}
       active={location.pathname === "/"}
       component={Link}
       to={"/"}
@@ -35,7 +35,7 @@ export const quizzerMenuItems = (padding = 0) => {
       {user ? (
         <NavLink
           label={t("profile")}
-          leftSection={<IconUser style={{ width: rem(14), height: rem(14) }} />}
+          leftSection={<TbUser style={{ width: rem(14), height: rem(14) }} />}
           active={location.pathname === "/user/" + user.id}
           component={Link}
           to={"/user/" + user.id}
@@ -48,7 +48,7 @@ export const quizzerMenuItems = (padding = 0) => {
   const administer = (
     <NavLink
       label={t("administer")}
-      leftSection={<IconUserShield style={{ width: rem(14), height: rem(14) }} />}
+      leftSection={<TbUserShield style={{ width: rem(14), height: rem(14) }} />}
       active={location.pathname === "/admin"}
       component={Link}
       to={"/admin"}
@@ -59,7 +59,7 @@ export const quizzerMenuItems = (padding = 0) => {
   const reportIssue = (
     <NavLink
       label={t("report-a-problem")}
-      leftSection={<IconBug style={{ width: rem(14), height: rem(14) }} />}
+      leftSection={<TbBug style={{ width: rem(14), height: rem(14) }} />}
       component="a"
       href="https://github.com/kernie66/react-quizzer/issues"
       target="_blank"
@@ -72,7 +72,7 @@ export const quizzerMenuItems = (padding = 0) => {
   const changePassword = (
     <NavLink
       label={t("change-password")}
-      leftSection={<IconPasswordUser style={{ width: rem(14), height: rem(14) }} />}
+      leftSection={<TbPasswordUser style={{ width: rem(14), height: rem(14) }} />}
       active={location.pathname === "/password"}
       component={Link}
       to={"/password"}
@@ -83,7 +83,7 @@ export const quizzerMenuItems = (padding = 0) => {
   const loginUser = (
     <NavLink
       label={t("login")}
-      leftSection={<IconLogin style={{ width: rem(14), height: rem(14) }} />}
+      leftSection={<TbLogin style={{ width: rem(14), height: rem(14) }} />}
       active={location.pathname === "/password"}
       component={Link}
       to={"/password"}
@@ -94,7 +94,7 @@ export const quizzerMenuItems = (padding = 0) => {
   const logoutUser = (
     <NavLink
       label={t("logout")}
-      leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
+      leftSection={<TbLogout style={{ width: rem(14), height: rem(14) }} />}
       onClick={logout}
       p={padding}
     />

@@ -9,7 +9,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Button, Divider, Group, Modal, PasswordInput, Text, TextInput, rem } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { TbCheck, TbX } from "react-icons/tb";
 
 export default function LoginPage() {
   const [opened, { open, close }] = useDisclosure(true);
@@ -56,7 +56,7 @@ export default function LoginPage() {
           title: t("login"),
           message: t("logging-in-username", { username }),
           color: "green",
-          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+          icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
           autoClose: 5000,
         });
         const result = await login(username, password);
@@ -69,7 +69,7 @@ export default function LoginPage() {
               title: t("login"),
               message: t("server-error-when-logging-in"),
               color: "red",
-              icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+              icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
               autoClose: 5000,
             });
           }

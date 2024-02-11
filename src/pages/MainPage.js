@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Checkbox, ColorInput, ColorPicker, Text } from "@mantine/core";
-import { IconBrandMantine } from "@tabler/icons-react";
+import { TbBrandMantine } from "react-icons/tb";
 import OnlineStatus from "../components/OnlineStatus.js";
 import QuizzerTable from "../components/QuizzerTable.js";
 import { useApi } from "../contexts/ApiProvider.js";
@@ -47,7 +47,7 @@ export default function MainPage() {
       <h3>Quiz info placeholder</h3>
       <Checkbox label="Ready to play some quiz" />
       <Button color="pink">
-        <IconBrandMantine />
+        <TbBrandMantine />
         Play
       </Button>
       <ColorInput />

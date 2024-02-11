@@ -7,7 +7,7 @@ import { Button, Divider, Group, Modal, Text, rem } from "@mantine/core";
 import SetPassword from "../components/SetPassword.js";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { TbCheck, TbX } from "react-icons/tb";
 
 export default function ResetPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -48,7 +48,7 @@ export default function ResetPage() {
         title: t("reset-password"),
         message: t("your-password-has-been-successfully-reset"),
         color: "green",
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+        icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
         autoClose: 5000,
       });
       navigate("/login");
@@ -57,7 +57,7 @@ export default function ResetPage() {
         title: t("reset-password"),
         message: t("password-could-not-be-reset-please-try-again"),
         color: "red",
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+        icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
       });
       navigate("/reset-request");
     }

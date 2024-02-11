@@ -1,6 +1,6 @@
 import { useUser } from "../contexts/UserProvider";
 import { Avatar, Group, Menu, rem } from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons-react";
+import { TbChevronDown } from "react-icons/tb";
 import { quizzerMenuItems } from "../helpers/quizzerMenuItems.js";
 import { useState } from "react";
 import { useShallowEffect } from "@mantine/hooks";
@@ -28,7 +28,7 @@ export default function UserMenu() {
             variant="gradient"
             gradient={{ from: "blue", to: "yellow", deg: 320 }}
           />
-          <IconChevronDown style={{ width: rem(14), height: rem(14) }} />
+          <TbChevronDown style={{ width: rem(14), height: rem(14) }} />
         </Group>
       </Menu.Target>
       <Menu.Dropdown>

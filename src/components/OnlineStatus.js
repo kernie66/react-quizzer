@@ -1,5 +1,5 @@
 import { useNetwork } from "@mantine/hooks";
-import { IconWifi, IconWifiOff } from "@tabler/icons-react";
+import { TbWifi, TbWifiOff } from "react-icons/tb";
 import { useSSE } from "../contexts/SSEProvider.js";
 import { useEventSourceListener } from "@react-nano/use-event-source";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function OnlineStatus() {
   return (
     <>
       <div>
-        {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />} Ping:{" "}
+        {networkStatus.online ? <TbWifi color="green" /> : <TbWifiOff color="red" />} Ping:{" "}
         {pingCount}
       </div>
     </>

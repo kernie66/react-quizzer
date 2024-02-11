@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Divider, Flex, Modal, Select, Text, rem } from "@mantine/core";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconExclamationCircle, IconX } from "@tabler/icons-react";
+import { TbCheck, TbExclamationCircle, TbX } from "react-icons/tb";
 import { useSetState } from "@mantine/hooks";
 
 export default function ChangeAvatar({ user, opened, close }) {
@@ -44,7 +44,7 @@ export default function ChangeAvatar({ user, opened, close }) {
           title: userData.name,
           message: t("profile-has-been-updated"),
           color: "green",
-          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+          icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
           autoClose: 4000,
         });
       } else {
@@ -52,7 +52,7 @@ export default function ChangeAvatar({ user, opened, close }) {
           title: userData.name,
           message: t("the-profile-could-not-be-updated"),
           color: "red",
-          icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+          icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
         });
       }
     } else {
@@ -60,7 +60,7 @@ export default function ChangeAvatar({ user, opened, close }) {
         title: userData.name,
         message: t("the-profile-was-not-changed"),
         color: "blue",
-        icon: <IconExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
+        icon: <TbExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
       });
     }
     close();

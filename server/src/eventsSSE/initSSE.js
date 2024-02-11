@@ -15,8 +15,7 @@ export const initSSE = () => {
   globalChannel
     .on("session-registered", (session) => {
       logger.debug("Added connected sessions:", globalChannel.sessionCount);
-      logger.info("Session", session.req);
-      console.log(session.req.hostname);
+      logger.info("Connected client hostname", session.req.hostname);
     })
     .on("session-deregistered", () => {
       logger.debug("Removed connected sessions:", globalChannel.sessionCount);

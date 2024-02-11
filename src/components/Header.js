@@ -6,7 +6,7 @@ import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFullscreen, useNetwork, useViewportSize } from "@mantine/hooks";
-import { IconMaximize, IconMinimize, IconWifi, IconWifiOff } from "@tabler/icons-react";
+import { TbMaximize, TbMinimize, TbWifi, TbWifiOff } from "react-icons/tb";
 import ConnectedUsers from "./ConnectedUsers.js";
 import { useSSE } from "../contexts/SSEProvider.js";
 import { useEventSourceListener } from "@react-nano/use-event-source";
@@ -63,6 +63,9 @@ export default function Header({ opened, toggle }) {
             {t("app-name")}
           </Text>
         </UnstyledButton>
+        <Group ml="xl" gap="xs">
+          <ConnectedUsers clients={clients} />
+        </Group>
         <Group ml="xl" gap="xs" visibleFrom="sm">
           {isAdmin && (
             <Stack gap={0} pr={8}>
@@ -70,8 +73,7 @@ export default function Header({ opened, toggle }) {
               <Text size="xs">Y: {height}</Text>
             </Stack>
           )}
-          <ConnectedUsers clients={clients} />
-          {networkStatus.online ? <IconWifi color="green" /> : <IconWifiOff color="red" />}
+          {networkStatus.online ? <TbWifi color="green" /> : <TbWifiOff color="red" />}
           <UserMenu navbar />
         </Group>
       </Group>
@@ -83,7 +85,7 @@ export default function Header({ opened, toggle }) {
           radius="xl"
           gradient={{ from: "blue", to: "yellow", deg: 320 }}
         >
-          {fullscreen ? <IconMinimize size={24} /> : <IconMaximize size={24} />}
+          {fullscreen ? <TbMinimize size={24} /> : <TbMaximize size={24} />}
         </ThemeIcon>
       </UnstyledButton>
     </Group>

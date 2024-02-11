@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { showNotification } from "@mantine/notifications";
 import { rem } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
+import { TbX } from "react-icons/tb";
 import { useEventSource } from "@react-nano/use-event-source";
 import { useUser } from "./UserProvider.js";
 
@@ -23,7 +23,7 @@ export default function SSEProvider({ children }) {
         title: t("server-error"),
         message: "Error connecting to the server sent events",
         color: "red",
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+        icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
         autoClose: 8000,
       });
     }

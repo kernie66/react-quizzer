@@ -8,7 +8,7 @@ import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
 import isInvalidUsername from "../helpers/isInvalidUsername.js";
 import { showNotification } from "@mantine/notifications";
-import { IconArrowBackUp, IconCheck, IconExclamationCircle, IconX } from "@tabler/icons-react";
+import { TbArrowBackUp, TbCheck, TbExclamationCircle, TbX } from "react-icons/tb";
 import { useSetState } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import {
@@ -191,14 +191,14 @@ export default function EditUser({ opened, close, user }) {
             title: form.values.name,
             message: t("your-profile-has-been-updated"),
             color: "green",
-            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+            icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
           });
         } else {
           showNotification({
             title: form.values.name,
             message: t("the-profile-could-not-be-updated"),
             color: "red",
-            icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+            icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
           });
         }
       } else {
@@ -206,7 +206,7 @@ export default function EditUser({ opened, close, user }) {
           title: form.values.name,
           message: t("the-profile-was-not-changed"),
           color: "blue",
-          icon: <IconExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
+          icon: <TbExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
         });
       }
       close();
@@ -234,7 +234,7 @@ export default function EditUser({ opened, close, user }) {
             mb="md"
             rightSectionPointerEvents="all"
             rightSection={
-              <IconArrowBackUp
+              <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("name", _user.name)}
                 style={{ display: form.values.name != _user.name ? undefined : "none" }}
@@ -250,7 +250,7 @@ export default function EditUser({ opened, close, user }) {
             onBlur={checkUsername}
             rightSectionPointerEvents="all"
             rightSection={
-              <IconArrowBackUp
+              <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("username", _user.username)}
                 style={{ display: form.values.username != _user.username ? undefined : "none" }}
@@ -265,7 +265,7 @@ export default function EditUser({ opened, close, user }) {
             onBlur={checkEmail}
             rightSectionPointerEvents="all"
             rightSection={
-              <IconArrowBackUp
+              <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("email", _user.email)}
                 style={{ display: form.values.email != _user.email ? undefined : "none" }}

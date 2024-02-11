@@ -11,7 +11,7 @@ import { Button, Divider, Group, Modal, rem } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { TbCheck, TbX } from "react-icons/tb";
 
 export default function RegistrationPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -60,7 +60,7 @@ export default function RegistrationPage() {
           title: t("user-registration"),
           message: t("you-have-successfully-registered"),
           color: "green",
-          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+          icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
           autoClose: 5000,
         });
         navigate("/login");
@@ -69,7 +69,7 @@ export default function RegistrationPage() {
           title: t("user-registration"),
           message: "Registration of new user failed on server, please try again",
           color: "red",
-          icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+          icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
           autoClose: 5000,
         });
       }

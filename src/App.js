@@ -19,6 +19,7 @@ import { Container } from "@mantine/core";
 import { BasicErrorFallback, logErrorToService } from "./helpers/errorHandlers.js";
 import SSEProvider from "./contexts/SSEProvider.js";
 import QuizzerShell from "./components/QuizzerShell.js";
+import { IconContext } from "react-icons";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
@@ -26,6 +27,8 @@ const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 //const endpoint = BASE_API_URL + "/api/connect";
 
 const queryClient = new QueryClient();
+
+const iconDefaults = { size: 30 };
 
 export default function App() {
   return (
@@ -37,7 +40,7 @@ export default function App() {
               <UserProvider>
                 <SSEProvider>
                   <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
-                    <Container fluid="md" className="p-0 MainBody">
+                    <IconContext.Provider value={iconDefaults}>
                       <QuizzerShell>
                         <Routes>
                           <Route
@@ -88,7 +91,7 @@ export default function App() {
                           />
                         </Routes>
                       </QuizzerShell>
-                    </Container>
+                    </IconContext.Provider>
                   </ErrorBoundary>
                 </SSEProvider>
               </UserProvider>

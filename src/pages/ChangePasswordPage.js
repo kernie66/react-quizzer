@@ -6,7 +6,7 @@ import { useForm } from "@mantine/form";
 import { Button, Divider, Group, Modal, PasswordInput, Text, rem } from "@mantine/core";
 import { useUser } from "../contexts/UserProvider.js";
 import { showNotification } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { TbCheck, TbX } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 export default function ChangePasswordPage() {
@@ -46,7 +46,7 @@ export default function ChangePasswordPage() {
         title: t("change-password"),
         message: t("your-password-has-been-updated"),
         color: "green",
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+        icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
         autoClose: 5000,
       });
       close();
@@ -73,7 +73,7 @@ export default function ChangePasswordPage() {
         title: t("change-password"),
         message: t("password-could-not-be-changed-please-try-again"),
         color: "red",
-        icon: <IconX style={{ width: rem(18), height: rem(18) }} />,
+        icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
       });
     }
   };
