@@ -7,22 +7,27 @@ export default function ConnectedUsers({ clients }) {
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);
   useEffect(() => {
-    let newIcon = <TbUserOff color="red" />;
+    let userIcon = <TbUserOff color="red" />;
+    let wizardIcon = <FaHatWizard color="gray" />;
     if (clients) {
-      if (clients === 1) {
-        newIcon = <TbUser color="green" />;
+      if (Number(clients) === 1) {
+        userIcon = <TbUser color="green" />;
+        wizardIcon = <FaHatWizard color="green" />;
       } else {
-        newIcon = <TbUsers color="green" />;
+        userIcon = <TbUsers color="green" />;
       }
     }
-    setQuizzerIcon(newIcon);
-    setQuizMasterIcon(<FaHatWizard color="green" />);
+    console.log("Clients:", clients, userIcon.type.name);
+    setQuizzerIcon(userIcon);
+    setQuizMasterIcon(wizardIcon);
   }, [clients]);
 
   return (
     <Group gap={8}>
       <Popover>
-        <Popover.Target>{quizMasterIcon}</Popover.Target>
+        <Popover.Target>
+          <Group>{quizMasterIcon}</Group>
+        </Popover.Target>
         <Popover.Dropdown>No QuizMaster</Popover.Dropdown>
       </Popover>
       -
