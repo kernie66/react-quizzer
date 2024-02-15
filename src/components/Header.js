@@ -18,36 +18,37 @@ export default function Header({ opened, toggle }) {
   const networkStatus = useNetwork();
   const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
-  const [clients, setClients] = useState(77);
+  const [clients, setClients] = useState(0);
   const { globalEventSource } = useSSE();
 
   useEventSourceListener(
     globalEventSource,
     ["clients"],
     ({ data }) => {
+      let numberOfClients = 0;
       if (data) {
-        setClients(data);
+        numberOfClients = data;
       } else {
-        setClients(0);
         console.log("No user data from SSE");
       }
+      setClients(numberOfClients);
     },
     [],
   );
 
   useEffect(() => {
+    let admin = false;
     if (user) {
       if (user.isAdmin) {
-        setIsAdmin(true);
+        admin = true;
         console.log("Current user is admin");
       } else {
-        setIsAdmin(false);
         console.log("Current user is not admin");
       }
     } else {
-      setIsAdmin(false);
       console.log("No current user");
     }
+    setIsAdmin(admin);
   }, [user]);
 
   useEffect(() => {
