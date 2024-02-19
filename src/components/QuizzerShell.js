@@ -16,7 +16,7 @@ export default function QuizzerShell({ children }) {
 
   return (
     <AppShell
-      header={{ height: { base: headerHeight * 2.2, xsscr: headerHeight } }}
+      header={{ height: { base: headerHeight * 2.2, xs: headerHeight } }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { desktop: true, mobile: !opened } }}
       padding={{ base: "xs", sm: "lg", lg: "xl" }}
     >
