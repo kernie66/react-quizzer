@@ -6,16 +6,19 @@ import { useUser } from "../contexts/UserProvider.js";
 import { ErrorBoundary } from "react-error-boundary";
 import { BasicErrorFallback, logErrorToService } from "../helpers/errorHandlers.js";
 
+const headerHeight = 42;
+
 export default function QuizzerShell({ children }) {
   const [opened, { toggle }] = useDisclosure();
   const { user } = useUser();
-  const menuItems = quizzerMenuItems(16);
+
+  const menuItems = quizzerMenuItems(16, toggle);
 
   return (
     <AppShell
-      header={{ height: 42 }}
+      header={{ height: { base: headerHeight * 2.2, xsscr: headerHeight } }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { desktop: true, mobile: !opened } }}
-      padding="md"
+      padding={{ base: "xs", sm: "lg", lg: "xl" }}
     >
       <AppShell.Header bg="blue.2">
         <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>

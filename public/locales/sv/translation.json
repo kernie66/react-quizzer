@@ -188,5 +188,6 @@
   "unknown-response-from-server": "Okänt svar från servern",
   "password-could-not-be-changed-please-try-again": "Lösenordet kunde inte ändras, försök igen",
   "start-page": "Startsida",
-  "server-error": "Serverfel"
+  "server-error": "Serverfel",
+  "scroll-to-top": "Åter till toppen"
 }

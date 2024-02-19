@@ -81,7 +81,7 @@ export default function Quizzers({ currentId }) {
                         style={transitionStyles}
                         onClick={() => scrollTo({ y: 0 })}
                       >
-                        Scroll to top
+                        {t("scroll-to-top")}
                       </Button>
                     )}
                   </Transition>

@@ -188,5 +188,6 @@
   "unknown-response-from-server": "Unknown response from server",
   "password-could-not-be-changed-please-try-again": "Password could not be changed, please try again",
   "start-page": "Start page",
-  "server-error": "Server error"
+  "server-error": "Server error",
+  "scroll-to-top": "Scroll to top"
 }

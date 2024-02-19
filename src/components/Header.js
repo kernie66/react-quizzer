@@ -78,17 +78,19 @@ export default function Header({ opened, toggle }) {
           <UserMenu navbar />
         </Group>
       </Group>
-      <LanguageSwitcher />
-      <UnstyledButton onClick={fullscreenToggle} ml={8}>
-        <ThemeIcon
-          variant="gradient"
-          size={32}
-          radius="xl"
-          gradient={{ from: "blue", to: "yellow", deg: 320 }}
-        >
-          {fullscreen ? <TbMinimize size={24} /> : <TbMaximize size={24} />}
-        </ThemeIcon>
-      </UnstyledButton>
+      <Group mr={0} gap="xs" visibleFrom="sm">
+        <LanguageSwitcher />
+        <UnstyledButton onClick={fullscreenToggle} ml={8}>
+          <ThemeIcon
+            variant="gradient"
+            size={32}
+            radius="xl"
+            gradient={{ from: "blue", to: "yellow", deg: 320 }}
+          >
+            {fullscreen ? <TbMinimize size={24} /> : <TbMaximize size={24} />}
+          </ThemeIcon>
+        </UnstyledButton>
+      </Group>
     </Group>
   );
 }

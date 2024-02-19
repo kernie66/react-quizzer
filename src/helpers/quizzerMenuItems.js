@@ -14,7 +14,7 @@ import {
 } from "react-icons/tb";
 import { useUser } from "../contexts/UserProvider.js";
 
-export const quizzerMenuItems = (padding = 0) => {
+export function quizzerMenuItems(padding, toggle) {
   const { user, logout } = useUser();
   const { t } = useTranslation();
   const location = useLocation();
@@ -26,6 +26,7 @@ export const quizzerMenuItems = (padding = 0) => {
       active={location.pathname === "/"}
       component={Link}
       to={"/"}
+      onClick={toggle}
       p={padding}
     />
   );
@@ -39,6 +40,7 @@ export const quizzerMenuItems = (padding = 0) => {
           active={location.pathname === "/user/" + user.id}
           component={Link}
           to={"/user/" + user.id}
+          onClick={toggle}
           p={padding}
         />
       ) : null}
@@ -52,6 +54,7 @@ export const quizzerMenuItems = (padding = 0) => {
       active={location.pathname === "/admin"}
       component={Link}
       to={"/admin"}
+      onClick={toggle}
       p={padding}
     />
   );
@@ -65,6 +68,7 @@ export const quizzerMenuItems = (padding = 0) => {
       target="_blank"
       rel="noreferrer"
       className="text-decoration-none"
+      onClick={toggle}
       p={padding}
     />
   );
@@ -76,6 +80,7 @@ export const quizzerMenuItems = (padding = 0) => {
       active={location.pathname === "/password"}
       component={Link}
       to={"/password"}
+      onClick={toggle}
       p={padding}
     />
   );
@@ -87,6 +92,7 @@ export const quizzerMenuItems = (padding = 0) => {
       active={location.pathname === "/password"}
       component={Link}
       to={"/password"}
+      onClick={toggle}
       p={padding}
     />
   );
@@ -109,4 +115,4 @@ export const quizzerMenuItems = (padding = 0) => {
     loginUser,
     logoutUser,
   };
-};
+}
