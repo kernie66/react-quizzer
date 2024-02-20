@@ -127,6 +127,7 @@ export default class AxiosApiClient {
   }
 
   removeLogin() {
+    console.log("Removing user data from local storage");
     return localStorage.clear();
   }
 

@@ -1,8 +1,5 @@
-import { useApi } from "../contexts/ApiProvider";
-import { useQuery } from "@tanstack/react-query";
 import Quizzer from "./Quizzer.js";
 import { useTranslation } from "react-i18next";
-import getQuizzers from "../helpers/getQuizzers.js";
 import {
   Affix,
   Alert,
@@ -17,31 +14,21 @@ import {
 } from "@mantine/core";
 import { TbArrowUp, TbInfoCircle } from "react-icons/tb";
 import { useWindowScroll } from "@mantine/hooks";
+import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default function Quizzers({ currentId }) {
-  const api = useApi();
   const { t } = useTranslation();
   const [scroll, scrollTo] = useWindowScroll();
 
   const icon = <TbInfoCircle />;
 
-  const fetchQuizzers = (id) => {
-    return getQuizzers(api, id);
-  };
-
   const {
     isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
-  } = useQuery(
-    {
-      queryKey: ["quizzers"],
-      queryFn: () => fetchQuizzers(),
-    },
-    //[currentId],
-  );
+  } = useQuizzersQuery();
 
   return (
     <>

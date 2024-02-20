@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { alphabetical, fork } from "radash";
 import { useApi } from "../contexts/ApiProvider.js";
 
 // Get the list of registered quizzers, optionally excluding one user ID
-export default async function getQuizzers(excludeId) {
+export async function getQuizzers(excludeId) {
   const api = useApi();
   let quizzers = [];
   console.log("Excluding ID:", excludeId);
@@ -17,4 +18,10 @@ export default async function getQuizzers(excludeId) {
   } else {
     throw new Error("No quizzers found");
   }
+}
+export default function useQuizzersQuery() {
+  return useQuery({
+    queryKey: ["quizzers"],
+    queryFn: () => getQuizzers(),
+  });
 }
