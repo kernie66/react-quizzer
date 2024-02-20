@@ -59,8 +59,8 @@ export default function EditUser({ opened, close, user }) {
     data: quizzers,
   } = useQuery(
     {
-      queryKey: ["quizzers", { excludeId: _user.id }],
-      queryFn: () => fetchQuizzers(_user.id),
+      queryKey: ["quizzers"],
+      queryFn: () => fetchQuizzers(),
     },
     //[_user.id],
   );
