@@ -4,15 +4,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useApi } from "../contexts/ApiProvider.js";
-import { alphabetical } from "radash";
-import { useQuery } from "@tanstack/react-query";
 import { Table } from "@mantine/core";
 import i18next from "i18next";
+import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
 
 export default function QuizzerTable() {
-  const api = useApi();
-
   const columnHelper = createColumnHelper();
   const columns = [
     columnHelper.accessor("name", {
@@ -23,14 +19,15 @@ export default function QuizzerTable() {
     }),
   ];
 
+  /*
   const getQuizzers = async () => {
     const response = await api.get("/users");
     if (response.ok) {
       const quizzers = alphabetical(response.data, (item) => item.name);
-      /*       if (currentId) {
+       if (currentId) {
           const [, otherQuizzers] = fork(quizzers, (q) => q.id === currentId);
           return otherQuizzers;
-        } else { */
+        } else {
       return quizzers;
       // }
     } else {
@@ -38,11 +35,15 @@ export default function QuizzerTable() {
       throw new Error("No quizzers found");
     }
   };
+  */
 
-  const { isLoading: isLoadingQuizzers, data: quizzers } = useQuery({
+  const { isLoading: isLoadingQuizzers, data: quizzers } = useQuizzersQuery();
+  /*
+  useQuery({
     queryKey: ["quizzers"],
     queryFn: () => getQuizzers(),
   });
+  */
 
   const table = useReactTable({
     data: quizzers,

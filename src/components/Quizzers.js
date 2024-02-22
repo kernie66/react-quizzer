@@ -58,9 +58,7 @@ export default function Quizzers({ currentId }) {
                           <Quizzer quizzer={quizzer} />
                           <Divider mb={4} />
                         </Stack>
-                      ) : (
-                        <></>
-                      )}
+                      ) : null}
                     </>
                   ))
                 )}

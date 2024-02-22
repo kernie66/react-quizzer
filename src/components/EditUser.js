@@ -2,8 +2,6 @@ import { useApi } from "../contexts/ApiProvider";
 import { useTranslation } from "react-i18next";
 import { useErrorBoundary } from "react-error-boundary";
 import { isEmpty, sift, trim } from "radash";
-import { useQuery } from "@tanstack/react-query";
-import getQuizzers from "../helpers/getQuizzers.js";
 import isValidEmail from "../helpers/isValidEmail.js";
 import useConfirm from "../hooks/useConfirm.js";
 import isInvalidUsername from "../helpers/isInvalidUsername.js";
@@ -23,6 +21,7 @@ import {
   rem,
 } from "@mantine/core";
 import { useEffect } from "react";
+import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
 
 export default function EditUser({ opened, close, user }) {
   const [confirmModalText, setConfirmModalText] = useSetState({});
@@ -48,22 +47,11 @@ export default function EditUser({ opened, close, user }) {
     },
   });
 
-  // Helper function with api parameter
-  const fetchQuizzers = (id) => {
-    return getQuizzers(api, id);
-  };
-
   const {
     isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
-  } = useQuery(
-    {
-      queryKey: ["quizzers"],
-      queryFn: () => fetchQuizzers(),
-    },
-    //[_user.id],
-  );
+  } = useQuizzersQuery();
 
   const checkUsername = async () => {
     let usernameError;
