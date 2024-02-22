@@ -4,18 +4,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Alert, Loader, Table, Text } from "@mantine/core";
+import { Table } from "@mantine/core";
 import i18next from "i18next";
 import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
-import { TbInfoCircle } from "react-icons/tb";
-import { useTranslation } from "react-i18next";
-
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+import QuizzersLoading from "./QuizzersLoading.js";
+import QuizzerLoadingError from "./QuizzerLoadingError.js";
 
 export default function QuizzerTable() {
-  const { t } = useTranslation();
-  const icon = <TbInfoCircle />;
-
   const {
     isLoading: isLoadingQuizzers,
     isError: quizzerError,
@@ -42,18 +37,11 @@ export default function QuizzerTable() {
   return (
     <>
       {quizzerError ? (
-        <Alert variant="light" color="red" title="Quizzers" icon={icon}>
-          {t("could-not-retrieve-quizzers")}
-        </Alert>
+        <QuizzerLoadingError />
       ) : (
         <>
           {isLoadingQuizzers ? (
-            <>
-              <Loader color="blue" />
-              <Text span>
-                {t("getting-data-from")} {BASE_API_URL}
-              </Text>
-            </>
+            <QuizzersLoading />
           ) : (
             <>
               <Table striped highlightOnHover>

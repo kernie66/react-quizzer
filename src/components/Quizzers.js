@@ -1,28 +1,15 @@
 import Quizzer from "./Quizzer.js";
 import { useTranslation } from "react-i18next";
-import {
-  Affix,
-  Alert,
-  Button,
-  Divider,
-  Loader,
-  ScrollArea,
-  Stack,
-  Text,
-  Transition,
-  rem,
-} from "@mantine/core";
-import { TbArrowUp, TbInfoCircle } from "react-icons/tb";
+import { Affix, Button, Divider, ScrollArea, Stack, Text, Transition, rem } from "@mantine/core";
+import { TbArrowUp } from "react-icons/tb";
 import { useWindowScroll } from "@mantine/hooks";
 import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
-
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+import QuizzerLoadingError from "./QuizzerLoadingError.js";
+import QuizzersLoading from "./QuizzersLoading.js";
 
 export default function Quizzers({ currentId }) {
   const { t } = useTranslation();
   const [scroll, scrollTo] = useWindowScroll();
-
-  const icon = <TbInfoCircle />;
 
   const {
     isLoading: isLoadingQuizzers,
@@ -33,18 +20,11 @@ export default function Quizzers({ currentId }) {
   return (
     <>
       {quizzerError ? (
-        <Alert variant="light" color="red" title="Quizzers" icon={icon}>
-          {t("could-not-retrieve-quizzers")}
-        </Alert>
+        <QuizzerLoadingError />
       ) : (
         <>
           {isLoadingQuizzers ? (
-            <>
-              <Loader color="blue" />
-              <Text span>
-                {t("getting-data-from")} {BASE_API_URL}
-              </Text>
-            </>
+            <QuizzersLoading />
           ) : (
             <>
               <ScrollArea type="always" offsetScrollbars mah="75vh">
