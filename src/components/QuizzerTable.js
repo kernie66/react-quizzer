@@ -4,11 +4,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Alert, Table } from "@mantine/core";
+import { Alert, Loader, Table, Text } from "@mantine/core";
 import i18next from "i18next";
 import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
 import { TbInfoCircle } from "react-icons/tb";
 import { useTranslation } from "react-i18next";
+
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default function QuizzerTable() {
   const { t } = useTranslation();
@@ -46,7 +48,12 @@ export default function QuizzerTable() {
       ) : (
         <>
           {isLoadingQuizzers ? (
-            <>Loading</>
+            <>
+              <Loader color="blue" />
+              <Text span>
+                {t("getting-data-from")} {BASE_API_URL}
+              </Text>
+            </>
           ) : (
             <>
               <Table striped highlightOnHover>
