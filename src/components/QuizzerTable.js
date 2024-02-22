@@ -4,11 +4,22 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table } from "@mantine/core";
+import { Alert, Table } from "@mantine/core";
 import i18next from "i18next";
 import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
+import { TbInfoCircle } from "react-icons/tb";
+import { useTranslation } from "react-i18next";
 
 export default function QuizzerTable() {
+  const { t } = useTranslation();
+  const icon = <TbInfoCircle />;
+
+  const {
+    isLoading: isLoadingQuizzers,
+    isError: quizzerError,
+    data: quizzers,
+  } = useQuizzersQuery();
+
   const columnHelper = createColumnHelper();
   const columns = [
     columnHelper.accessor("name", {
@@ -19,32 +30,6 @@ export default function QuizzerTable() {
     }),
   ];
 
-  /*
-  const getQuizzers = async () => {
-    const response = await api.get("/users");
-    if (response.ok) {
-      const quizzers = alphabetical(response.data, (item) => item.name);
-       if (currentId) {
-          const [, otherQuizzers] = fork(quizzers, (q) => q.id === currentId);
-          return otherQuizzers;
-        } else {
-      return quizzers;
-      // }
-    } else {
-      // setUser(null);
-      throw new Error("No quizzers found");
-    }
-  };
-  */
-
-  const { isLoading: isLoadingQuizzers, data: quizzers } = useQuizzersQuery();
-  /*
-  useQuery({
-    queryKey: ["quizzers"],
-    queryFn: () => getQuizzers(),
-  });
-  */
-
   const table = useReactTable({
     data: quizzers,
     columns,
@@ -54,36 +39,44 @@ export default function QuizzerTable() {
 
   return (
     <>
-      {isLoadingQuizzers ? (
-        <>Loading</>
+      {quizzerError ? (
+        <Alert variant="light" color="red" title="Quizzers" icon={icon}>
+          {t("could-not-retrieve-quizzers")}
+        </Alert>
       ) : (
         <>
-          <Table striped highlightOnHover>
-            <Table.Thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <Table.Tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <Table.Th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </Table.Th>
+          {isLoadingQuizzers ? (
+            <>Loading</>
+          ) : (
+            <>
+              <Table striped highlightOnHover>
+                <Table.Thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <Table.Tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <Table.Th key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                        </Table.Th>
+                      ))}
+                    </Table.Tr>
                   ))}
-                </Table.Tr>
-              ))}
-            </Table.Thead>
-            <Table.Tbody>
-              {table.getRowModel().rows.map((row) => (
-                <Table.Tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <Table.Td key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </Table.Td>
+                </Table.Thead>
+                <Table.Tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <Table.Tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <Table.Td key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Table.Td>
+                      ))}
+                    </Table.Tr>
                   ))}
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+                </Table.Tbody>
+              </Table>
+            </>
+          )}
         </>
       )}
     </>
