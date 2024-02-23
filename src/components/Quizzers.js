@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Affix, Button, Divider, ScrollArea, Stack, Text, Transition, rem } from "@mantine/core";
 import { TbArrowUp } from "react-icons/tb";
 import { useWindowScroll } from "@mantine/hooks";
-import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
+import { useExcludeQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 import QuizzerLoadingError from "./QuizzerLoadingError.js";
 import QuizzersLoading from "./QuizzersLoading.js";
 
@@ -15,7 +15,7 @@ export default function Quizzers({ currentId }) {
     isLoading: isLoadingQuizzers,
     isError: quizzerError,
     data: quizzers,
-  } = useQuizzersQuery();
+  } = useExcludeQuizzerQuery(currentId); //useQuizzersQuery();
 
   return (
     <>
@@ -33,12 +33,10 @@ export default function Quizzers({ currentId }) {
                 ) : (
                   quizzers.map((quizzer) => (
                     <>
-                      {quizzer.id !== currentId ? (
-                        <Stack gap={0} key={quizzer.id}>
-                          <Quizzer quizzer={quizzer} />
-                          <Divider mb={4} />
-                        </Stack>
-                      ) : null}
+                      <Stack gap={0} key={quizzer.id}>
+                        <Quizzer quizzer={quizzer} />
+                        <Divider mb={4} />
+                      </Stack>
                     </>
                   ))
                 )}

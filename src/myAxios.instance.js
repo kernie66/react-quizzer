@@ -1,4 +1,5 @@
 import axios from "axios";
+import { redirect } from "react-router-dom";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
@@ -17,6 +18,8 @@ myAxios.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.log("No access token added to request");
     }
     return config;
   },
@@ -62,6 +65,7 @@ myAxios.interceptors.response.use(
           console.error("Token refresh error:", error);
           // Handle refresh token error or redirect to login
           localStorage.clear();
+          return redirect("/login");
         }
       }
       if (error.response.status < 500) {

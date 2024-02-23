@@ -2,17 +2,15 @@ import classes from "./css/userPage.module.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import EditUser from "../components/EditUser";
-import { useApi } from "../contexts/ApiProvider";
 import { useUser } from "../contexts/UserProvider";
 import { useTranslation } from "react-i18next";
-// import { useErrorBoundary } from "react-error-boundary";
-import { useQuery } from "@tanstack/react-query";
 import ChangeAvatar from "../components/ChangeAvatar.js";
 import Quizzers from "../components/Quizzers.js";
 import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { Button, Divider, Group, Loader, Stack, Text, Title } from "@mantine/core";
+import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -20,12 +18,13 @@ export default function UserPage() {
   const [avatarSize, setAvatarSize] = useState(128);
   const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
   const [openedUser, { open: openUser, close: closeUser }] = useDisclosure(false);
-  const api = useApi();
+  // const api = useApi();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
   const { width } = useViewportSize();
   //  const { showBoundary } = useErrorBoundary();
 
+  /*
   const getUser = async (id) => {
     const response = await api.get("/users/" + id);
     if (response.ok) {
@@ -40,15 +39,22 @@ export default function UserPage() {
       throw new Error("User not found");
     }
   };
+*/
+  const { isLoading: isLoadingUser, data: user, refetch: refreshUser } = useGetQuizzerQuery(id);
 
-  const {
-    isLoading: isLoadingUser,
-    data: user,
-    refetch: refreshUser,
-  } = useQuery({
+  useEffect(() => {
+    if (user?.id === loggedInUser.id || loggedInUser.isAdmin) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, [user, loggedInUser]);
+  /*
+    useQuery({
     queryKey: ["user", id],
     queryFn: () => getUser(id),
   });
+  */
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -90,7 +96,7 @@ export default function UserPage() {
       ) : (
         <>
           {!user ? (
-            <p>{t("user-not-found")}</p>
+            <Text>{t("user-not-found")}</Text>
           ) : (
             <>
               <EditUser opened={openedUser} close={closeModal} user={user} />

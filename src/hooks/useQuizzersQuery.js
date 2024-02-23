@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { alphabetical, fork } from "radash";
 import { useApi } from "../contexts/ApiProvider.js";
 
-export default function useQuizzersQuery() {
+export default function useQuizzersQuery(select) {
   const api = useApi();
 
   // Get the list of registered quizzers
@@ -19,15 +19,21 @@ export default function useQuizzersQuery() {
   return useQuery({
     queryKey: ["quizzers"],
     queryFn: () => getQuizzers(),
+    select,
   });
 }
 
-export const excludeQuizzer = (quizzers, excludeId) => {
-  console.log("Excluding ID:", excludeId);
+const excludeQuizzer = (quizzers, excludeId) => {
   let modifiedQuizzers = quizzers;
   if (excludeId) {
-    const [, otherQuizzers] = fork(quizzers, (q) => q.id === excludeId);
+    const [, otherQuizzers] = fork(quizzers, (q) => q.id === Number(excludeId));
     modifiedQuizzers = otherQuizzers;
   }
   return modifiedQuizzers;
 };
+
+export const useExcludeQuizzerQuery = (excludeId) =>
+  useQuizzersQuery((data) => excludeQuizzer(data, excludeId));
+
+export const useGetQuizzerQuery = (includeId) =>
+  useQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)));
