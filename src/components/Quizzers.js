@@ -13,53 +13,49 @@ export default function Quizzers({ currentId }) {
 
   const {
     isLoading: isLoadingQuizzers,
-    isError: quizzerError,
+    isError: isQuizzerError,
     data: quizzers,
   } = useExcludeQuizzerQuery(currentId); //useQuizzersQuery();
 
+  if (isLoadingQuizzers) {
+    return <QuizzersLoading />;
+  }
+
+  if (isQuizzerError) {
+    return <QuizzerLoadingError />;
+  }
+
   return (
     <>
-      {quizzerError ? (
-        <QuizzerLoadingError />
-      ) : (
-        <>
-          {isLoadingQuizzers ? (
-            <QuizzersLoading />
-          ) : (
+      <ScrollArea type="always" offsetScrollbars mah="75vh">
+        {quizzers.length === 0 ? (
+          <Text>{t("there-are-no-quizzers-registered-yet")}</Text>
+        ) : (
+          quizzers.map((quizzer) => (
             <>
-              <ScrollArea type="always" offsetScrollbars mah="75vh">
-                {quizzers.length === 0 ? (
-                  <Text>{t("there-are-no-quizzers-registered-yet")}</Text>
-                ) : (
-                  quizzers.map((quizzer) => (
-                    <>
-                      <Stack gap={0} key={quizzer.id}>
-                        <Quizzer quizzer={quizzer} />
-                        <Divider mb={4} />
-                      </Stack>
-                    </>
-                  ))
-                )}
-              </ScrollArea>
-              {quizzers.length > 2 ? (
-                <Affix position={{ bottom: 20, right: 20 }}>
-                  <Transition transition="slide-up" mounted={scroll.y > 0}>
-                    {(transitionStyles) => (
-                      <Button
-                        leftSection={<TbArrowUp style={{ width: rem(16), height: rem(16) }} />}
-                        style={transitionStyles}
-                        onClick={() => scrollTo({ y: 0 })}
-                      >
-                        {t("scroll-to-top")}
-                      </Button>
-                    )}
-                  </Transition>
-                </Affix>
-              ) : null}
+              <Stack gap={0} key={quizzer.id}>
+                <Quizzer quizzer={quizzer} />
+                <Divider mb={4} />
+              </Stack>
             </>
-          )}
-        </>
-      )}
+          ))
+        )}
+      </ScrollArea>
+      {quizzers.length > 2 ? (
+        <Affix position={{ bottom: 20, right: 20 }}>
+          <Transition transition="slide-up" mounted={scroll.y > 0}>
+            {(transitionStyles) => (
+              <Button
+                leftSection={<TbArrowUp style={{ width: rem(16), height: rem(16) }} />}
+                style={transitionStyles}
+                onClick={() => scrollTo({ y: 0 })}
+              >
+                {t("scroll-to-top")}
+              </Button>
+            )}
+          </Transition>
+        </Affix>
+      ) : null}
     </>
   );
 }
