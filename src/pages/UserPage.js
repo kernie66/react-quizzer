@@ -40,7 +40,12 @@ export default function UserPage() {
     }
   };
 */
-  const { isLoading: isLoadingUser, data: user, refetch: refreshUser } = useGetQuizzerQuery(id);
+  const {
+    isLoading: isLoadingUser,
+    data: user,
+    isError: isUserError,
+    refetch: refreshUser,
+  } = useGetQuizzerQuery(id);
 
   useEffect(() => {
     if (user?.id === loggedInUser.id || loggedInUser.isAdmin) {
@@ -84,59 +89,53 @@ export default function UserPage() {
     refreshUser();
   };
 
+  if (isLoadingUser) {
+    return (
+      <Text>
+        {t("looking-for-user")}
+        <Loader color="blue" type="dots" />
+      </Text>
+    );
+  }
+
+  if (isUserError) {
+    return <Text>{t("user-not-found")}</Text>;
+  }
+
   return (
     <>
-      {isLoadingUser ? (
-        <>
-          <div className="text-secondary align-items-center">
-            {t("looking-for-user")}
-            <Loader color="blue" type="dots" />
-          </div>
-        </>
-      ) : (
-        <>
-          {!user ? (
-            <Text>{t("user-not-found")}</Text>
-          ) : (
-            <>
-              <EditUser opened={openedUser} close={closeModal} user={user} />
-              <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
-              <Group align="start" mb="sm">
-                <QuizzerAvatar user={user} size={avatarSize} />
-                <Stack gap="xs">
-                  <Title order={2}>
-                    {user.name}{" "}
-                    {user.id === loggedInUser.id ? (
-                      <span className={classes.me}>({t("me")})</span>
-                    ) : null}{" "}
-                    {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
-                  </Title>
-                  {user.aboutMe && (
-                    <Text size="xl" fw={500} my={8} c="indigo.7" style={{ whiteSpace: "pre-wrap" }}>
-                      {user.aboutMe}
-                    </Text>
-                  )}
-                  <UserInfo user={user} />
-                </Stack>
-                <Text>Wins</Text>
-              </Group>
-
-              {loggedIn === true && (
-                <Group mx={16}>
-                  <Button variant="light" onClick={changeAvatar}>
-                    {t("change-avatar")}
-                  </Button>
-                  <Button variant="light" onClick={editUser}>
-                    {t("update")}
-                  </Button>
-                </Group>
-              )}
-              <Divider my={8} color="blue.6" size="sm" />
-              <Quizzers currentId={user.id} />
-            </>
+      <EditUser opened={openedUser} close={closeModal} user={user} />
+      <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
+      <Group align="start" mb="sm">
+        <QuizzerAvatar user={user} size={avatarSize} />
+        <Stack gap="xs">
+          <Title order={2}>
+            {user.name}{" "}
+            {user.id === loggedInUser.id ? <span className={classes.me}>({t("me")})</span> : null}{" "}
+            {user.isAdmin ? <span>&mdash;&nbsp;{t("administrator")}</span> : null}
+          </Title>
+          {user.aboutMe && (
+            <Text size="xl" fw={500} my={8} c="indigo.7" style={{ whiteSpace: "pre-wrap" }}>
+              {user.aboutMe}
+            </Text>
           )}
-        </>
+          <UserInfo user={user} />
+        </Stack>
+        <Text>Wins</Text>
+      </Group>
+
+      {loggedIn === true && (
+        <Group mx={16}>
+          <Button variant="light" onClick={changeAvatar}>
+            {t("change-avatar")}
+          </Button>
+          <Button variant="light" onClick={editUser}>
+            {t("update")}
+          </Button>
+        </Group>
       )}
+      <Divider my={8} color="blue.6" size="sm" />
+      <Quizzers currentId={user.id} />
     </>
   );
 }
