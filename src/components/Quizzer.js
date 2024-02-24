@@ -3,16 +3,18 @@ import { Link } from "react-router-dom";
 import TimeAgo from "./TimeAgo";
 import { useTranslation } from "react-i18next";
 import QuizzerAvatar from "./QuizzerAvatar.js";
-import { Group, Text } from "@mantine/core";
+import { Group, Indicator, Text } from "@mantine/core";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
 
   return (
     <Group className="Quizzer" mb="xs">
-      <Text pr="0.5rem">
-        <QuizzerAvatar user={quizzer} size={48} />
-      </Text>
+      <Group pr="0.5rem">
+        <Indicator offset={8} color="grey">
+          <QuizzerAvatar user={quizzer} size={48} />
+        </Indicator>
+      </Group>
       <div>
         <Text>
           <Link to={"/user/" + quizzer.id} className="text-info-emphasis text-decoration-none">

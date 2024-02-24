@@ -17,7 +17,6 @@ export default function ConnectedUsers({ clients }) {
         userIcon = <TbUsers color="green" />;
       }
     }
-    console.log("Clients:", clients, userIcon.type.name);
     setQuizzerIcon(userIcon);
     setQuizMasterIcon(wizardIcon);
   }, [clients]);
