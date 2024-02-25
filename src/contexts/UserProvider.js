@@ -15,7 +15,9 @@ export default function UserProvider({ children }) {
 
   const updateUserQuery = (userData) => {
     if (userData) {
-      queryClient.setQueryData(["user", String(userData.id)], userData);
+      console.log("Refresh quizzers query by invalidation");
+      // queryClient.setQueryData(["user", String(userData.id)], userData);
+      queryClient.invalidateQueries({ queryKey: ["quizzers"] });
     }
   };
 

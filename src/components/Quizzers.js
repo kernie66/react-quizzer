@@ -33,8 +33,8 @@ export default function Quizzers({ currentId }) {
         ) : (
           quizzers.map((quizzer) => (
             <Stack gap={0} key={quizzer.id}>
-              <Quizzer quizzer={quizzer} key={quizzer.id + 1000} />
-              <Divider mb={4} key={quizzer.id + 2000} />
+              <Quizzer quizzer={quizzer} />
+              <Divider mb={4} />
             </Stack>
           ))
         )}
