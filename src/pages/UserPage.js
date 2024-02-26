@@ -124,16 +124,14 @@ export default function UserPage() {
         <Text>Wins</Text>
       </Group>
 
-      {loggedIn === true && (
-        <Group mx={16}>
-          <Button variant="light" onClick={changeAvatar}>
-            {t("change-avatar")}
-          </Button>
-          <Button variant="light" onClick={editUser}>
-            {t("update")}
-          </Button>
-        </Group>
-      )}
+      <Group mx={16}>
+        <Button variant="light" disabled={!loggedIn} onClick={changeAvatar}>
+          {t("change-avatar")}
+        </Button>
+        <Button variant="light" disabled={!loggedIn} onClick={editUser}>
+          {t("update")}
+        </Button>
+      </Group>
       <Divider my={8} color="blue.6" size="sm" />
       <Quizzers currentId={user.id} />
     </>
