@@ -31,7 +31,7 @@ export default function QuizzerTable() {
     data: quizzers,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    debugAll: true,
+    debugAll: false,
   });
 
   if (isLoadingQuizzers) {
