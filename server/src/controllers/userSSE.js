@@ -3,7 +3,7 @@ import { Token, User } from "../../models/index.js";
 import { logger } from "../logger/logger.js";
 import { Unauthorized } from "../utils/errorHandler.js";
 import { clients } from "../app.js";
-import { clientsSSE } from "../eventsSSE/initSSE.js";
+import { clientsSSE, quizzersSSE } from "../eventsSSE/initSSE.js";
 
 //let clients = [];
 
@@ -68,13 +68,14 @@ export const connectSSE = async (req, res, next) => {
 
     const newClient = {
       id: clientId,
-      user,
+      user: user.dataValues,
       res,
     };
 
     clients.push(newClient);
     logger.debug("Clients:", clients.length);
     clientsSSE();
+    quizzersSSE();
 
     logger.info(`${user.username} - Connection opened`);
 

@@ -18,20 +18,14 @@ export default function Header({ opened, toggle }) {
   const networkStatus = useNetwork();
   const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
-  const [clients, setClients] = useState(0);
+  const [quizzers, setQuizzers] = useState(0);
   const { globalEventSource } = useSSE();
 
   useEventSourceListener(
     globalEventSource,
-    ["clients"],
+    ["quizzers"],
     ({ data }) => {
-      let numberOfClients = 0;
-      if (data) {
-        numberOfClients = data;
-      } else {
-        console.log("No user data from SSE");
-      }
-      setClients(numberOfClients);
+      setQuizzers(JSON.parse(data));
     },
     [],
   );
@@ -65,7 +59,7 @@ export default function Header({ opened, toggle }) {
           </Text>
         </UnstyledButton>
         <Group ml="xl" gap="xs">
-          <ConnectedUsers clients={clients} />
+          <ConnectedUsers quizzers={quizzers} />
         </Group>
         <Group ml="xl" gap="xs" visibleFrom="sm">
           {isAdmin && (

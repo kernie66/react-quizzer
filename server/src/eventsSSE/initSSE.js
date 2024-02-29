@@ -1,6 +1,7 @@
 import { clients, globalChannel } from "../app.js";
 import cron from "node-cron";
 import { logger } from "../logger/logger.js";
+import { select } from "radash";
 
 export const initSSE = () => {
   let counter = 1;
@@ -26,4 +27,20 @@ export const clientsSSE = () => {
   const numberOfClients = clients.length;
   globalChannel.broadcast(numberOfClients, "clients");
   logger.debug("Clients (SSE):", numberOfClients);
+};
+
+export const quizzersSSE = () => {
+  const quizzers = select(
+    clients,
+    (c) => c.id,
+    (c) => c.user.quizMasterId === null,
+  );
+  const quizMaster = select(
+    clients,
+    (c) => c.id,
+    (c) => c.user.quizMasterId !== null,
+  );
+  const quizzerIds = { quizMaster, quizzers }; // fork(clients, (q) => q.user.quizMasterId === null);
+  logger.debug("Quizzers (SSE):", quizzerIds);
+  globalChannel.broadcast(quizzerIds, "quizzers");
 };
