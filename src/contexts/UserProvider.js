@@ -3,6 +3,7 @@ import { useApi } from "./ApiProvider";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
+import useLoginQuery from "../hooks/useLoginQuery.js";
 
 const UserContext = createContext();
 
@@ -21,6 +22,40 @@ export default function UserProvider({ children }) {
     }
   };
 
+  const { isLoading, isError, data: response } = useLoginQuery();
+
+  useEffect(() => {
+    (async () => {
+      let userData = null;
+      // Check if the user has been logged in
+      if (api.isAuthenticated()) {
+        // Check if the login is still valid
+        try {
+          if (isLoading) {
+            console.log("Loading login info");
+          } else if (isError) {
+            console.error("Error checking logged in user");
+          }
+          // response = await api.checkLoggedIn();
+          else if (response?.ok) {
+            const userId = api.getUserId();
+            console.log("User ID:", userId);
+            let response2 = await api.get("/users/" + userId);
+            console.log("Current user:", response2.data[0]);
+            userData = response2.ok ? response2.data[0] : null;
+            updateUserQuery(userData);
+            //} else {
+            //  api.removeLogin();
+          }
+        } catch (error) {
+          console.error("Error checking login:", error);
+          showBoundary(error);
+        }
+      }
+      setUser(userData);
+    })();
+  }, [api, response, isError, isLoading]);
+  /*
   useEffect(() => {
     (async () => {
       let userData = null;
@@ -29,7 +64,8 @@ export default function UserProvider({ children }) {
         let response;
         // Check if the login is still valid
         try {
-          response = await api.checkLoggedIn();
+          // response = await api.checkLoggedIn();
+          response = await useLoginQuery();
           if (response.ok) {
             const userId = api.getUserId();
             console.log("User ID:", userId);
@@ -48,7 +84,7 @@ export default function UserProvider({ children }) {
       setUser(userData);
     })();
   }, [api]);
-
+  */
   const login = useCallback(
     async (username, password) => {
       const result = await api.login(username, password);

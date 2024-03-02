@@ -189,5 +189,6 @@
   "password-could-not-be-changed-please-try-again": "Lösenordet kunde inte ändras, försök igen",
   "start-page": "Startsida",
   "server-error": "Serverfel",
-  "scroll-to-top": "Åter till toppen"
+  "scroll-to-top": "Åter till toppen",
+  "no-quizmaster": "Ingen QuizMaster"
 }

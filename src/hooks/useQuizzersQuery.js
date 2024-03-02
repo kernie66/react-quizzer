@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { alphabetical, fork } from "radash";
+import { alphabetical, fork, select } from "radash";
 import { useApi } from "../contexts/ApiProvider.js";
 
 export default function useQuizzersQuery(select) {
@@ -37,3 +37,17 @@ export const useExcludeQuizzerQuery = (excludeId) =>
 
 export const useGetQuizzerQuery = (includeId) =>
   useQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)));
+
+export const useGetQuizzersQuery = (quizzerArray) => {
+  const quizzers = [];
+  const { data } = useQuizzersQuery((data) =>
+    select(
+      data,
+      (q) => q,
+      (q) => quizzerArray.includes(q.id),
+    ),
+  );
+  quizzers.push(data);
+  console.log("Quizzers:", data);
+  return quizzers;
+};

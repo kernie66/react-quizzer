@@ -189,5 +189,6 @@
   "password-could-not-be-changed-please-try-again": "Password could not be changed, please try again",
   "start-page": "Start page",
   "server-error": "Server error",
-  "scroll-to-top": "Scroll to top"
+  "scroll-to-top": "Scroll to top",
+  "no-quizmaster": "No QuizMaster"
 }

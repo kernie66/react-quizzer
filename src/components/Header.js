@@ -5,7 +5,7 @@ import LanguageSwitcher from "./LanguageSwitcher.js";
 import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useFullscreen, useNetwork, useViewportSize } from "@mantine/hooks";
+import { useFullscreen, useNetwork, useSetState, useViewportSize } from "@mantine/hooks";
 import { TbMaximize, TbMinimize, TbWifi, TbWifiOff } from "react-icons/tb";
 import ConnectedUsers from "./ConnectedUsers.js";
 import { useSSE } from "../contexts/SSEProvider.js";
@@ -18,14 +18,20 @@ export default function Header({ opened, toggle }) {
   const networkStatus = useNetwork();
   const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
-  const [quizzers, setQuizzers] = useState(0);
+  const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
   const { globalEventSource } = useSSE();
 
   useEventSourceListener(
     globalEventSource,
     ["quizzers"],
     ({ data }) => {
-      setQuizzers(JSON.parse(data));
+      const parsedData = JSON.parse(data);
+      if (parsedData.quizzers) {
+        setQuizzers({ quizzers: parsedData.quizzers });
+      }
+      if (parsedData.quizMaster) {
+        setQuizzers({ quizMaster: parsedData.quizMaster });
+      }
     },
     [],
   );
