@@ -38,16 +38,11 @@ export const useExcludeQuizzerQuery = (excludeId) =>
 export const useGetQuizzerQuery = (includeId) =>
   useQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)));
 
-export const useGetQuizzersQuery = (quizzerArray) => {
-  const quizzers = [];
-  const { data } = useQuizzersQuery((data) =>
+export const useGetQuizzersQuery = (quizzerArray) =>
+  useQuizzersQuery((data) =>
     select(
       data,
       (q) => q,
       (q) => quizzerArray.includes(q.id),
     ),
   );
-  quizzers.push(data);
-  console.log("Quizzers:", data);
-  return quizzers;
-};

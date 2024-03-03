@@ -1,9 +1,10 @@
-import { Badge, Group, Popover, Text } from "@mantine/core";
+import { Badge, Divider, Group, Popover, ScrollArea, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { TbUserOff, TbUser, TbUsers } from "react-icons/tb";
 import { FaHatWizard } from "react-icons/fa6";
 import { useGetQuizzerQuery, useGetQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 import i18next from "i18next";
+import QuizzerAvatar from "./QuizzerAvatar.js";
 
 const noQuizMaster = i18next.t("no-quizmaster");
 
@@ -44,7 +45,7 @@ export default function ConnectedUsers({ quizzers }) {
   }, [quizzers]);
 
   if (quizzerNameArray) {
-    console.log("Quizzers for tooltip:", quizzerNameArray.id);
+    console.log("Quizzers for tooltip:", quizzerNameArray);
   }
 
   return (
@@ -66,9 +67,20 @@ export default function ConnectedUsers({ quizzers }) {
           </Group>
         </Popover.Target>
         <Popover.Dropdown>
-          {quizzerNameArray
-            ? quizzerNameArray?.map((quizzer) => <Text key={quizzer.id}>quizzer.name</Text>)
-            : null}
+          <Text size="md">Quizzers</Text>
+          <Divider mb={8} />
+          <ScrollArea type="hover" mah="75vh" offsetScrollbars>
+            {quizzerNameArray ? (
+              quizzerNameArray.map((quizzer) => (
+                <Group gap={4} ms={-6} mb={4} key={quizzer.id}>
+                  <QuizzerAvatar user={quizzer} size={24} />
+                  <Text>{quizzer.name}</Text>
+                </Group>
+              ))
+            ) : (
+              <Text fs="italic">No quizzers</Text>
+            )}
+          </ScrollArea>
         </Popover.Dropdown>
       </Popover>
     </Group>

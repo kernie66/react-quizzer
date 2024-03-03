@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../contexts/ApiProvider.js";
+import { experimental_createPersister } from "@tanstack/query-persist-client-core";
 
 export default function useLoginQuery(select) {
   const api = useApi();
@@ -20,5 +21,9 @@ export default function useLoginQuery(select) {
     queryKey: ["login"],
     queryFn: () => getLogin(),
     select,
+    persister: experimental_createPersister({
+      storage: window.localStorage,
+      maxAge: 1000 * 60 * 60 * 24 * 10,
+    }),
   });
 }
