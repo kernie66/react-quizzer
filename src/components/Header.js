@@ -5,7 +5,13 @@ import LanguageSwitcher from "./LanguageSwitcher.js";
 import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useFullscreen, useNetwork, useSetState, useViewportSize } from "@mantine/hooks";
+import {
+  useFullscreen,
+  useNetwork,
+  useSetState,
+  useShallowEffect,
+  useViewportSize,
+} from "@mantine/hooks";
 import { TbMaximize, TbMinimize, TbWifi, TbWifiOff } from "react-icons/tb";
 import ConnectedUsers from "./ConnectedUsers.js";
 import { useSSE } from "../contexts/SSEProvider.js";
@@ -36,7 +42,7 @@ export default function Header({ opened, toggle }) {
     [],
   );
 
-  useEffect(() => {
+  useShallowEffect(() => {
     let admin = false;
     if (user) {
       if (user.isAdmin) {

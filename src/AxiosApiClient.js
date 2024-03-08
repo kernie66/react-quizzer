@@ -1,3 +1,4 @@
+import { readLocalStorageValue } from "@mantine/hooks";
 import myAxios from "./myAxios.instance.js";
 
 export default class AxiosApiClient {
@@ -92,6 +93,7 @@ export default class AxiosApiClient {
   }
 
   async checkLoggedIn() {
+    console.log("Checking login");
     let response = await this.get("/login");
     response.userId = this.getUserId();
     console.log("Check login:", response);
@@ -113,6 +115,18 @@ export default class AxiosApiClient {
     if (userId) {
       return true;
     } else {
+      return false;
+    }
+  }
+
+  isLoggedIn() {
+    const userData = readLocalStorageValue({ key: 'quizzer-query-["loggedIn"]' });
+    console.log("User data", userData);
+    if (userData && userData.state.data.userId > 0) {
+      console.log("User %d is logged in", userData.state.data.userId);
+      return true;
+    } else {
+      console.log("No user logged in");
       return false;
     }
   }

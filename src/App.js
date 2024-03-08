@@ -25,7 +25,7 @@ const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 //const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 //const endpoint = BASE_API_URL + "/api/connect";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // Global default is 20 minutes

@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../contexts/ApiProvider.js";
-import { experimental_createPersister } from "@tanstack/query-persist-client-core";
+import queryPersister from "../helpers/queryPersister.js";
 
 export default function useLoginQuery(select) {
   const api = useApi();
 
+  // const enabled = api.isLoggedIn();
+
   // Get the logged in user
   const getLogin = async () => {
+    console.log("getLogin");
     const response = await api.get("/login");
     if (response.ok) {
       response.userId = api.getUserId();
@@ -18,12 +21,11 @@ export default function useLoginQuery(select) {
   };
 
   return useQuery({
-    queryKey: ["login"],
+    queryKey: ["loggedIn"],
     queryFn: () => getLogin(),
     select,
-    persister: experimental_createPersister({
-      storage: window.localStorage,
-      maxAge: 1000 * 60 * 60 * 24 * 10,
-    }),
+    retry: false,
+    // enabled: enabled,
+    persister: queryPersister(),
   });
 }

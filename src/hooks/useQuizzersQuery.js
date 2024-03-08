@@ -2,8 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { alphabetical, fork, select } from "radash";
 import { useApi } from "../contexts/ApiProvider.js";
 
-export default function useQuizzersQuery(select) {
+export default function useQuizzersQuery(select, enabled) {
   const api = useApi();
+
+  let isEnabled = api.isLoggedIn();
+  if (enabled !== undefined) {
+    isEnabled = enabled;
+  }
+  console.debug("QuizzersQuery enabled:", isEnabled);
 
   // Get the list of registered quizzers
   const getQuizzers = async () => {
@@ -20,6 +26,7 @@ export default function useQuizzersQuery(select) {
     queryKey: ["quizzers"],
     queryFn: () => getQuizzers(),
     select,
+    enabled: isEnabled,
   });
 }
 
@@ -35,8 +42,11 @@ const excludeQuizzer = (quizzers, excludeId) => {
 export const useExcludeQuizzerQuery = (excludeId) =>
   useQuizzersQuery((data) => excludeQuizzer(data, excludeId));
 
-export const useGetQuizzerQuery = (includeId) =>
-  useQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)));
+export const useGetQuizzerQuery = (includeId) => {
+  console.log("Query quizzer with ID:", includeId);
+  const enabled = includeId !== undefined && Number(includeId) > 0;
+  return useQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)), enabled);
+};
 
 export const useGetQuizzersQuery = (quizzerArray) =>
   useQuizzersQuery((data) =>

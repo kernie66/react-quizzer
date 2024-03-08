@@ -1,4 +1,5 @@
 import axios from "axios";
+import { redirect } from "react-router-dom";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
@@ -64,8 +65,8 @@ myAxios.interceptors.response.use(
           console.error("Token refresh error:", error);
           // Handle refresh token error or redirect to login
           // localStorage.clear();
-          // return redirect("/login");
-          return Promise.reject(error);
+          return redirect("/login");
+          // return Promise.reject(error);
         }
       }
       if (error.response.status < 500) {

@@ -1,10 +1,11 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { useApi } from "./ApiProvider";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
 import useLoginQuery from "../hooks/useLoginQuery.js";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
+import { useShallowEffect } from "@mantine/hooks";
 
 const UserContext = createContext();
 
@@ -27,19 +28,21 @@ export default function UserProvider({ children }) {
   const { isLoading, isError, data: loggedInUser } = useLoginQuery();
 
   const {
-    // isLoading: isLoadingUser,
+    isLoading: isLoadingUser,
     data: user,
-    // isError: isUserError,
+    isError: isUserError,
+    error,
     // refetch: refreshUser,
   } = useGetQuizzerQuery(loggedInId);
 
-  useEffect(() => {
+  useShallowEffect(() => {
     let userId = 0;
     // Check if the user has been logged in
     if (api.isAuthenticated()) {
       // Check if the login is still valid
       try {
         if (loggedInUser) {
+          console.log("Logged in user:", loggedInUser);
           userId = loggedInUser.data.userId;
           console.log("User ID:", userId);
           // let response2 = await api.get("/users/" + userId);
@@ -51,6 +54,7 @@ export default function UserProvider({ children }) {
         } else if (isError) {
           console.error("Error checking logged in user");
         } else {
+          console.log("Remove login");
           api.removeLogin();
         }
         // response = await api.checkLoggedIn();
@@ -62,10 +66,13 @@ export default function UserProvider({ children }) {
     setLoggedInId(userId);
   }, [api, loggedInUser, isError, isLoading]);
 
-  useEffect(() => {
+  useShallowEffect(() => {
     console.log("Current user:", user);
+    console.log("Is loading user:", isLoadingUser);
+    console.log("Is user error:", isUserError);
+    if (isUserError) console.log("Error message:", error);
     updateUserQuery(user);
-  }, [user]);
+  }, [user, isLoadingUser, isUserError]);
 
   const login = useCallback(
     async (username, password) => {

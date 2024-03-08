@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { TbUserOff, TbUser, TbUsers } from "react-icons/tb";
 import { FaHatWizard } from "react-icons/fa6";
 import { useGetQuizzerQuery, useGetQuizzersQuery } from "../hooks/useQuizzersQuery.js";
-import i18next from "i18next";
 import QuizzerAvatar from "./QuizzerAvatar.js";
-
-const noQuizMaster = i18next.t("no-quizmaster");
+import { useTranslation } from "react-i18next";
 
 export default function ConnectedUsers({ quizzers }) {
+  const { t } = useTranslation();
+  const noQuizMaster = t("no-quizmaster");
   const [numberOfQuizzers, setNumberOfQuizzers] = useState(0);
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);

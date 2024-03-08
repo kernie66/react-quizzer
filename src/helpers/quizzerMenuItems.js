@@ -89,9 +89,9 @@ export function quizzerMenuItems(padding, toggle) {
     <NavLink
       label={t("login")}
       leftSection={<TbLogin style={{ width: rem(14), height: rem(14) }} />}
-      active={location.pathname === "/password"}
+      active={location.pathname === "/login"}
       component={Link}
-      to={"/password"}
+      to={"/login"}
       onClick={toggle}
       p={padding}
     />
