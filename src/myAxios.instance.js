@@ -33,8 +33,6 @@ myAxios.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("error:", error);
-    console.log("error.code:", error.code);
     if (error.code !== "ERR_NETWORK" && error.code !== "ECONNABORTED") {
       console.log("Intercepting response status:", error.response.status);
       const originalRequest = error.config;
@@ -74,6 +72,8 @@ myAxios.interceptors.response.use(
       }
     } else {
       console.error("Network error");
+      console.log("error:", error);
+      console.log("error.code:", error.code);
       // throw new Error("Network error");
       return Promise.reject(error);
     }

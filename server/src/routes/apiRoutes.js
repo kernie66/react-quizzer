@@ -36,7 +36,7 @@ apiRouter.get("/", (req, res) => {
 apiRouter.get("/login", (req, res) => {
   res
     .status(200)
-    .json({ success: `User ${req.user.username} already logged in...`, userId: req.user.id });
+    .json({ success: `User ${req.user.username} is logged in...`, userId: req.user.id });
 });
 
 apiRouter.get("/clients", getClients);

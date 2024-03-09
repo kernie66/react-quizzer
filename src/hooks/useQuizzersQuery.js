@@ -9,10 +9,11 @@ export default function useQuizzersQuery(select, enabled) {
   if (enabled !== undefined) {
     isEnabled = enabled;
   }
-  console.debug("QuizzersQuery enabled:", isEnabled);
+  console.log("QuizzersQuery enabled:", isEnabled);
 
   // Get the list of registered quizzers
   const getQuizzers = async () => {
+    console.log("Getting quizzers from server...");
     const response = await api.get("/users");
     if (response.ok) {
       const quizzers = alphabetical(response.data, (item) => item.name);
@@ -27,6 +28,7 @@ export default function useQuizzersQuery(select, enabled) {
     queryFn: () => getQuizzers(),
     select,
     enabled: isEnabled,
+    staleTime: Infinity,
   });
 }
 
