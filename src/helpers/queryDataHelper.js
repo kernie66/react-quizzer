@@ -6,7 +6,8 @@ export const getLoggedInUserId = () => {
 
   const loggedInData = queryClient.getQueryData(["loggedIn"]);
   if (loggedInData) {
-    userId = loggedInData.data.userId;
+    console.log("Logged In Data:", loggedInData);
+    userId = loggedInData;
   }
   return userId;
 };

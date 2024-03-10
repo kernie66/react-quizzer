@@ -1,9 +1,9 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useCallback } from "react";
 import { useApi } from "./ApiProvider";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
-import useLoginQuery from "../hooks/useLoginQuery.js";
+import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 import { useShallowEffect } from "@mantine/hooks";
 
@@ -11,7 +11,7 @@ const UserContext = createContext();
 
 export default function UserProvider({ children }) {
   // const [user, setUser] = useState();
-  const [loggedInId, setLoggedInId] = useState(0);
+  // const [loggedInId, setLoggedInId] = useState(0);
   const api = useApi();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -25,7 +25,7 @@ export default function UserProvider({ children }) {
     }
   };
 
-  const { isLoading, isError, data: loggedInUser } = useLoginQuery();
+  const { isLoading, isError, data: loggedInId } = useLoggedInQuery();
 
   const {
     isLoading: isLoadingUser,
@@ -36,15 +36,15 @@ export default function UserProvider({ children }) {
   } = useGetQuizzerQuery(loggedInId);
 
   useShallowEffect(() => {
-    let userId = 0;
+    //let userId = 0;
     // Check if the user has been logged in
     if (api.isAuthenticated()) {
       // Check if the login is still valid
       try {
-        if (loggedInUser) {
-          console.log("Logged in user:", loggedInUser);
-          userId = loggedInUser.data.userId;
-          console.log("User ID:", userId);
+        if (loggedInId) {
+          console.log("Logged in user ID:", loggedInId);
+          //userId = loggedInUser.data.userId;
+          //console.log("User ID:", userId);
           // let response2 = await api.get("/users/" + userId);
           // console.log("Current user:", response2.data[0]);
           // userData = response2.ok ? response2.data[0] : null;
@@ -63,8 +63,8 @@ export default function UserProvider({ children }) {
         showBoundary(error);
       }
     }
-    setLoggedInId(userId);
-  }, [api, loggedInUser, isError, isLoading]);
+    //setLoggedInId(userId);
+  }, [api, loggedInId, isError, isLoading]);
 
   useShallowEffect(() => {
     console.log("Current user:", user);
