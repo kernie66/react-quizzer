@@ -5,9 +5,11 @@ import { FaHatWizard } from "react-icons/fa6";
 import { useGetQuizzerQuery, useGetQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { useTranslation } from "react-i18next";
+import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
-export default function ConnectedUsers({ quizzers }) {
+export default function ConnectedUsers() {
   const { t } = useTranslation();
+  const { quizzers } = useQuizzers();
   const noQuizMaster = t("no-quizmaster");
   const [numberOfQuizzers, setNumberOfQuizzers] = useState(0);
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);

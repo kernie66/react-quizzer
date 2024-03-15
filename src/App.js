@@ -19,6 +19,7 @@ import { BasicErrorFallback, logErrorToService } from "./helpers/errorHandlers.j
 import SSEProvider from "./contexts/SSEProvider.js";
 import QuizzerShell from "./components/QuizzerShell.js";
 import { IconContext } from "react-icons";
+import QuizzerProvider from "./contexts/QuizzerProvider.js";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
@@ -44,60 +45,62 @@ export default function App() {
           <ApiProvider>
             <UserProvider>
               <SSEProvider>
-                <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
-                  <IconContext.Provider value={iconDefaults}>
-                    <QuizzerShell>
-                      <Routes>
-                        <Route
-                          path="/login"
-                          element={
-                            <PublicRoute>
-                              <LoginPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/register"
-                          element={
-                            <PublicRoute>
-                              <RegistrationPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset-request"
-                          element={
-                            <PublicRoute>
-                              <ResetRequestPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset"
-                          element={
-                            <PublicRoute>
-                              <ResetPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="*"
-                          element={
-                            <PrivateRoute>
-                              <Routes>
-                                <Route path="/" element={<MainPage />} />
-                                <Route path="/explore" element={<ExplorePage />} />
-                                <Route path="/user/:id" element={<UserPage />} />
-                                <Route path="/password" element={<ChangePasswordPage />} />
-                                <Route path="*" element={<Navigate to="/" />} />
-                              </Routes>
-                            </PrivateRoute>
-                          }
-                        />
-                      </Routes>
-                    </QuizzerShell>
-                  </IconContext.Provider>
-                </ErrorBoundary>
+                <QuizzerProvider>
+                  <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
+                    <IconContext.Provider value={iconDefaults}>
+                      <QuizzerShell>
+                        <Routes>
+                          <Route
+                            path="/login"
+                            element={
+                              <PublicRoute>
+                                <LoginPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/register"
+                            element={
+                              <PublicRoute>
+                                <RegistrationPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/reset-request"
+                            element={
+                              <PublicRoute>
+                                <ResetRequestPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/reset"
+                            element={
+                              <PublicRoute>
+                                <ResetPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="*"
+                            element={
+                              <PrivateRoute>
+                                <Routes>
+                                  <Route path="/" element={<MainPage />} />
+                                  <Route path="/explore" element={<ExplorePage />} />
+                                  <Route path="/user/:id" element={<UserPage />} />
+                                  <Route path="/password" element={<ChangePasswordPage />} />
+                                  <Route path="*" element={<Navigate to="/" />} />
+                                </Routes>
+                              </PrivateRoute>
+                            }
+                          />
+                        </Routes>
+                      </QuizzerShell>
+                    </IconContext.Provider>
+                  </ErrorBoundary>
+                </QuizzerProvider>
               </SSEProvider>
             </UserProvider>
           </ApiProvider>

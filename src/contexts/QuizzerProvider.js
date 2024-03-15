@@ -5,16 +5,39 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
 import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
-import { useShallowEffect } from "@mantine/hooks";
+import { useSetState, useShallowEffect } from "@mantine/hooks";
 import queryPersister from "../helpers/queryPersister.js";
+import { useEventSourceListener } from "@react-nano/use-event-source";
+import { useSSE } from "./SSEProvider.js";
 
-const UserContext = createContext();
+const QuizzerContext = createContext();
 
-export default function UserProvider({ children }) {
+export default function QuizzerProvider({ children }) {
   const api = useApi();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { showBoundary } = useErrorBoundary();
+  const { globalEventSource } = useSSE();
+  const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
+
+  useEventSourceListener(
+    globalEventSource,
+    ["quizzers"],
+    ({ data }) => {
+      const parsedData = JSON.parse(data);
+      if (parsedData.quizzers) {
+        setQuizzers({ quizzers: parsedData.quizzers });
+      }
+      if (parsedData.quizMaster) {
+        setQuizzers({ quizMaster: parsedData.quizMaster });
+      }
+    },
+    [],
+  );
+
+  const clients = useCallback(() => {
+    return quizzers.quizzers.length + quizzers.quizMaster.length;
+  }, [quizzers]);
 
   queryClient.setQueryDefaults(["authData"], {
     queryFn: () => null,
@@ -105,9 +128,13 @@ export default function UserProvider({ children }) {
     navigate("/login");
   }, [api]);
 
-  return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
+  return (
+    <QuizzerContext.Provider value={{ quizzers, clients, user, login, logout }}>
+      {children}
+    </QuizzerContext.Provider>
+  );
 }
 
-export function useUser() {
-  return useContext(UserContext);
+export function useQuizzers() {
+  return useContext(QuizzerContext);
 }

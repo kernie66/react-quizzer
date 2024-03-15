@@ -5,17 +5,9 @@ import LanguageSwitcher from "./LanguageSwitcher.js";
 import { useUser } from "../contexts/UserProvider.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  useFullscreen,
-  useNetwork,
-  useSetState,
-  useShallowEffect,
-  useViewportSize,
-} from "@mantine/hooks";
+import { useFullscreen, useNetwork, useShallowEffect, useViewportSize } from "@mantine/hooks";
 import { TbMaximize, TbMinimize, TbWifi, TbWifiOff } from "react-icons/tb";
 import ConnectedUsers from "./ConnectedUsers.js";
-import { useSSE } from "../contexts/SSEProvider.js";
-import { useEventSourceListener } from "@react-nano/use-event-source";
 
 export default function Header({ opened, toggle }) {
   const { user } = useUser();
@@ -24,23 +16,6 @@ export default function Header({ opened, toggle }) {
   const networkStatus = useNetwork();
   const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
-  const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
-  const { globalEventSource } = useSSE();
-
-  useEventSourceListener(
-    globalEventSource,
-    ["quizzers"],
-    ({ data }) => {
-      const parsedData = JSON.parse(data);
-      if (parsedData.quizzers) {
-        setQuizzers({ quizzers: parsedData.quizzers });
-      }
-      if (parsedData.quizMaster) {
-        setQuizzers({ quizMaster: parsedData.quizMaster });
-      }
-    },
-    [],
-  );
 
   useShallowEffect(() => {
     let admin = false;
@@ -71,7 +46,7 @@ export default function Header({ opened, toggle }) {
           </Text>
         </UnstyledButton>
         <Group ml="xl" gap="xs">
-          <ConnectedUsers quizzers={quizzers} />
+          <ConnectedUsers />
         </Group>
         <Group ml="xl" gap="xs" visibleFrom="sm">
           {isAdmin && (
