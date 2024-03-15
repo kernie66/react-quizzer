@@ -1,6 +1,5 @@
 import { createContext, useContext, useCallback } from "react";
 import { useApi } from "./ApiProvider";
-import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
 import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
@@ -14,7 +13,6 @@ const QuizzerContext = createContext();
 
 export default function QuizzerProvider({ children }) {
   const api = useApi();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { showBoundary } = useErrorBoundary();
   const { globalEventSource } = useSSE();
@@ -51,14 +49,6 @@ export default function QuizzerProvider({ children }) {
       console.log("Refresh quizzers query by invalidation");
       queryClient.invalidateQueries({ queryKey: ["quizzers"] });
     }
-  };
-
-  const updateAuthData = (data) => {
-    queryClient.setQueryData(["authData"], data);
-    queryClient.prefetchQuery({
-      queryKey: ["authData"],
-      queryFn: async () => console.log("Set query data"),
-    });
   };
 
   const {
@@ -106,30 +96,8 @@ export default function QuizzerProvider({ children }) {
     updateUserQuery(user);
   }, [user, isLoadingUser, isUserError]);
 
-  const login = useCallback(
-    async (username, password) => {
-      const result = await api.login(username, password);
-      if (result.ok) {
-        updateAuthData(result.data);
-        const userId = result.data.id;
-        const response = await api.get("/users/" + userId);
-        console.log("Logged in user:", response.data[0]);
-        const userData = response.ok ? response.data[0] : null;
-        updateUserQuery(userData);
-        return response;
-      }
-      return result;
-    },
-    [api],
-  );
-
-  const logout = useCallback(async () => {
-    await api.logout();
-    navigate("/login");
-  }, [api]);
-
   return (
-    <QuizzerContext.Provider value={{ quizzers, clients, user, login, logout }}>
+    <QuizzerContext.Provider value={{ quizzers, clients, user }}>
       {children}
     </QuizzerContext.Provider>
   );
