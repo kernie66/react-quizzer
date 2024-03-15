@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../contexts/ApiProvider.js";
 import queryPersister from "../helpers/queryPersister.js";
 
@@ -32,25 +32,8 @@ export function useLoggedInQuery(select) {
   });
 }
 
-export function useLoginQuery(username, password) {
-  const api = useApi();
+export function setLoginData(response) {
+  const queryClient = useQueryClient();
 
-  const login = async () => {
-    const response = await api.post("/auth/login", { username, password });
-    if (response.ok) {
-      console.log("Login response:", response.data);
-      return response;
-    } else {
-      throw new Error("Login failed");
-    }
-  };
-
-  return useQuery({
-    queryKey: ["login"],
-    queryFn: () => login(),
-    retry: false,
-    staleTime: Infinity,
-    // enabled: enabled,
-    persister: queryPersister(),
-  });
+  queryClient.setQueryData(["authData"], response);
 }

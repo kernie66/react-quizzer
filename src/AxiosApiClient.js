@@ -85,7 +85,7 @@ export default class AxiosApiClient {
   async login(username, password) {
     const response = await this.post("/auth/login", { username, password });
     if (response.ok) {
-      console.log("Response:", response.data);
+      console.log("Login response:", response.data);
       this.setUserId(response.data.id);
       this.setTokens(response.data);
     }

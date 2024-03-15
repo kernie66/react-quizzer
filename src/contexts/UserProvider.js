@@ -6,6 +6,7 @@ import { useErrorBoundary } from "react-error-boundary";
 import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 import { useShallowEffect } from "@mantine/hooks";
+import queryPersister from "../helpers/queryPersister.js";
 
 const UserContext = createContext();
 
@@ -17,6 +18,13 @@ export default function UserProvider({ children }) {
   const queryClient = useQueryClient();
   const { showBoundary } = useErrorBoundary();
 
+  queryClient.setQueryDefaults(["authData"], {
+    queryFn: () => null,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    persister: queryPersister(),
+  });
+
   const updateUserQuery = (userData) => {
     if (userData) {
       console.log("Refresh quizzers query by invalidation");
@@ -25,7 +33,19 @@ export default function UserProvider({ children }) {
     }
   };
 
-  const { isLoading, isError, data: loggedInId } = useLoggedInQuery();
+  const updateAuthData = (data) => {
+    queryClient.setQueryData(["authData"], data);
+    queryClient.prefetchQuery({
+      queryKey: ["authData"],
+      queryFn: async () => console.log("Set query data"),
+    });
+  };
+
+  const {
+    isLoading: isLoadingLoggedIn,
+    isError: isErrorLoggedIn,
+    data: loggedInId,
+  } = useLoggedInQuery();
 
   const {
     isLoading: isLoadingUser,
@@ -49,9 +69,9 @@ export default function UserProvider({ children }) {
           // console.log("Current user:", response2.data[0]);
           // userData = response2.ok ? response2.data[0] : null;
           // updateUserQuery(userData);
-        } else if (isLoading) {
+        } else if (isLoadingLoggedIn) {
           console.log("Loading login info");
-        } else if (isError) {
+        } else if (isErrorLoggedIn) {
           console.error("Error checking logged in user");
         } else {
           console.log("Remove login");
@@ -64,7 +84,7 @@ export default function UserProvider({ children }) {
       }
     }
     //setLoggedInId(userId);
-  }, [api, loggedInId, isError, isLoading]);
+  }, [api, loggedInId, isErrorLoggedIn, isLoadingLoggedIn]);
 
   useShallowEffect(() => {
     console.log("Current user:", user);
@@ -78,6 +98,7 @@ export default function UserProvider({ children }) {
     async (username, password) => {
       const result = await api.login(username, password);
       if (result.ok) {
+        updateAuthData(result.data);
         const userId = result.data.id;
         const response = await api.get("/users/" + userId);
         console.log("Logged in user:", response.data[0]);
