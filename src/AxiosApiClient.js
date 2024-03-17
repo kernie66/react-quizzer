@@ -1,5 +1,5 @@
 import myAxios from "./myAxios.instance.js";
-import { getLoggedInUserId } from "./helpers/queryDataHelper.js";
+import { clearLoggedInUserId, getLoggedInUserId } from "./helpers/queryDataHelper.js";
 
 export default class AxiosApiClient {
   constructor(onError) {
@@ -121,13 +121,21 @@ export default class AxiosApiClient {
   }
 
   isLoggedIn() {
-    const loggedInId = getLoggedInUserId();
-    console.log("User ID from query:", loggedInId);
-    if (loggedInId && loggedInId > 0) {
-      console.log("User %d is logged in", loggedInId);
-      return true;
-    } else {
-      console.log("No user logged in");
+    try {
+      const loggedInId = getLoggedInUserId();
+
+      if (loggedInId && loggedInId > 0) {
+        console.log("User %d is logged in", loggedInId);
+        return true;
+      } else {
+        console.log("No user logged in");
+        // this.removeLogin();
+        return false;
+      }
+    } catch (error) {
+      console.log(error.message);
+      this.logout();
+      clearLoggedInUserId();
       return false;
     }
   }

@@ -5,6 +5,7 @@ export default function queryPersister(maxAge) {
   if (Number(maxAge)) {
     maxAgeSetting = Number(maxAge);
   }
+
   return experimental_createPersister({
     storage: window.localStorage,
     maxAge: maxAgeSetting,

@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback } from "react";
+import { createContext, useContext } from "react";
 import { useApi } from "./ApiProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
@@ -33,9 +33,7 @@ export default function QuizzerProvider({ children }) {
     [],
   );
 
-  const clients = useCallback(() => {
-    return quizzers.quizzers.length + quizzers.quizMaster.length;
-  }, [quizzers]);
+  const clients = quizzers.quizzers.length + quizzers.quizMaster.length;
 
   queryClient.setQueryDefaults(["authData"], {
     queryFn: () => null,

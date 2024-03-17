@@ -4,11 +4,13 @@ import { TbChevronDown } from "react-icons/tb";
 import { quizzerMenuItems } from "../helpers/quizzerMenuItems.js";
 import { useState } from "react";
 import { useShallowEffect } from "@mantine/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function UserMenu() {
   const { user } = useUser();
   const menuItems = quizzerMenuItems(1);
   const [avatarImage, setAvatarImage] = useState(null);
+  const queryClient = useQueryClient();
 
   useShallowEffect(() => {
     if (user && user.avatarUrl) {
@@ -16,6 +18,11 @@ export default function UserMenu() {
     } else {
       setAvatarImage(null);
     }
+  }, [user]);
+
+  useShallowEffect(() => {
+    console.log("User menu:", user);
+    queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
   }, [user]);
 
   return (

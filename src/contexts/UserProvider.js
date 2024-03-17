@@ -25,8 +25,13 @@ export default function UserProvider({ children }) {
 
   const updateUserQuery = (userData) => {
     if (userData) {
+      console.log("Update user:", userData);
+      queryClient.setQueryData(["loggedIn"], userData.id);
       console.log("Refresh quizzers query by invalidation");
-      queryClient.invalidateQueries({ queryKey: ["quizzers"] });
+
+      queryClient.invalidateQueries({ queryKey: ["quizzers"], refetchType: "all" });
+    } else {
+      queryClient.setQueryData(["loggedIn"], 0);
     }
   };
 
@@ -46,11 +51,15 @@ export default function UserProvider({ children }) {
 
   const {
     isLoading: isLoadingUser,
-    data: user,
     isError: isUserError,
+    data: user,
     error,
     // refetch: refreshUser,
   } = useGetQuizzerQuery(loggedInId);
+
+  useShallowEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
+  }, [user]);
 
   useShallowEffect(() => {
     //let userId = 0;
@@ -80,7 +89,7 @@ export default function UserProvider({ children }) {
     console.log("Is loading user:", isLoadingUser);
     console.log("Is user error:", isUserError);
     if (isUserError) console.log("Error message:", error);
-    updateUserQuery(user);
+    // updateUserQuery(user);
   }, [user, isLoadingUser, isUserError]);
 
   const login = useCallback(

@@ -26,7 +26,7 @@ export default function MainPage() {
       <ColorInput />
       <ColorPicker />
       <OnlineStatus />
-      <Text>Number of connected players: {clients()}</Text>
+      <Text>Number of connected players: {clients}</Text>
       <Text>Local storage: {localStorage.getItem("userData")}</Text>
       <QuizzerTable />
     </>

@@ -72,7 +72,11 @@ export const connectSSE = async (req, res, next) => {
       res,
     };
 
-    clients.push(newClient);
+    if (clients.includes(clientId)) {
+      console.log("Duplicate client ID:", clientId);
+    } else {
+      clients.push(newClient);
+    }
     logger.debug("Clients:", clients.length);
     clientsSSE();
     quizzersSSE();
@@ -92,6 +96,8 @@ export const connectSSE = async (req, res, next) => {
         return false;
       });
       logger.info("Removed SSE client", removedClient[0].user.username);
+      clientsSSE();
+      quizzersSSE();
 
       res.end("OK");
     });

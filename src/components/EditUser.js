@@ -21,7 +21,7 @@ import {
   rem,
 } from "@mantine/core";
 import { useEffect } from "react";
-import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
+import { useQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 
 export default function EditUser({ opened, close, user }) {
   const [confirmModalText, setConfirmModalText] = useSetState({});

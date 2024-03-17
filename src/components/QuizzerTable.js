@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-table";
 import { Table } from "@mantine/core";
 import i18next from "i18next";
-import useQuizzersQuery from "../hooks/useQuizzersQuery.js";
+import { useQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 import QuizzersLoading from "./QuizzersLoading.js";
 import QuizzerLoadingError from "./QuizzerLoadingError.js";
 
