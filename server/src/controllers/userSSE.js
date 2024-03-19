@@ -4,6 +4,7 @@ import { logger } from "../logger/logger.js";
 import { Unauthorized } from "../utils/errorHandler.js";
 import { clients } from "../app.js";
 import { clientsSSE, quizzersSSE } from "../eventsSSE/initSSE.js";
+import { replaceOrAppend } from "radash";
 
 //let clients = [];
 
@@ -72,11 +73,17 @@ export const connectSSE = async (req, res, next) => {
       res,
     };
 
+    const setClients = replaceOrAppend(clients, newClient, (f) => f.id === newClient.id);
+    logger.info("New clients array:", setClients.length);
+    clients.splice(0, clients.length);
+    setClients.map((setClient) => clients.push(setClient));
+    /*
     if (clients.includes(clientId)) {
       console.log("Duplicate client ID:", clientId);
     } else {
       clients.push(newClient);
     }
+    */
     logger.debug("Clients:", clients.length);
     clientsSSE();
     quizzersSSE();
