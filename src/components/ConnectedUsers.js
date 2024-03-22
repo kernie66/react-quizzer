@@ -69,7 +69,7 @@ export default function ConnectedUsers() {
           </Group>
         </Popover.Target>
         <Popover.Dropdown>
-          <Text size="md">Quizzers</Text>
+          <Text size="md">{t("quizzers")}</Text>
           <Divider mb={8} />
           <ScrollArea type="hover" mah="75vh" offsetScrollbars>
             {quizzerNameArray ? (
@@ -80,7 +80,7 @@ export default function ConnectedUsers() {
                 </Group>
               ))
             ) : (
-              <Text fs="italic">No quizzers</Text>
+              <Text fs="italic">{t("no-quizzers")}</Text>
             )}
           </ScrollArea>
         </Popover.Dropdown>

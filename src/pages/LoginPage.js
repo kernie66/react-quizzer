@@ -20,8 +20,6 @@ export default function LoginPage() {
   // const location = useLocation();
   const { showBoundary } = useErrorBoundary();
 
-  console.log("Reached login page");
-
   const form = useForm({
     initialValues: {
       username: "",

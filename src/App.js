@@ -20,11 +20,9 @@ import SSEProvider from "./contexts/SSEProvider.js";
 import QuizzerShell from "./components/QuizzerShell.js";
 import { IconContext } from "react-icons";
 import QuizzerProvider from "./contexts/QuizzerProvider.js";
+import { EventSourceProvider } from "react-sse-hooks";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
-
-//const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
-//const endpoint = BASE_API_URL + "/api/connect";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,64 +42,69 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <ApiProvider>
             <UserProvider>
-              <SSEProvider>
-                <QuizzerProvider>
-                  <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
-                    <IconContext.Provider value={iconDefaults}>
-                      <QuizzerShell>
-                        <Routes>
-                          <Route
-                            path="/login"
-                            element={
-                              <PublicRoute>
-                                <LoginPage />
-                              </PublicRoute>
-                            }
-                          />
-                          <Route
-                            path="/register"
-                            element={
-                              <PublicRoute>
-                                <RegistrationPage />
-                              </PublicRoute>
-                            }
-                          />
-                          <Route
-                            path="/reset-request"
-                            element={
-                              <PublicRoute>
-                                <ResetRequestPage />
-                              </PublicRoute>
-                            }
-                          />
-                          <Route
-                            path="/reset"
-                            element={
-                              <PublicRoute>
-                                <ResetPage />
-                              </PublicRoute>
-                            }
-                          />
-                          <Route
-                            path="*"
-                            element={
-                              <PrivateRoute>
-                                <Routes>
-                                  <Route path="/" element={<MainPage />} />
-                                  <Route path="/explore" element={<ExplorePage />} />
-                                  <Route path="/user/:id" element={<UserPage />} />
-                                  <Route path="/password" element={<ChangePasswordPage />} />
-                                  <Route path="*" element={<Navigate to="/" />} />
-                                </Routes>
-                              </PrivateRoute>
-                            }
-                          />
-                        </Routes>
-                      </QuizzerShell>
-                    </IconContext.Provider>
-                  </ErrorBoundary>
-                </QuizzerProvider>
-              </SSEProvider>
+              <EventSourceProvider>
+                <SSEProvider>
+                  <QuizzerProvider>
+                    <ErrorBoundary
+                      FallbackComponent={BasicErrorFallback}
+                      onError={logErrorToService}
+                    >
+                      <IconContext.Provider value={iconDefaults}>
+                        <QuizzerShell>
+                          <Routes>
+                            <Route
+                              path="/login"
+                              element={
+                                <PublicRoute>
+                                  <LoginPage />
+                                </PublicRoute>
+                              }
+                            />
+                            <Route
+                              path="/register"
+                              element={
+                                <PublicRoute>
+                                  <RegistrationPage />
+                                </PublicRoute>
+                              }
+                            />
+                            <Route
+                              path="/reset-request"
+                              element={
+                                <PublicRoute>
+                                  <ResetRequestPage />
+                                </PublicRoute>
+                              }
+                            />
+                            <Route
+                              path="/reset"
+                              element={
+                                <PublicRoute>
+                                  <ResetPage />
+                                </PublicRoute>
+                              }
+                            />
+                            <Route
+                              path="*"
+                              element={
+                                <PrivateRoute>
+                                  <Routes>
+                                    <Route path="/" element={<MainPage />} />
+                                    <Route path="/explore" element={<ExplorePage />} />
+                                    <Route path="/user/:id" element={<UserPage />} />
+                                    <Route path="/password" element={<ChangePasswordPage />} />
+                                    <Route path="*" element={<Navigate to="/" />} />
+                                  </Routes>
+                                </PrivateRoute>
+                              }
+                            />
+                          </Routes>
+                        </QuizzerShell>
+                      </IconContext.Provider>
+                    </ErrorBoundary>
+                  </QuizzerProvider>
+                </SSEProvider>
+              </EventSourceProvider>
             </UserProvider>
           </ApiProvider>
           <ReactQueryDevtools />

@@ -190,5 +190,7 @@
   "start-page": "Start page",
   "server-error": "Server error",
   "scroll-to-top": "Scroll to top",
-  "no-quizmaster": "No QuizMaster"
+  "no-quizmaster": "No QuizMaster",
+  "no-quizzers": "No quizzers",
+  "quizzers": "Quizzers"
 }

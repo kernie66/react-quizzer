@@ -5,9 +5,6 @@ import OnlineStatus from "../components/OnlineStatus.js";
 import QuizzerTable from "../components/QuizzerTable.js";
 import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
-//const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
-//const endpoint = BASE_API_URL + "/api/connect";
-
 export default function MainPage() {
   const { clients } = useQuizzers();
 

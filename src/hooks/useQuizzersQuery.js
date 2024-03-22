@@ -9,7 +9,7 @@ const doQuizzersQuery = (select, enabled) => {
   if (enabled !== undefined) {
     isEnabled = enabled;
   }
-  console.log("QuizzersQuery enabled:", isEnabled);
+  // console.log("QuizzersQuery enabled:", isEnabled);
 
   // Get the list of registered quizzers
   const getQuizzers = async () => {
@@ -47,7 +47,7 @@ export const useExcludeQuizzerQuery = (excludeId) =>
   doQuizzersQuery((data) => excludeQuizzer(data, excludeId));
 
 export const useGetQuizzerQuery = (includeId) => {
-  console.log("Query quizzer with ID:", includeId);
+  // console.log("Query quizzer with ID:", includeId);
   const enabled = includeId !== undefined && Number(includeId) > 0;
   return doQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)), enabled);
 };

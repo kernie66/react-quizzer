@@ -73,18 +73,10 @@ export const connectSSE = async (req, res, next) => {
       res,
     };
 
+    // Update clients without duplicate users (if logged in multiple times)
     const setClients = replaceOrAppend(clients, newClient, (f) => f.id === newClient.id);
-    logger.info("New clients array:", setClients.length);
     clients.splice(0, clients.length);
     setClients.map((setClient) => clients.push(setClient));
-    /*
-    if (clients.includes(clientId)) {
-      console.log("Duplicate client ID:", clientId);
-    } else {
-      clients.push(newClient);
-    }
-    */
-    logger.debug("Clients:", clients.length);
     clientsSSE();
     quizzersSSE();
 

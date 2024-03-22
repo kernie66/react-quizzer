@@ -107,7 +107,6 @@ export default class AxiosApiClient {
       this.removeLogin();
     }
     return response;
-    //  return redirect("/login");
   }
 
   isAuthenticated() {

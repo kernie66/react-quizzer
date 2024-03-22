@@ -190,5 +190,7 @@
   "start-page": "Startsida",
   "server-error": "Serverfel",
   "scroll-to-top": "Åter till toppen",
-  "no-quizmaster": "Ingen QuizMaster"
+  "no-quizmaster": "Ingen QuizMaster",
+  "quizzers": "Quizzare",
+  "no-quizzers": "Inga quizzare"
 }

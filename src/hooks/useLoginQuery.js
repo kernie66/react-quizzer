@@ -4,6 +4,7 @@ import queryPersister from "../helpers/queryPersister.js";
 
 export function useLoggedInQuery(select) {
   const api = useApi();
+  const queryClient = useQueryClient();
 
   // const enabled = api.isLoggedIn();
 
@@ -11,11 +12,12 @@ export function useLoggedInQuery(select) {
   const getLoggedIn = async () => {
     console.log("Get logged in user from server...");
     const response = await api.get("/login");
+    console.log("Check login:", response);
     if (response.ok) {
       // response.userId = api.getUserId();
-      console.log("Check login:", response);
       return response.data.userId;
     } else {
+      queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
       throw new Error("No logged in user found");
     }
   };
