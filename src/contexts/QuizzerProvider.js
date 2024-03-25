@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useApi } from "./ApiProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
@@ -6,7 +6,7 @@ import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 import { useSetState, useShallowEffect } from "@mantine/hooks";
 import queryPersister from "../helpers/queryPersister.js";
-import { useEventSourceListener } from "@react-nano/use-event-source";
+import { useEventSourceListener } from "react-sse-hooks"; // "@react-nano/use-event-source";
 import { useSSE } from "./SSEProvider.js";
 
 const QuizzerContext = createContext();
@@ -17,23 +17,33 @@ export default function QuizzerProvider({ children }) {
   const { showBoundary } = useErrorBoundary();
   const { globalEventSource } = useSSE();
   const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
+  const [clients, setClients] = useState(0);
 
-  useEventSourceListener(
-    globalEventSource,
-    ["quizzers"],
-    ({ data }) => {
-      const parsedData = JSON.parse(data);
-      if (parsedData.quizzers) {
-        setQuizzers({ quizzers: parsedData.quizzers });
-      }
-      if (parsedData.quizMaster) {
-        setQuizzers({ quizMaster: parsedData.quizMaster });
-      }
+  // eslint-disable-next-line no-unused-vars
+  const { startListening, stopListening } = useEventSourceListener(
+    {
+      source: globalEventSource,
+      startOnInit: false,
+      event: {
+        name: "quizzers",
+        listener: ({ data }) => {
+          console.log("data", data);
+          //const parsedData = JSON.parse(data);
+          if (data.quizzers) {
+            setQuizzers({ quizzers: data.quizzers });
+          }
+          if (data.quizMaster) {
+            setQuizzers({ quizMaster: data.quizMaster });
+          }
+        },
+      },
     },
-    [],
+    [globalEventSource],
   );
 
-  const clients = quizzers.quizzers.length + quizzers.quizMaster.length;
+  useEffect(() => {
+    setClients(quizzers.quizzers.length + quizzers.quizMaster.length);
+  }, [quizzers]);
 
   queryClient.setQueryDefaults(["authData"], {
     queryFn: () => null,
@@ -70,7 +80,9 @@ export default function QuizzerProvider({ children }) {
       // Check if the login is still valid
       try {
         if (loggedInId) {
-          console.log("Logged in user ID:", loggedInId);
+          console.log("Logged in quizzer ID:", loggedInId);
+          console.log("Start listening for quizzers");
+          startListening();
         } else if (isLoadingLoggedIn) {
           console.log("Loading login info");
         } else if (isErrorLoggedIn) {

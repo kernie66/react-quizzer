@@ -7,7 +7,6 @@
     "@mantine/form": "^7.6.2",
     "@mantine/hooks": "^7.6.2",
     "@mantine/notifications": "^7.6.2",
-    "@react-nano/use-event-source": "^0.13.0",
     "@tanstack/query-persist-client-core": "^5.28.6",
     "@tanstack/react-query": "^5.28.6",
     "@tanstack/react-table": "^8.13.2",

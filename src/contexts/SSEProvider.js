@@ -1,9 +1,13 @@
-import { createContext, useCallback, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+/*
 import { useTranslation } from "react-i18next";
 import { showNotification } from "@mantine/notifications";
 import { rem } from "@mantine/core";
 import { TbX } from "react-icons/tb";
 import { useEventSource } from "@react-nano/use-event-source";
+*/
+import { useEventSource } from "react-sse-hooks";
+import { useShallowEffect } from "@mantine/hooks";
 import { useUser } from "./UserProvider.js";
 
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
@@ -12,11 +16,11 @@ const endpoint = BASE_API_URL + "/api/connect";
 const SSEContext = createContext();
 
 export default function SSEProvider({ children }) {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
+  const [url, setUrl] = useState(endpoint);
   const { user } = useUser();
-  const [eventSource, eventSourceStatus] = useEventSource(endpoint + `/${user?.id}`, false);
-  const [globalEventSource, globalEventSourceStatus] = useEventSource(endpoint, false);
 
+  /*
   const onError = useCallback(() => {
     if (user) {
       showNotification({
@@ -28,28 +32,28 @@ export default function SSEProvider({ children }) {
       });
     }
   }, [t]);
-
+*/
   useEffect(() => {
-    console.log("User SSE status changed to:", eventSourceStatus);
-    if (eventSourceStatus === "error") {
-      onError();
+    let newUrl = endpoint;
+    if (user) {
+      console.log("user.id", user.id);
+      newUrl = endpoint + "/" + user.id;
     }
-  }, [eventSourceStatus]);
+    setUrl(newUrl);
+  }, [user]);
 
-  useEffect(() => {
-    console.log("Global SSE status changed to:", globalEventSourceStatus);
-    if (globalEventSourceStatus === "error") {
+  const globalEventSource = useEventSource({
+    source: url,
+  });
+
+  useShallowEffect(() => {
+    console.log("Global SSE status changed to:", globalEventSource.readyState);
+    /* if (globalEventSourceStatus === "error") {
       onError();
-    }
-  }, [globalEventSourceStatus]);
+    } */
+  }, [globalEventSource]);
 
-  return (
-    <SSEContext.Provider
-      value={{ eventSource, eventSourceStatus, globalEventSource, globalEventSourceStatus }}
-    >
-      {children}
-    </SSEContext.Provider>
-  );
+  return <SSEContext.Provider value={{ globalEventSource }}>{children}</SSEContext.Provider>;
 }
 
 export function useSSE() {

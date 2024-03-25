@@ -10,7 +10,6 @@ import zxcvbn from "zxcvbn";
 import passport from "passport";
 import setPath from "./utils/setPath.js";
 import { checkUser } from "./controllers/users.js";
-import { connectSSE } from "./controllers/userSSE.js";
 import { connectGlobalSSE } from "./controllers/globalSSE.js";
 import { apiRouter } from "./routes/apiRoutes.js";
 import { dbRouter } from "./routes/dbRoutes.js";
@@ -49,8 +48,8 @@ import { initSSE } from "./eventsSSE/initSSE.js";
 
 app.use(morgan("dev"));
 app.get("/api/check", checkUser);
-app.get("/api/connect/:id", connectSSE);
-app.get("/api/connect", connectGlobalSSE);
+app.get("/api/connect/:id", connectGlobalSSE);
+//app.get("/api/connect", connectGlobalSSE);
 app.use("/api/auth", publicRouter);
 app.use("/api/db", passport.authenticate("jwt", { session: false }), checkAdmin, dbRouter);
 app.use("/api", passport.authenticate("jwt", { session: false }), checkLoggedIn, apiRouter);

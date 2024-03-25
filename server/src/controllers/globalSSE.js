@@ -1,48 +1,77 @@
 import sse from "better-sse";
 import { globalChannel } from "../app.js";
 import { logger } from "../logger/logger.js";
+import { User, Token } from "../../models/index.js";
+import { isEmpty } from "radash";
+import { clients } from "../app.js";
+import { Unauthorized } from "../utils/errorHandler.js";
+import { clientsSSE, quizzersSSE } from "../eventsSSE/initSSE.js";
+import { replaceOrAppend } from "radash";
 
-export const connectGlobalSSE = async (req, res) => {
-  /*
-  const headers = {
-    Connection: "keep-alive",
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache",
-    "Access-Control-Allow-Origin": "*",
-  };
-  res.writeHead(200, headers);
+export const connectGlobalSSE = async (req, res, next) => {
+  let user = null;
 
-  res.write("event: connected\n\n");
-  logger.info("Global SSE connected");
-  res.write(`data: ${JSON.stringify("Global SSE connected!\n")}`);
-  res.write(`id: global\n`);
-  res.write("\n\n");
-  */
+  const reqId = req.params?.id;
 
-  const globalSession = await sse.createSession(req, res);
-  globalSession.on("disconnected", () => {
-    logger.info("Global SSE disconnected event");
-  });
-  globalChannel.register(globalSession);
-  logger.info("Global SSE connected");
-  // If compression middleware is used, then res.flash()
-  // must be added to send data to the user
-  // res.flush();
+  if (isNaN(reqId)) {
+    logger.debug("No user ID for SSE, ignoring request");
+    res.status(204);
+    //next();
+  } else {
+    try {
+      if (!isNaN(reqId)) {
+        logger.info("User ID (SSE):", reqId);
+        const userId = parseInt(reqId);
+        if (!isNaN(userId)) {
+          user = await User.findByPk(userId, {
+            attributes: {
+              exclude: ["hashedPassword"],
+            },
+          });
+        }
+      } else {
+        logger.error("No user ID for SSE");
+        res.status(204);
+        next();
+      }
+      if (user) {
+        const tokens = await Token.findAll({ where: { userId: user.id } });
+        if (isEmpty(tokens)) {
+          throw new Unauthorized("User ID not logged in (SSE)");
+        }
+      } else {
+        next();
+      }
+    } catch (error) {
+      logger.error("Database query failed (SSE):", error);
+      next(error);
+    }
 
-  //let counter = 1;
-  // Send a subsequent message every five seconds
-  //const pingTask = cron.schedule("*/5 * * * * *", () => {
-  /*
-  const data = {
-      message: "Connected",
-      id: counter,
-      clients: clients.length,
+    const clientId = user.id;
+
+    const newClient = {
+      id: clientId,
+      user: user.dataValues,
+      res,
     };
-    globalChannel.broadcast(data, "ping");
-    // ping(res);
-    counter += 1;
-  });
-  */
+
+    // Update clients without duplicate users (if logged in multiple times)
+    const setClients = replaceOrAppend(clients, newClient, (f) => f.id === newClient.id);
+    clients.splice(0, clients.length);
+    setClients.map((setClient) => clients.push(setClient));
+
+    const globalSession = await sse.createSession(req, res);
+    globalSession.on("disconnected", () => {
+      logger.info("Global SSE disconnected event");
+    });
+    globalChannel.register(globalSession);
+    logger.info("Global SSE connected");
+    logger.info(`${user.username} - Connection opened`);
+
+    clientsSSE();
+    quizzersSSE();
+  }
+
   /*
   // Close the connection when the client disconnects
   req.on("close", () => {

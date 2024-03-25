@@ -94,7 +94,7 @@ export const connectSSE = async (req, res, next) => {
         }
         return false;
       });
-      logger.info("Removed SSE client", removedClient[0].user.username);
+      // logger.info("Removed SSE client", removedClient[0].user.username);
       clientsSSE();
       quizzersSSE();
 

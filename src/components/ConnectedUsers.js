@@ -5,16 +5,42 @@ import { FaHatWizard } from "react-icons/fa6";
 import { useGetQuizzerQuery, useGetQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { useTranslation } from "react-i18next";
-import { useQuizzers } from "../contexts/QuizzerProvider.js";
+import { useEventSourceListener } from "react-sse-hooks";
+import { useSetState } from "@mantine/hooks";
+import { useSSE } from "../contexts/SSEProvider.js";
 
 export default function ConnectedUsers() {
   const { t } = useTranslation();
-  const { quizzers } = useQuizzers();
+  // const { quizzers } = useQuizzers();
   const noQuizMaster = t("no-quizmaster");
   const [numberOfQuizzers, setNumberOfQuizzers] = useState(0);
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);
   const [quizMasterName, setQuizMasterName] = useState(noQuizMaster);
+  const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
+  const { globalEventSource } = useSSE();
+
+  // eslint-disable-next-line no-unused-vars
+  const { startListening, stopListening } = useEventSourceListener(
+    {
+      source: globalEventSource,
+      startOnInit: true,
+      event: {
+        name: "quizzers",
+        listener: ({ data }) => {
+          console.log("data", data);
+          //const parsedData = JSON.parse(data);
+          if (data.quizzers) {
+            setQuizzers({ quizzers: data.quizzers });
+          }
+          if (data.quizMaster) {
+            setQuizzers({ quizMaster: data.quizMaster });
+          }
+        },
+      },
+    },
+    [globalEventSource],
+  );
 
   const {
     // isLoading: isLoadingQuizzers,

@@ -42,9 +42,13 @@ export default function LoginPage() {
         } else {
           userCheck.username = username;
         }
-        const existingUser = await api.get("/check", userCheck);
-        if (existingUser.status !== 200) {
-          errors.username = t("user-not-found");
+        try {
+          const existingUser = await api.get("/check", userCheck);
+          if (existingUser.status !== 200) {
+            errors.username = t("user-not-found");
+          }
+        } catch (error) {
+          throw new Error("User not found");
         }
       }
       if (!password) {

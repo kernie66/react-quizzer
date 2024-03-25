@@ -1,30 +1,13 @@
 import { useNetwork } from "@mantine/hooks";
 import { TbWifi, TbWifiOff } from "react-icons/tb";
-//import { useEventSourceListener } from "@react-nano/use-event-source";
 import { useEffect, useState } from "react";
-import { useEventSource, useEventSourceListener } from "react-sse-hooks";
-
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
-const endpoint = BASE_API_URL + "/api/connect";
+import { useEventSourceListener } from "react-sse-hooks";
+import { useSSE } from "../contexts/SSEProvider.js";
 
 export default function OnlineStatus() {
   const [pingCount, setPingCount] = useState("-");
   const networkStatus = useNetwork();
-  //  const { globalEventSource } = useSSE();
-  /*
-  useEventSourceListener(
-    globalEventSource,
-    ["ping"],
-    ({ data }) => {
-      setPingCount(data);
-    },
-    [setPingCount],
-  );
-*/
-
-  const globalEventSource = useEventSource({
-    source: endpoint,
-  });
+  const { globalEventSource } = useSSE();
 
   const { startListening, stopListening } = useEventSourceListener({
     source: globalEventSource,
