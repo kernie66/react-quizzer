@@ -192,5 +192,6 @@
   "scroll-to-top": "Scroll to top",
   "no-quizmaster": "No QuizMaster",
   "no-quizzers": "No quizzers",
-  "quizzers": "Quizzers"
+  "quizzers": "Quizzers",
+  "error-connecting-to-the-server-sent-events": "Error connecting to the server sent events"
 }

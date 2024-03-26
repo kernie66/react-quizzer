@@ -192,5 +192,6 @@
   "scroll-to-top": "Åter till toppen",
   "no-quizmaster": "Ingen QuizMaster",
   "quizzers": "Quizzare",
-  "no-quizzers": "Inga quizzare"
+  "no-quizzers": "Inga quizzare",
+  "error-connecting-to-the-server-sent-events": "Fel vid anslutning till servern för skickade händelser"
 }
