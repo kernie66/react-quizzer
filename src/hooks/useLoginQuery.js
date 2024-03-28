@@ -6,7 +6,7 @@ export function useLoggedInQuery(select) {
   const api = useApi();
   const queryClient = useQueryClient();
 
-  // const enabled = api.isLoggedIn();
+  const enabled = api.isAuthenticated();
 
   // Get the logged in user
   const getLoggedIn = async () => {
@@ -27,15 +27,9 @@ export function useLoggedInQuery(select) {
     queryFn: () => getLoggedIn(),
     select,
     retry: false,
-    staleTime: Infinity,
+    staleTime: 60 * 1000,
     gcTime: Infinity,
-    // enabled: enabled,
+    enabled: enabled,
     persister: queryPersister(),
   });
-}
-
-export function setLoginData(response) {
-  const queryClient = useQueryClient();
-
-  queryClient.setQueryData(["authData"], response);
 }

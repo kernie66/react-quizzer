@@ -56,6 +56,7 @@ export default function SSEProvider({ children }) {
       },
     },
   });
+
   return <SSEContext.Provider value={{ globalEventSource }}>{children}</SSEContext.Provider>;
 }
 

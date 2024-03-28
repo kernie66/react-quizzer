@@ -1,6 +1,6 @@
 import { useNetwork } from "@mantine/hooks";
 import { TbWifi, TbWifiOff } from "react-icons/tb";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useEventSourceListener } from "react-sse-hooks";
 import { useSSE } from "../contexts/SSEProvider.js";
 
@@ -9,6 +9,7 @@ export default function OnlineStatus() {
   const networkStatus = useNetwork();
   const { globalEventSource } = useSSE();
 
+  // eslint-disable-next-line no-unused-vars
   const { startListening, stopListening } = useEventSourceListener({
     source: globalEventSource,
     startOnInit: true,
@@ -17,15 +18,6 @@ export default function OnlineStatus() {
       listener: ({ data }) => setPingCount(data),
     },
   });
-
-  useEffect(() => {
-    if (startListening) {
-      console.log("Start listening");
-    }
-    if (stopListening) {
-      console.log("Stop listening");
-    }
-  }, [startListening, stopListening]);
 
   return (
     <>

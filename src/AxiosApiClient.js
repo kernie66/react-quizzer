@@ -93,11 +93,20 @@ export default class AxiosApiClient {
   }
 
   async checkLoggedIn() {
-    console.log("Checking login");
-    let response = await this.get("/login");
-    response.userId = this.getUserId();
-    console.log("Check login:", response);
-    return response;
+    try {
+      console.log("Checking login");
+      let response = await this.get("/login");
+      console.log("Check login:", response);
+      if (response.ok) {
+        response.userId = this.getUserId();
+        return response;
+      } else {
+        console.log("No logged in user");
+        return false;
+      }
+    } catch (error) {
+      console.log("No user logged in");
+    }
   }
 
   async logout() {
@@ -110,7 +119,6 @@ export default class AxiosApiClient {
   }
 
   isAuthenticated() {
-    // const userId = getLoggedInUserId();
     const userId = localStorage.getItem("userData");
     if (userId) {
       return true;

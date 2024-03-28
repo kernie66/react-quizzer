@@ -1,11 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useApi } from "./ApiProvider";
-import { useQueryClient } from "@tanstack/react-query";
 import { useErrorBoundary } from "react-error-boundary";
 import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
-import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 import { useSetState, useShallowEffect } from "@mantine/hooks";
-import queryPersister from "../helpers/queryPersister.js";
 import { useEventSourceListener } from "react-sse-hooks"; // "@react-nano/use-event-source";
 import { useSSE } from "./SSEProvider.js";
 
@@ -13,7 +10,6 @@ const QuizzerContext = createContext();
 
 export default function QuizzerProvider({ children }) {
   const api = useApi();
-  const queryClient = useQueryClient();
   const { showBoundary } = useErrorBoundary();
   const { globalEventSource } = useSSE();
   const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
@@ -23,7 +19,7 @@ export default function QuizzerProvider({ children }) {
   const { startListening, stopListening } = useEventSourceListener(
     {
       source: globalEventSource,
-      startOnInit: false,
+      startOnInit: true,
       event: {
         name: "quizzers",
         listener: ({ data }) => {
@@ -45,33 +41,11 @@ export default function QuizzerProvider({ children }) {
     setClients(quizzers.quizzers.length + quizzers.quizMaster.length);
   }, [quizzers]);
 
-  queryClient.setQueryDefaults(["authData"], {
-    queryFn: () => null,
-    staleTime: Infinity,
-    gcTime: Infinity,
-    persister: queryPersister(),
-  });
-
-  const updateUserQuery = (userData) => {
-    if (userData) {
-      console.log("Refresh quizzers query by invalidation");
-      queryClient.invalidateQueries({ queryKey: ["quizzers"] });
-    }
-  };
-
   const {
     isLoading: isLoadingLoggedIn,
     isError: isErrorLoggedIn,
     data: loggedInId,
   } = useLoggedInQuery();
-
-  const {
-    isLoading: isLoadingUser,
-    data: user,
-    isError: isUserError,
-    error,
-    // refetch: refreshUser,
-  } = useGetQuizzerQuery(loggedInId);
 
   useShallowEffect(() => {
     //let userId = 0;
@@ -95,21 +69,13 @@ export default function QuizzerProvider({ children }) {
         console.error("Error checking login:", error);
         showBoundary(error);
       }
+    } else {
+      stopListening();
     }
   }, [api, loggedInId, isErrorLoggedIn, isLoadingLoggedIn]);
 
-  useShallowEffect(() => {
-    console.log("Current user:", user);
-    console.log("Is loading user:", isLoadingUser);
-    console.log("Is user error:", isUserError);
-    if (isUserError) console.log("Error message:", error);
-    updateUserQuery(user);
-  }, [user, isLoadingUser, isUserError]);
-
   return (
-    <QuizzerContext.Provider value={{ quizzers, clients, user }}>
-      {children}
-    </QuizzerContext.Provider>
+    <QuizzerContext.Provider value={{ quizzers, clients }}>{children}</QuizzerContext.Provider>
   );
 }
 

@@ -28,8 +28,6 @@ export default function ConnectedUsers() {
       event: {
         name: "quizzers",
         listener: ({ data }) => {
-          console.log("data", data);
-          //const parsedData = JSON.parse(data);
           if (data.quizzers) {
             setQuizzers({ quizzers: data.quizzers });
           }
@@ -71,10 +69,6 @@ export default function ConnectedUsers() {
     setNumberOfQuizzers(quizzerCount);
     setQuizMasterName(quizMaster);
   }, [quizzers]);
-
-  if (quizzerNameArray) {
-    console.log("Quizzers for tooltip:", quizzerNameArray);
-  }
 
   return (
     <Group gap={8}>

@@ -5,8 +5,8 @@ import { useApi } from "../contexts/ApiProvider.js";
 const doQuizzersQuery = (select, enabled) => {
   const api = useApi();
 
-  let isEnabled = true; // api.isLoggedIn();
-  if (enabled !== undefined) {
+  let isEnabled = api.isAuthenticated();
+  if (enabled !== undefined && isEnabled) {
     isEnabled = enabled;
   }
   // console.log("QuizzersQuery enabled:", isEnabled);

@@ -21,7 +21,6 @@ export default function UserMenu() {
   }, [user]);
 
   useShallowEffect(() => {
-    console.log("User menu:", user);
     queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
   }, [user]);
 

@@ -6,7 +6,6 @@ import { useErrorBoundary } from "react-error-boundary";
 import { useLoggedInQuery } from "../hooks/useLoginQuery.js";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
 import { useShallowEffect } from "@mantine/hooks";
-import queryPersister from "../helpers/queryPersister.js";
 
 const UserContext = createContext();
 
@@ -15,13 +14,6 @@ export default function UserProvider({ children }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { showBoundary } = useErrorBoundary();
-
-  queryClient.setQueryDefaults(["authData"], {
-    queryFn: () => null,
-    staleTime: Infinity,
-    gcTime: Infinity,
-    persister: queryPersister(),
-  });
 
   const updateUserQuery = (userData) => {
     if (userData) {
@@ -33,14 +25,6 @@ export default function UserProvider({ children }) {
     } else {
       queryClient.setQueryData(["loggedIn"], 0);
     }
-  };
-
-  const updateAuthData = (data) => {
-    queryClient.setQueryData(["authData"], data);
-    queryClient.prefetchQuery({
-      queryKey: ["authData"],
-      queryFn: async () => console.log("Set query data"),
-    });
   };
 
   const {
@@ -56,6 +40,13 @@ export default function UserProvider({ children }) {
     error,
     // refetch: refreshUser,
   } = useGetQuizzerQuery(loggedInId);
+
+  const removeLogin = () => {
+    console.log("Remove login");
+    api.removeLogin();
+    queryClient.removeQueries(["loggedIn"]);
+    navigate("/login");
+  };
 
   useShallowEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
@@ -74,13 +65,14 @@ export default function UserProvider({ children }) {
         } else if (isErrorLoggedIn) {
           console.error("Error checking logged in user");
         } else {
-          console.log("Remove login");
-          api.removeLogin();
+          removeLogin();
         }
       } catch (error) {
         console.error("Error checking login:", error);
         showBoundary(error);
       }
+    } else {
+      removeLogin();
     }
   }, [api, loggedInId, isErrorLoggedIn, isLoadingLoggedIn]);
 
@@ -96,7 +88,6 @@ export default function UserProvider({ children }) {
     async (username, password) => {
       const result = await api.login(username, password);
       if (result.ok) {
-        updateAuthData(result.data);
         const userId = result.data.id;
         const response = await api.get("/users/" + userId);
         console.log("Logged in user:", response.data[0]);
@@ -111,7 +102,7 @@ export default function UserProvider({ children }) {
 
   const logout = useCallback(async () => {
     await api.logout();
-    navigate("/login");
+    removeLogin();
   }, [api]);
 
   return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
