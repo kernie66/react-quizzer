@@ -36,6 +36,7 @@ export default function SSEProvider({ children }) {
       startListening();
     } else {
       stopListening();
+      globalEventSource.close();
     }
     setUrl(newUrl);
   }, [user]);

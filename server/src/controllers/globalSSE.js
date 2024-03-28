@@ -70,6 +70,24 @@ export const connectGlobalSSE = async (req, res, next) => {
 
     clientsSSE();
     quizzersSSE();
+
+    req.on("close", () => {
+      logger.info(`${clientId} - Connection closed`);
+
+      const removedClient = clients.filter((client, index, arr) => {
+        if (client.id == clientId) {
+          arr.splice(index, 1);
+          // logger.debug(`Removed client ${client.user.username} with index ${index}`);
+          return true;
+        }
+        return false;
+      });
+      // logger.info("Removed SSE client", removedClient[0].user.username);
+      clientsSSE();
+      quizzersSSE();
+
+      res.end("OK");
+    });
   }
 
   /*

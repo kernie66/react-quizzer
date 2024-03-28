@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useEventSourceListener } from "react-sse-hooks";
 import { useSetState } from "@mantine/hooks";
 import { useSSE } from "../contexts/SSEProvider.js";
+import { useUser } from "../contexts/UserProvider.js";
 
 export default function ConnectedUsers() {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ export default function ConnectedUsers() {
   const [quizMasterName, setQuizMasterName] = useState(noQuizMaster);
   const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
   const { globalEventSource } = useSSE();
+  const { user } = useUser();
 
   // eslint-disable-next-line no-unused-vars
   const { startListening, stopListening } = useEventSourceListener(
@@ -69,6 +71,12 @@ export default function ConnectedUsers() {
     setNumberOfQuizzers(quizzerCount);
     setQuizMasterName(quizMaster);
   }, [quizzers]);
+
+  useEffect(() => {
+    if (!user) {
+      setQuizzers({ quizMaster: [], quizzers: [] });
+    }
+  }, [user]);
 
   return (
     <Group gap={8}>
