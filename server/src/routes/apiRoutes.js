@@ -26,7 +26,7 @@ import {
   disconnectGame,
   getPlayers,
 } from "../controllers/games.js";
-import { getClients } from "../controllers/userSSE.js";
+import { getClients } from "../controllers/globalSSE.js";
 
 export const apiRouter = Router();
 apiRouter.get("/", (req, res) => {

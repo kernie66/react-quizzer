@@ -82,20 +82,16 @@ export const connectGlobalSSE = async (req, res, next) => {
         }
         return false;
       });
-      // logger.info("Removed SSE client", removedClient[0].user.username);
+      logger.info("Removed SSE client for ", removedClient[0].user.username);
       clientsSSE();
       quizzersSSE();
 
       res.end("OK");
     });
   }
+};
 
-  /*
-  // Close the connection when the client disconnects
-  req.on("close", () => {
-    pingTask.stop();
-    res.end("OK");
-    logger.info(`Global SSE connection closed`);
-  });
-  */
+export const getClients = (req, res) => {
+  logger.debug("Clients:", clients.length);
+  res.status(200).json(clients.map((client) => client.user));
 };

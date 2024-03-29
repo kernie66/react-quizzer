@@ -73,10 +73,18 @@ export default function ConnectedUsers() {
   }, [quizzers]);
 
   useEffect(() => {
+    // Remove info if not logged in
     if (!user) {
       setQuizzers({ quizMaster: [], quizzers: [] });
     }
   }, [user]);
+
+  const setFW = (quizzer) => {
+    if (quizzer.id === user.id) {
+      return 600; // Quite bold
+    }
+    return 300; // Normal
+  };
 
   return (
     <Group gap={8}>
@@ -104,7 +112,7 @@ export default function ConnectedUsers() {
               quizzerNameArray.map((quizzer) => (
                 <Group gap={4} ms={-6} mb={4} key={quizzer.id}>
                   <QuizzerAvatar user={quizzer} size={24} />
-                  <Text>{quizzer.name}</Text>
+                  <Text fw={setFW(quizzer)}>{quizzer.name}</Text>
                 </Group>
               ))
             ) : (

@@ -59,23 +59,6 @@ const useConfirm = () => {
     modalProps: {},
   };
 
-  /*
-  ConfirmModal.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    message: PropTypes.node,
-    title: PropTypes.node,
-    confirmText: PropTypes.node,
-    cancelText: PropTypes.node,
-    confirmColor: PropTypes.string,
-    cancelColor: PropTypes.string,
-    className: PropTypes.string,
-    size: PropTypes.string,
-    buttonsComponent: PropTypes.func,
-    bodyComponent: PropTypes.func,
-    modalProps: PropTypes.object,
-  };
-  */
-
   return [getConfirmation, ConfirmModal];
 };
 

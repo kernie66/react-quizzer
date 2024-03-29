@@ -18,28 +18,10 @@ export default function UserPage() {
   const [avatarSize, setAvatarSize] = useState(128);
   const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
   const [openedUser, { open: openUser, close: closeUser }] = useDisclosure(false);
-  // const api = useApi();
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
   const { width } = useViewportSize();
-  //  const { showBoundary } = useErrorBoundary();
 
-  /*
-  const getUser = async (id) => {
-    const response = await api.get("/users/" + id);
-    if (response.ok) {
-      if (response.data[0].id === loggedInUser.id || loggedInUser.isAdmin) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
-      }
-      return response.data[0];
-    } else {
-      // setUser(null);
-      throw new Error("User not found");
-    }
-  };
-*/
   const {
     isLoading: isLoadingUser,
     data: user,
@@ -54,12 +36,6 @@ export default function UserPage() {
       setLoggedIn(false);
     }
   }, [user, loggedInUser]);
-  /*
-    useQuery({
-    queryKey: ["user", id],
-    queryFn: () => getUser(id),
-  });
-  */
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
