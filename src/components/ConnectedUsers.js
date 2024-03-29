@@ -79,6 +79,7 @@ export default function ConnectedUsers() {
     }
   }, [user]);
 
+  // Set font weight
   const setFW = (quizzer) => {
     if (quizzer.id === user.id) {
       return 600; // Quite bold

@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 import "./auth/passportConfig.js";
-import { initSSE } from "./eventsSSE/initSSE.js";
+import { initSSE } from "./eventsSSE/globalChannelEvents.js";
 
 app.use(morgan("dev"));
 app.get("/api/check", checkUser);

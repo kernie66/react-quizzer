@@ -5,7 +5,7 @@ import { User, Token } from "../../models/index.js";
 import { isEmpty } from "radash";
 import { clients } from "../app.js";
 import { Unauthorized } from "../utils/errorHandler.js";
-import { clientsSSE, quizzersSSE } from "../eventsSSE/initSSE.js";
+import { clientsSSE, quizzersSSE } from "../eventsSSE/globalChannelEvents.js";
 import { replaceOrAppend } from "radash";
 
 export const connectGlobalSSE = async (req, res, next) => {

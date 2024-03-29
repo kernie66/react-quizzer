@@ -4,14 +4,26 @@ import TimeAgo from "./TimeAgo";
 import { useTranslation } from "react-i18next";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { Group, Indicator, Text } from "@mantine/core";
+import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
+  const { quizzers } = useQuizzers();
+
+  const onlineStatus = () => {
+    if (quizzers.quizzers.includes(quizzer.id)) {
+      return "green";
+    } else if (quizzers.quizMaster.includes(quizzer.id)) {
+      return "blue";
+    } else {
+      return "grey";
+    }
+  };
 
   return (
     <Group className="Quizzer" mb="xs">
       <Group pr="0.5rem">
-        <Indicator offset={8} color="grey">
+        <Indicator offset={8} color={onlineStatus()}>
           <QuizzerAvatar user={quizzer} size={48} />
         </Indicator>
       </Group>
