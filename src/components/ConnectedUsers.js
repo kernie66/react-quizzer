@@ -5,10 +5,8 @@ import { FaHatWizard } from "react-icons/fa6";
 import { useGetQuizzerQuery, useGetQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { useTranslation } from "react-i18next";
-import { useEventSourceListener } from "react-sse-hooks";
-import { useSetState } from "@mantine/hooks";
-import { useSSE } from "../contexts/SSEProvider.js";
 import { useUser } from "../contexts/UserProvider.js";
+import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
 export default function ConnectedUsers() {
   const { t } = useTranslation();
@@ -18,10 +16,12 @@ export default function ConnectedUsers() {
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);
   const [quizMasterName, setQuizMasterName] = useState(noQuizMaster);
-  const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
-  const { globalEventSource } = useSSE();
+  // const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
+  // const { globalEventSource } = useSSE();
   const { user } = useUser();
+  const { quizzers } = useQuizzers();
 
+  /*
   // eslint-disable-next-line no-unused-vars
   const { startListening, stopListening } = useEventSourceListener(
     {
@@ -41,7 +41,7 @@ export default function ConnectedUsers() {
     },
     [globalEventSource],
   );
-
+*/
   const {
     // isLoading: isLoadingQuizzers,
     // isError: isQuizzerError,
@@ -72,13 +72,14 @@ export default function ConnectedUsers() {
     setQuizMasterName(quizMaster);
   }, [quizzers]);
 
+  /*
   useEffect(() => {
     // Remove info if not logged in
     if (!user) {
       setQuizzers({ quizMaster: [], quizzers: [] });
     }
   }, [user]);
-
+*/
   // Set font weight
   const setFW = (quizzer) => {
     if (quizzer.id === user.id) {
