@@ -10,38 +10,14 @@ import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
 export default function ConnectedUsers() {
   const { t } = useTranslation();
-  // const { quizzers } = useQuizzers();
   const noQuizMaster = t("no-quizmaster");
   const [numberOfQuizzers, setNumberOfQuizzers] = useState(0);
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);
   const [quizMasterName, setQuizMasterName] = useState(noQuizMaster);
-  // const [quizzers, setQuizzers] = useSetState({ quizMaster: [], quizzers: [] });
-  // const { globalEventSource } = useSSE();
   const { user } = useUser();
   const { quizzers } = useQuizzers();
 
-  /*
-  // eslint-disable-next-line no-unused-vars
-  const { startListening, stopListening } = useEventSourceListener(
-    {
-      source: globalEventSource,
-      startOnInit: true,
-      event: {
-        name: "quizzers",
-        listener: ({ data }) => {
-          if (data.quizzers) {
-            setQuizzers({ quizzers: data.quizzers });
-          }
-          if (data.quizMaster) {
-            setQuizzers({ quizMaster: data.quizMaster });
-          }
-        },
-      },
-    },
-    [globalEventSource],
-  );
-*/
   const {
     // isLoading: isLoadingQuizzers,
     // isError: isQuizzerError,
@@ -72,14 +48,6 @@ export default function ConnectedUsers() {
     setQuizMasterName(quizMaster);
   }, [quizzers]);
 
-  /*
-  useEffect(() => {
-    // Remove info if not logged in
-    if (!user) {
-      setQuizzers({ quizMaster: [], quizzers: [] });
-    }
-  }, [user]);
-*/
   // Set font weight
   const setFW = (quizzer) => {
     if (quizzer.id === user.id) {

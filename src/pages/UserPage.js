@@ -9,8 +9,10 @@ import Quizzers from "../components/Quizzers.js";
 import UserInfo from "../components/UserInfo.js";
 import QuizzerAvatar from "../components/QuizzerAvatar.js";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { Button, Divider, Group, Loader, Stack, Text, Title } from "@mantine/core";
+import { Button, Divider, Group, Indicator, Loader, Stack, Text, Title } from "@mantine/core";
 import { useGetQuizzerQuery } from "../hooks/useQuizzersQuery.js";
+import setQuizzerOnlineColour from "../helpers/setQuizzerOnlineColour.js";
+import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -21,6 +23,7 @@ export default function UserPage() {
   const { t } = useTranslation();
   const { user: loggedInUser } = useUser();
   const { width } = useViewportSize();
+  const { quizzers } = useQuizzers();
 
   const {
     isLoading: isLoadingUser,
@@ -78,12 +81,18 @@ export default function UserPage() {
     return <Text>{t("user-not-found")}</Text>;
   }
 
+  const onlineStatus = () => {
+    return setQuizzerOnlineColour(quizzers, user);
+  };
+
   return (
     <>
       <EditUser opened={openedUser} close={closeModal} user={user} />
       <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
       <Group align="start" mb="sm">
-        <QuizzerAvatar user={user} size={avatarSize} />
+        <Indicator offset={avatarSize / 8} size={avatarSize / 4} color={onlineStatus()}>
+          <QuizzerAvatar user={user} size={avatarSize} />
+        </Indicator>
         <Stack gap="xs">
           <Title order={2}>
             {user.name}{" "}

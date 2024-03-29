@@ -5,19 +5,14 @@ import { useTranslation } from "react-i18next";
 import QuizzerAvatar from "./QuizzerAvatar.js";
 import { Group, Indicator, Text } from "@mantine/core";
 import { useQuizzers } from "../contexts/QuizzerProvider.js";
+import setQuizzerOnlineColour from "../helpers/setQuizzerOnlineColour.js";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
   const { quizzers } = useQuizzers();
 
   const onlineStatus = () => {
-    if (quizzers.quizzers.includes(quizzer.id)) {
-      return "green";
-    } else if (quizzers.quizMaster.includes(quizzer.id)) {
-      return "blue";
-    } else {
-      return "grey";
-    }
+    return setQuizzerOnlineColour(quizzers, quizzer);
   };
 
   return (
