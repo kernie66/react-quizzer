@@ -55,7 +55,9 @@ export default function QuizzerShell({ children }) {
       </AppShell.Navbar>
       <ErrorBoundary FallbackComponent={BasicErrorFallback} onError={logErrorToService}>
         <ScrollArea h={mainHeight} type="auto" mt={headerHeight}>
-          <AppShell.Main bg="blue.1">{children}</AppShell.Main>
+          <AppShell.Main bg="blue.1" pt={{ base: "xs", sm: "md", lg: "lg" }}>
+            {children}
+          </AppShell.Main>
         </ScrollArea>
       </ErrorBoundary>
     </AppShell>

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Checkbox, ColorInput, ColorPicker, Text } from "@mantine/core";
+import { Button, Checkbox, ColorInput, ColorPicker, Stack, Text } from "@mantine/core";
 import { TbBrandMantine } from "react-icons/tb";
 import OnlineStatus from "../components/OnlineStatus.js";
 import QuizzerTable from "../components/QuizzerTable.js";
@@ -13,7 +13,7 @@ export default function MainPage() {
   }, []);
 
   return (
-    <>
+    <Stack pt={0}>
       <h3>Quiz info placeholder</h3>
       <Checkbox label="Ready to play some quiz" />
       <Button color="pink">
@@ -26,6 +26,6 @@ export default function MainPage() {
       <Text>Number of connected players: {clients}</Text>
       <Text>Local storage: {localStorage.getItem("userData")}</Text>
       <QuizzerTable />
-    </>
+    </Stack>
   );
 }
