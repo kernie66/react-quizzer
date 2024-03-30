@@ -17,6 +17,7 @@ import { useQuizzers } from "../contexts/QuizzerProvider.js";
 export default function UserPage() {
   const { id } = useParams();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [itsMe, setItsMe] = useState(false);
   const [avatarSize, setAvatarSize] = useState(128);
   const [openedAvatar, { open: openAvatar, close: closeAvatar }] = useDisclosure(false);
   const [openedUser, { open: openUser, close: closeUser }] = useDisclosure(false);
@@ -33,11 +34,17 @@ export default function UserPage() {
   } = useGetQuizzerQuery(id);
 
   useEffect(() => {
-    if (user?.id === loggedInUser.id || loggedInUser.isAdmin) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
+    let isMe = false;
+    let isLoggedIn = false;
+
+    if (user?.id === loggedInUser.id) {
+      isMe = true;
+      isLoggedIn = true;
+    } else if (loggedInUser.isAdmin) {
+      isLoggedIn = true;
     }
+    setItsMe(isMe);
+    setLoggedIn(isLoggedIn);
   }, [user, loggedInUser]);
 
   useEffect(() => {
@@ -90,7 +97,13 @@ export default function UserPage() {
       <EditUser opened={openedUser} close={closeModal} user={user} />
       <ChangeAvatar opened={openedAvatar} close={closeModal} user={user} />
       <Group align="start" mb="sm">
-        <Indicator offset={avatarSize / 8} size={avatarSize / 4} color={onlineStatus()}>
+        <Indicator
+          offset={avatarSize / 8}
+          size={avatarSize / 4}
+          color={onlineStatus()}
+          withBorder
+          processing={itsMe}
+        >
           <QuizzerAvatar user={user} size={avatarSize} />
         </Indicator>
         <Stack gap="xs">

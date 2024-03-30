@@ -9,10 +9,10 @@ import { useFullscreen, useNetwork, useShallowEffect, useViewportSize } from "@m
 import { TbMaximize, TbMinimize, TbWifi, TbWifiOff } from "react-icons/tb";
 import ConnectedUsers from "./ConnectedUsers.js";
 
-export default function Header({ opened, toggle }) {
+export default function Header({ opened, toggle, height = 42 }) {
   const { user } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
-  const { height, width } = useViewportSize();
+  const { height: viewportHeight, width: viewportWidth } = useViewportSize();
   const networkStatus = useNetwork();
   const { toggle: fullscreenToggle, fullscreen } = useFullscreen();
   const { t } = useTranslation();
@@ -37,7 +37,7 @@ export default function Header({ opened, toggle }) {
   }, [networkStatus]);
 
   return (
-    <Group h="100%" px="md">
+    <Group h={height} px="md">
       <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       <Group justify="space-between" style={{ flex: 1 }}>
         <UnstyledButton component={Link} to="/">
@@ -51,8 +51,8 @@ export default function Header({ opened, toggle }) {
         <Group ml="xl" gap="xs" visibleFrom="sm">
           {isAdmin && (
             <Stack gap={0} pr={8}>
-              <Text size="xs">X: {width}</Text>
-              <Text size="xs">Y: {height}</Text>
+              <Text size="xs">X: {viewportWidth}</Text>
+              <Text size="xs">Y: {viewportHeight}</Text>
             </Stack>
           )}
           {networkStatus.online ? <TbWifi color="green" /> : <TbWifiOff color="red" />}

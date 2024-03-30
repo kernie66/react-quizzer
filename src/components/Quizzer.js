@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import TimeAgo from "./TimeAgo";
 import { useTranslation } from "react-i18next";
@@ -6,19 +6,31 @@ import QuizzerAvatar from "./QuizzerAvatar.js";
 import { Group, Indicator, Text } from "@mantine/core";
 import { useQuizzers } from "../contexts/QuizzerProvider.js";
 import setQuizzerOnlineColour from "../helpers/setQuizzerOnlineColour.js";
+import { useUser } from "../contexts/UserProvider.js";
+import { useShallowEffect } from "@mantine/hooks";
 
 export default memo(function Quizzer({ quizzer }) {
   const { t } = useTranslation();
   const { quizzers } = useQuizzers();
+  const { user } = useUser();
+  const [itsMe, setItsMe] = useState(false);
 
   const onlineStatus = () => {
     return setQuizzerOnlineColour(quizzers, quizzer);
   };
 
+  useShallowEffect(() => {
+    let isMe = false;
+    if (quizzer.id === user.id) {
+      isMe = true;
+    }
+    setItsMe(isMe);
+  }, [quizzer, user]);
+
   return (
     <Group className="Quizzer" mb="xs">
       <Group pr="0.5rem">
-        <Indicator offset={8} color={onlineStatus()}>
+        <Indicator offset={8} color={onlineStatus()} processing={itsMe} withBorder size={16}>
           <QuizzerAvatar user={quizzer} size={48} />
         </Indicator>
       </Group>
