@@ -71,6 +71,7 @@ export const createGame = async (req, res) => {
 export const startGame = async (req, res) => {
   let quizMaster = req.user;
   const gameId = req.params.id;
+  logger.info("Starting game with ID:", gameId);
   if (req.body.quizMaster) {
     const quizMasterCheck = await User.findByPk(req.body.quizMaster);
     if (!isEmpty(quizMasterCheck)) {

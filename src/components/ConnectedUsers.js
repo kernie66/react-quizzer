@@ -10,11 +10,11 @@ import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
 export default function ConnectedUsers() {
   const { t } = useTranslation();
-  const noQuizMaster = t("no-quizmaster");
+  // const noQuizMaster = t("no-quizmaster");
   const [numberOfQuizzers, setNumberOfQuizzers] = useState(0);
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);
-  const [quizMasterName, setQuizMasterName] = useState(noQuizMaster);
+  const [quizMasterName, setQuizMasterName] = useState("");
   const { user } = useUser();
   const { quizzers } = useQuizzers();
 
@@ -24,12 +24,17 @@ export default function ConnectedUsers() {
     data: quizzerNameArray,
   } = useGetQuizzersQuery(quizzers.quizzers); //useQuizzersQuery();
 
+  const {
+    // isLoading: isLoadingQuizzers,
+    // isError: isQuizzerError,
+    data: quizMasterData,
+  } = useGetQuizzerQuery(quizzers.quizMaster[0]); //useQuizzersQuery();
+
   useEffect(() => {
     let userIcon = <TbUserOff color="red" />;
     let wizardIcon = <FaHatWizard color="gray" />;
     let quizzerCount = 0;
-    let quizMaster = noQuizMaster;
-    let quizMasterId = 0;
+    let quizMaster = "";
 
     quizzerCount = quizzers.quizzers.length;
     if (quizzerCount === 1) {
@@ -38,14 +43,15 @@ export default function ConnectedUsers() {
       userIcon = <TbUsers color="green" />;
     }
     if (quizzers.quizMaster.length === 1) {
-      quizMasterId = quizzers.quizMaster[0];
       wizardIcon = <FaHatWizard color="green" />;
-      quizMaster = useGetQuizzerQuery(quizMasterId);
+      console.log("quizMasterData", quizMasterData);
+      quizMaster = quizMasterData.name;
     }
     setQuizzerIcon(userIcon);
     setQuizMasterIcon(wizardIcon);
     setNumberOfQuizzers(quizzerCount);
     setQuizMasterName(quizMaster);
+    console.log("quizMaster", quizMaster);
   }, [quizzers]);
 
   // Set font weight
@@ -62,7 +68,18 @@ export default function ConnectedUsers() {
         <Popover.Target>
           <Group>{quizMasterIcon}</Group>
         </Popover.Target>
-        <Popover.Dropdown>{quizMasterName}</Popover.Dropdown>
+        <Popover.Dropdown>
+          <Text size="md">QuizMaster</Text>
+          <Divider mb={8} />
+          {quizMasterName ? (
+            <Group gap={4} ms={-6} mb={4}>
+              <QuizzerAvatar user={quizMasterData.id} size={24} />
+              <Text>{quizMasterName}</Text>
+            </Group>
+          ) : (
+            <Text fs="italic">{t("no-quizmaster")}</Text>
+          )}
+        </Popover.Dropdown>
       </Popover>
       -
       <Popover>
