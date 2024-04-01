@@ -10,11 +10,9 @@ import { useQuizzers } from "../contexts/QuizzerProvider.js";
 
 export default function ConnectedUsers() {
   const { t } = useTranslation();
-  // const noQuizMaster = t("no-quizmaster");
   const [numberOfQuizzers, setNumberOfQuizzers] = useState(0);
   const [quizzerIcon, setQuizzerIcon] = useState(<TbUserOff color="red" />);
   const [quizMasterIcon, setQuizMasterIcon] = useState(<FaHatWizard color="gray" />);
-  const [quizMasterName, setQuizMasterName] = useState("");
   const { user } = useUser();
   const { quizzers } = useQuizzers();
 
@@ -27,14 +25,13 @@ export default function ConnectedUsers() {
   const {
     // isLoading: isLoadingQuizzers,
     // isError: isQuizzerError,
-    data: quizMasterData,
+    data: quizMaster,
   } = useGetQuizzerQuery(quizzers.quizMaster[0]); //useQuizzersQuery();
 
   useEffect(() => {
     let userIcon = <TbUserOff color="red" />;
     let wizardIcon = <FaHatWizard color="gray" />;
     let quizzerCount = 0;
-    let quizMaster = "";
 
     quizzerCount = quizzers.quizzers.length;
     if (quizzerCount === 1) {
@@ -43,20 +40,16 @@ export default function ConnectedUsers() {
       userIcon = <TbUsers color="green" />;
     }
     if (quizzers.quizMaster.length === 1) {
-      wizardIcon = <FaHatWizard color="green" />;
-      console.log("quizMasterData", quizMasterData);
-      quizMaster = quizMasterData.name;
+      wizardIcon = <FaHatWizard color="blueviolet" />;
     }
     setQuizzerIcon(userIcon);
     setQuizMasterIcon(wizardIcon);
     setNumberOfQuizzers(quizzerCount);
-    setQuizMasterName(quizMaster);
-    console.log("quizMaster", quizMaster);
   }, [quizzers]);
 
   // Set font weight
-  const setFW = (quizzer) => {
-    if (quizzer.id === user.id) {
+  const setFW = (id) => {
+    if (id === user.id) {
       return 600; // Quite bold
     }
     return 300; // Normal
@@ -68,13 +61,13 @@ export default function ConnectedUsers() {
         <Popover.Target>
           <Group>{quizMasterIcon}</Group>
         </Popover.Target>
-        <Popover.Dropdown>
+        <Popover.Dropdown bg="violet.1">
           <Text size="md">QuizMaster</Text>
-          <Divider mb={8} />
-          {quizMasterName ? (
+          <Divider mb={8} size="sm" color="violet.3" />
+          {quizMaster ? (
             <Group gap={4} ms={-6} mb={4}>
-              <QuizzerAvatar user={quizMasterData.id} size={24} />
-              <Text>{quizMasterName}</Text>
+              <QuizzerAvatar user={quizMaster} size={24} />
+              <Text fw={setFW(quizMaster.id)}>{quizMaster.name}</Text>
             </Group>
           ) : (
             <Text fs="italic">{t("no-quizmaster")}</Text>
@@ -91,15 +84,15 @@ export default function ConnectedUsers() {
             </Badge>
           </Group>
         </Popover.Target>
-        <Popover.Dropdown>
+        <Popover.Dropdown bg="indigo.1">
           <Text size="md">{t("quizzers")}</Text>
-          <Divider mb={8} />
+          <Divider mb={8} size="sm" color="indigo.3" />
           <ScrollArea type="hover" mah="75vh" offsetScrollbars>
             {quizzerNameArray ? (
               quizzerNameArray.map((quizzer) => (
                 <Group gap={4} ms={-6} mb={4} key={quizzer.id}>
                   <QuizzerAvatar user={quizzer} size={24} />
-                  <Text fw={setFW(quizzer)}>{quizzer.name}</Text>
+                  <Text fw={setFW(quizzer.id)}>{quizzer.name}</Text>
                 </Group>
               ))
             ) : (
