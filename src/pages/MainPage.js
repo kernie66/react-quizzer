@@ -6,12 +6,14 @@ import QuizzerTable from "../components/QuizzerTable.js";
 import { useQuizzers } from "../contexts/QuizzerProvider.js";
 import { useApi } from "../contexts/ApiProvider.js";
 import { useUser } from "../contexts/UserProvider.js";
+import { useNavigate } from "react-router-dom";
 
 export default function MainPage() {
   const { clients } = useQuizzers();
   const [checked, setChecked] = useState(false);
   const api = useApi();
   const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -30,6 +32,10 @@ export default function MainPage() {
     if (checked) setQuizMaster();
   }, [checked]);
 
+  const gotoGameList = () => {
+    navigate("/gamelist");
+  };
+
   return (
     <Stack pt={0}>
       <h3>Quiz info placeholder</h3>
@@ -42,6 +48,7 @@ export default function MainPage() {
         <TbBrandMantine />
         Play
       </Button>
+      <Button onClick={gotoGameList}>Go to games list</Button>
       <ColorInput />
       <ColorPicker />
       <OnlineStatus />

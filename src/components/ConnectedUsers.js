@@ -39,7 +39,7 @@ export default function ConnectedUsers() {
     } else if (quizzerCount > 1) {
       userIcon = <TbUsers color="green" />;
     }
-    if (quizzers.quizMaster.length === 1) {
+    if (quizzers.quizMaster.length >= 1) {
       wizardIcon = <FaHatWizard color="blueviolet" />;
     }
     setQuizzerIcon(userIcon);

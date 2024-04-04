@@ -84,6 +84,7 @@ export const startGame = async (req, res) => {
   if (!isEmpty(game)) {
     if (game.status === "prepared" || req.body.restart) {
       await game.setQuizMaster(quizMaster);
+      game.gameMaster = quizMaster;
       game.status = "started";
       game.quizDate = Date.now();
       await game.save();

@@ -21,6 +21,7 @@ import QuizzerShell from "./components/QuizzerShell.js";
 import { IconContext } from "react-icons";
 import QuizzerProvider from "./contexts/QuizzerProvider.js";
 import { EventSourceProvider } from "react-sse-hooks";
+import GameListPage from "./pages/GameListPage.js";
 
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage.js"));
 
@@ -91,6 +92,7 @@ export default function App() {
                                   <Routes>
                                     <Route path="/" element={<MainPage />} />
                                     <Route path="/explore" element={<ExplorePage />} />
+                                    <Route path="/gamelist" element={<GameListPage />} />
                                     <Route path="/user/:id" element={<UserPage />} />
                                     <Route path="/password" element={<ChangePasswordPage />} />
                                     <Route path="*" element={<Navigate to="/" />} />

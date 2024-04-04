@@ -6,6 +6,10 @@ export const Game = db.define("game", {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  gameMaster: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   winner: {
     type: DataTypes.INTEGER,
     allowNull: true,
