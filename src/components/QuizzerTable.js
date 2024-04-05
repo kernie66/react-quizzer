@@ -1,16 +1,18 @@
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { Box } from "@mantine/core";
-import i18next from "i18next";
 import { useQuizzersQuery } from "../hooks/useQuizzersQuery.js";
 import QuizzersLoading from "./QuizzersLoading.js";
 import QuizzerLoadingError from "./QuizzerLoadingError.js";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import QuizzerAvatar from "./QuizzerAvatar.js";
-
-//Import Mantine React Table Translations
+import { MRT_Localization_EN } from "mantine-react-table/locales/en";
 import { MRT_Localization_SV } from "mantine-react-table/locales/sv";
+import { useTranslation } from "react-i18next";
 
 export default function QuizzerTable() {
+  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState(MRT_Localization_EN);
+
   const {
     isLoading: isLoadingQuizzers,
     isError: isQuizzerError,
@@ -21,7 +23,7 @@ export default function QuizzerTable() {
     () => [
       {
         accessorKey: "name",
-        header: i18next.t("name"),
+        header: t("name"),
         enableHiding: false,
         Cell: ({ renderedCellValue, row }) => (
           <Box display="flex">
@@ -32,14 +34,14 @@ export default function QuizzerTable() {
       },
       {
         accessorKey: "username",
-        header: i18next.t("username"),
+        header: t("username"),
       },
       {
         accessorKey: "email",
-        header: i18next.t("email"),
+        header: t("email"),
       },
     ],
-    [],
+    [language],
   );
 
   const table = useMantineReactTable({
@@ -68,7 +70,7 @@ export default function QuizzerTable() {
         minHeight: "2.4rem",
       },
     },
-    localization: MRT_Localization_SV,
+    localization: language,
   });
 
   if (isLoadingQuizzers) {
@@ -78,6 +80,13 @@ export default function QuizzerTable() {
   if (isQuizzerError) {
     return <QuizzerLoadingError />;
   }
+
+  useEffect(() => {
+    const fullLanguageCode = i18n.resolvedLanguage;
+    const shortLanguageCode = fullLanguageCode.split("-")[0];
+    if (shortLanguageCode === "en") setLanguage(MRT_Localization_EN);
+    if (shortLanguageCode === "sv") setLanguage(MRT_Localization_SV);
+  });
 
   return <MantineReactTable table={table} />;
 }
