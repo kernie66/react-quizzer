@@ -1,4 +1,4 @@
-import { Stack, Text } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../contexts/ApiProvider.js";
 import GameTable from "../components/GameTable.js";
@@ -27,8 +27,9 @@ export default function GameListPage() {
   return (
     <Stack pt={0}>
       <h3>Game list</h3>
-      <Text>Number of games: {games.length}</Text>
-      <GameTable />
+      <GameTable games={games} />
     </Stack>
   );
 }
+
+// <Text>Number of games: {games?.length}</Text>

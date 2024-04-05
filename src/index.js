@@ -5,7 +5,8 @@ import "./services/i18n";
 // core styles are required for all packages
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-
+import "@mantine/dates/styles.css"; //if using mantine date picker features
+import "mantine-react-table/styles.css"; //import MRT styles
 // other css files are required only if
 // you are using components from the corresponding package
 // import '@mantine/dates/styles.css';
