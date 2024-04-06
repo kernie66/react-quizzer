@@ -1,7 +1,7 @@
 import { Stack } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../contexts/ApiProvider.js";
-import GameTable from "../components/GameTable.js";
+import GameTable from "../components/tables/GameTable.js";
 
 export default function GameListPage() {
   const api = useApi();

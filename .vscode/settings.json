@@ -19,5 +19,9 @@
     "doesnt",
     "Popover"
   ],
-  "eslint.workingDirectories": ["./", "./server"]
+  "eslint.workingDirectories": [
+    "./",
+    "./server"
+  ],
+  "javascript.preferences.importModuleSpecifierEnding": "js"
 }

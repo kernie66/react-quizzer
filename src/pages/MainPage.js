@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Checkbox, ColorInput, ColorPicker, Stack, Text } from "@mantine/core";
 import { TbBrandMantine } from "react-icons/tb";
 import OnlineStatus from "../components/OnlineStatus.js";
-import QuizzerTable from "../components/QuizzerTable.js";
+import QuizzerTable from "../components/tables/QuizzerTable.js";
 import { useQuizzers } from "../contexts/QuizzerProvider.js";
 import { useApi } from "../contexts/ApiProvider.js";
 import { useUser } from "../contexts/UserProvider.js";

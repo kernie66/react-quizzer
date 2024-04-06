@@ -193,5 +193,9 @@
   "no-quizmaster": "No QuizMaster",
   "no-quizzers": "No quizzers",
   "quizzers": "Quizzers",
-  "error-connecting-to-the-server-sent-events": "Error connecting to the server sent events"
+  "error-connecting-to-the-server-sent-events": "Error connecting to the server sent events",
+  "quiz-date": "Quiz Date",
+  "id": "ID",
+  "quiz-master": "Quiz Master",
+  "quiz-status": "Quiz Status"
 }

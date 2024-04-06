@@ -1,10 +1,10 @@
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { Box } from "@mantine/core";
-import { useQuizzersQuery } from "../hooks/useQuizzersQuery.js";
-import QuizzersLoading from "./QuizzersLoading.js";
-import QuizzerLoadingError from "./QuizzerLoadingError.js";
+import { useQuizzersQuery } from "../../hooks/useQuizzersQuery.js";
 import { useEffect, useMemo, useState } from "react";
-import QuizzerAvatar from "./QuizzerAvatar.js";
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { TbRefresh } from "react-icons/tb";
+import QuizzerAvatar from "../QuizzerAvatar.js";
 import { MRT_Localization_EN } from "mantine-react-table/locales/en";
 import { MRT_Localization_SV } from "mantine-react-table/locales/sv";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,8 @@ export default function QuizzerTable() {
   const {
     isLoading: isLoadingQuizzers,
     isError: isQuizzerError,
-    data: quizzers,
+    data: quizzers = [],
+    refetch,
   } = useQuizzersQuery();
 
   const columns = useMemo(
@@ -47,6 +48,7 @@ export default function QuizzerTable() {
   const table = useMantineReactTable({
     data: quizzers,
     columns,
+    state: { isLoading: isLoadingQuizzers },
     debugAll: false,
     initialState: {
       density: "xs",
@@ -70,9 +72,23 @@ export default function QuizzerTable() {
         minHeight: "2.4rem",
       },
     },
+    mantineToolbarAlertBannerProps: isQuizzerError
+      ? {
+          color: "red",
+          children: "Error loading data",
+        }
+      : undefined,
+    renderTopToolbarCustomActions: () => (
+      <Tooltip label="Refresh Data">
+        <ActionIcon variant="transparent" onClick={() => refetch()}>
+          <TbRefresh />
+        </ActionIcon>
+      </Tooltip>
+    ),
     localization: language,
   });
 
+  /*
   if (isLoadingQuizzers) {
     return <QuizzersLoading />;
   }
@@ -80,6 +96,7 @@ export default function QuizzerTable() {
   if (isQuizzerError) {
     return <QuizzerLoadingError />;
   }
+  */
 
   useEffect(() => {
     const fullLanguageCode = i18n.resolvedLanguage;
