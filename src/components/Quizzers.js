@@ -4,7 +4,7 @@ import { Affix, Button, Divider, ScrollArea, Stack, Text, Transition, rem } from
 import { TbArrowUp } from "react-icons/tb";
 import { useWindowScroll } from "@mantine/hooks";
 import { useExcludeQuizzerQuery } from "../hooks/useQuizzersQuery.js";
-import QuizzerLoadingError from "./QuizzerLoadingError.js";
+import { QuizzerLoadingError } from "./LoadingErrors.js";
 import QuizzersLoading from "./QuizzersLoading.js";
 
 export default function Quizzers({ currentId }) {

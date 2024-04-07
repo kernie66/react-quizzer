@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { MRT_Localization_EN } from "mantine-react-table/locales/en";
 import { MRT_Localization_SV } from "mantine-react-table/locales/sv";
+import { GamesLoadingError } from "../LoadingErrors.js";
 
 export default function GameTable() {
   const { t, i18n } = useTranslation();
@@ -13,6 +14,7 @@ export default function GameTable() {
 
   const {
     isLoading: isLoadingGames,
+    isFetching: isFetchingGames,
     isError: isGamesError,
     data: games = [],
     refetch,
@@ -29,8 +31,10 @@ export default function GameTable() {
         header: t("quiz-master"),
       },
       {
-        accessorKey: "status",
+        accessorFn: (originalRow) => t(originalRow.status),
+        id: "status",
         header: t("quiz-status"),
+        filterVariant: "multi-select",
       },
       {
         accessorKey: "quizDate",
@@ -43,12 +47,17 @@ export default function GameTable() {
   const table = useMantineReactTable({
     data: games,
     columns,
-    state: { isLoading: isLoadingGames },
+    enableFacetedValues: true,
+    state: {
+      isLoading: isLoadingGames,
+      showProgressBars: isFetchingGames,
+      showAlertBanner: isGamesError,
+    },
     debugAll: false,
     mantineToolbarAlertBannerProps: isGamesError
       ? {
           color: "red",
-          children: "Error loading data",
+          children: <GamesLoadingError />,
         }
       : undefined,
     renderTopToolbarCustomActions: () => (

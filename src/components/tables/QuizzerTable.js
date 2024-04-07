@@ -8,6 +8,7 @@ import QuizzerAvatar from "../QuizzerAvatar.js";
 import { MRT_Localization_EN } from "mantine-react-table/locales/en";
 import { MRT_Localization_SV } from "mantine-react-table/locales/sv";
 import { useTranslation } from "react-i18next";
+import { QuizzerLoadingError } from "../LoadingErrors.js";
 
 export default function QuizzerTable() {
   const { t, i18n } = useTranslation();
@@ -15,6 +16,7 @@ export default function QuizzerTable() {
 
   const {
     isLoading: isLoadingQuizzers,
+    isFetching: isFetchingQuizzers,
     isError: isQuizzerError,
     data: quizzers = [],
     refetch,
@@ -48,7 +50,11 @@ export default function QuizzerTable() {
   const table = useMantineReactTable({
     data: quizzers,
     columns,
-    state: { isLoading: isLoadingQuizzers },
+    state: {
+      isLoading: isLoadingQuizzers,
+      showProgressBars: isFetchingQuizzers,
+      showAlertBanner: isQuizzerError,
+    },
     debugAll: false,
     initialState: {
       density: "xs",
@@ -75,7 +81,7 @@ export default function QuizzerTable() {
     mantineToolbarAlertBannerProps: isQuizzerError
       ? {
           color: "red",
-          children: "Error loading data",
+          children: <QuizzerLoadingError />,
         }
       : undefined,
     renderTopToolbarCustomActions: () => (
