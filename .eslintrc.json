@@ -7,7 +7,7 @@
   "root": true,
   "extends": [
     "eslint:recommended",
-//    "@mantine/eslint-config",
+    //    "@mantine/eslint-config",
     "plugin:react/jsx-runtime",
     "plugin:react/recommended",
     "plugin:jest/recommended",
@@ -40,6 +40,9 @@
     }
   ],
   "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
     "ecmaVersion": "latest",
     "sourceType": "module"
   },

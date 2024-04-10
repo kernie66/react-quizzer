@@ -16,7 +16,7 @@ export function useLoggedInQuery(select) {
     if (response.ok) {
       // response.userId = api.getUserId();
       return response.data.userId;
-    } else {
+    } else if (response.status === 401) {
       queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
       throw new Error("No logged in user found");
     }
