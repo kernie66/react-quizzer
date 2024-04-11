@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { alphabetical, fork, select } from "radash";
-import { useApi } from "../contexts/ApiProvider.js";
+import { useApi } from "../contexts/ApiProvider";
 
 const doQuizzersQuery = (select, enabled) => {
   const api = useApi();

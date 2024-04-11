@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useApi } from "../contexts/ApiProvider.js";
-import queryPersister from "../helpers/queryPersister.js";
+import { useApi } from "../contexts/ApiProvider";
+import queryPersister from "../helpers/queryPersister";
 
 export function useLoggedInQuery(select) {
   const api = useApi();

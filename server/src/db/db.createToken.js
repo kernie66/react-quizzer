@@ -1,8 +1,8 @@
 import { isEmpty } from "radash";
 import { Token, User } from "../../models/index.js";
 import jwt from "jsonwebtoken";
-const { sign } = jwt;
 import { logger } from "../logger/logger.js";
+const { sign } = jwt;
 
 export default async function dbCreateToken(id) {
   try {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
 const myAxios = axios.create({
   baseURL: BASE_API_URL + "/api",

@@ -23,7 +23,7 @@ export const authUser = async (username, password, done) => {
     }
     logger.debug("User info:", user.dataValues);
     // Ensure to get the real hashed password and not the redacted print version
-    const devNoAuth = process.env.NODE_ENV === "development" && process.env.NO_AUTH;
+    const devNoAuth = import.meta.env.NODE_ENV === "development" && import.meta.env.NO_AUTH;
     if (user.dataValues.hashedPassword) {
       const passwordsMatch = await bcrypt.compare(password, user.dataValues.hashedPassword);
       if (passwordsMatch || devNoAuth) {

@@ -1,4 +1,4 @@
-import isValidEmail from "./isValidEmail.js";
+import isValidEmail from "./isValidEmail";
 
 export default function isInvalidUsername(username) {
   let usernameError;

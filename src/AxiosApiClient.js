@@ -1,5 +1,5 @@
-import myAxios from "./myAxios.instance.js";
-import { clearLoggedInUserId, getLoggedInUserId } from "./helpers/queryDataHelper.js";
+import myAxios from "./myAxios.instance";
+import { clearLoggedInUserId, getLoggedInUserId } from "./helpers/queryDataHelper";
 
 export default class AxiosApiClient {
   constructor(onError) {

@@ -1,12 +1,10 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import FlashProvider from "../src/contexts/FlashProvider.js";
-import ApiProvider from "../src/contexts/ApiProvider.js";
-// eslint-disable-next-line
-import i18n from "./i18nForTest.js";
-import TestAuthComponent from "./components/ApiProvider.test/TestAuthComponent.js";
-import TestLoginComponent from "./components/ApiProvider.test/TestLoginComponent.js";
+import FlashProvider from "../src/contexts/FlashProvider";
+import ApiProvider from "../src/contexts/ApiProvider";
+import TestAuthComponent from "./components/ApiProvider.test/TestAuthComponent";
+import TestLoginComponent from "./components/ApiProvider.test/TestLoginComponent";
 import userEvent from "@testing-library/user-event";
-import myAxios from "../src/myAxios.instance.js";
+import myAxios from "../src/myAxios.instance";
 import MockAdapter from "axios-mock-adapter";
 
 const mockAxios = new MockAdapter(myAxios, { onNoMatch: "throwException" });

@@ -1,5 +1,5 @@
 import { alphabetical, fork } from "radash";
-import { useApi } from "../contexts/ApiProvider.js";
+import { useApi } from "../contexts/ApiProvider";
 
 // Get the list of registered quizzers, optionally excluding one user ID
 export default async function getQuizzers(excludeId) {

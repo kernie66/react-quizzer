@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { alphabetical } from "radash";
-import { useApi } from "../contexts/ApiProvider.js";
+import { useApi } from "../contexts/ApiProvider";
 
 const doGamesQuery = (select, enabled) => {
   const api = useApi();
