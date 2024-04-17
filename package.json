@@ -67,12 +67,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
-    "@babel/plugin-syntax-flow": "^7.24.1",
-    "@babel/plugin-transform-private-property-in-object": "^7.24.1",
-    "@babel/plugin-transform-react-jsx": "^7.23.4",
-    "@babel/preset-env": "^7.24.4",
-    "@babel/preset-react": "^7.24.1",
     "@tanstack/eslint-plugin-query": "^5.28.11",
     "@tanstack/react-query-devtools": "^5.29.2",
     "@testing-library/dom": "^10.0.0",
@@ -84,8 +78,6 @@
     "@typescript-eslint/parser": "^7.7.0",
     "@vitejs/plugin-react": "^4.2.1",
     "axios-mock-adapter": "^1.22.0",
-    "babel-jest": "^29.7.0",
-    "babel-plugin-macros": "^3.1.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
