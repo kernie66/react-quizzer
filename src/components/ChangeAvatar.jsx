@@ -25,7 +25,7 @@ export default function ChangeAvatar({ user, opened, close }) {
 
   useEffect(() => {
     setUserData(user);
-  }, [user]);
+  }, [user, setUserData]);
 
   useEffect(() => {
     const newUrl = url + `d=${avatarType}`;
@@ -33,11 +33,11 @@ export default function ChangeAvatar({ user, opened, close }) {
       avatarType: avatarType,
       avatarUrl: newUrl,
     });
-  }, [avatarType]);
+  }, [avatarType, setUserData, url]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    if (user.avatarType != userData.avatarType) {
+    if (user.avatarType !== userData.avatarType) {
       const response = await api.put("/users/" + user.id, { avatarType: userData.avatarType });
       if (response.ok) {
         showNotification({

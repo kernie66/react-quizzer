@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "checkJs": false,
+    "allowJs": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "target": "es2020",
     "module": "NodeNext"
   },

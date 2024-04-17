@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Divider, Grid, List, PasswordInput, Popover, Text } from "@mantine/core";
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import getPasswordStrength from "../helpers/getPasswordStrength";
 import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.jsx";
@@ -17,7 +17,10 @@ export default function SetPassword({ form, focus = false }) {
     suggestions: [],
     score: 0,
   });
-  const userInputs = [form.values.username, form.values.email, "Saab", "Quizzer", "lösenord"];
+
+  const userInputs = useMemo(() => {
+    return [form.values.username, form.values.email, "Saab", "Quizzer", "lösenord"];
+  }, [form.values]);
 
   useEffect(() => {
     (async () => {
@@ -41,7 +44,7 @@ export default function SetPassword({ form, focus = false }) {
       console.log("zxcvbnResult:", zxcvbnResult);
       setPasswordCheck({ warning: tooltipText, suggestions: suggestions, score: score });
     })();
-  }, [debouncedPassword]);
+  }, [debouncedPassword, password.length, setPasswordCheck, userInputs]);
 
   const updatePassword = (event) => {
     const typedPassword = event.currentTarget.value;

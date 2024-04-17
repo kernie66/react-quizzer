@@ -13,7 +13,7 @@ export default function UserInfo({ user }) {
   useEffect(() => {
     interval.start();
     return interval.stop;
-  }, [update]);
+  }, [update, interval]);
 
   return (
     <List

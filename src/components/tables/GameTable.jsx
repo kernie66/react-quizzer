@@ -41,7 +41,7 @@ export default function GameTable() {
         header: t("quiz-date"),
       },
     ],
-    [],
+    [t],
   );
 
   const table = useMantineReactTable({
@@ -85,7 +85,7 @@ export default function GameTable() {
     const shortLanguageCode = fullLanguageCode.split("-")[0];
     if (shortLanguageCode === "en") setLanguage(MRT_Localization_EN);
     if (shortLanguageCode === "sv") setLanguage(MRT_Localization_SV);
-  });
+  }, [setLanguage]);
 
   return <MantineReactTable table={table} />;
 }

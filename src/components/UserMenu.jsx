@@ -1,7 +1,6 @@
 import { useUser } from "../contexts/UserProvider";
 import { Avatar, Group, Menu, rem } from "@mantine/core";
 import { TbChevronDown } from "react-icons/tb";
-import { quizzerMenuItems } from "../helpers/quizzerMenuItems";
 import { useState } from "react";
 import { useShallowEffect } from "@mantine/hooks";
 import { useQueryClient } from "@tanstack/react-query";

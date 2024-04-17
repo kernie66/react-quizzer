@@ -2,7 +2,7 @@ import { alphabetical, fork } from "radash";
 import { useApi } from "../contexts/ApiProvider";
 
 // Get the list of registered quizzers, optionally excluding one user ID
-export default async function getQuizzers(excludeId) {
+export default async function useGetQuizzers(excludeId) {
   const api = useApi();
   let quizzers = [];
   console.log("Excluding ID:", excludeId);

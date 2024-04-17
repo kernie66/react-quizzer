@@ -20,7 +20,7 @@ export default function TimeAgo({ isoDate }) {
 
   useEffect(() => {
     setLanguage(i18n.resolvedLanguage);
-  });
+  }, [i18n.resolvedLanguage]);
 
   return <span title={date.toString()}>{rtf.format(time, unit)}</span>;
 }

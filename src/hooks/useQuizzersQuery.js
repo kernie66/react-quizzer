@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { alphabetical, fork, select } from "radash";
 import { useApi } from "../contexts/ApiProvider";
 
-const doQuizzersQuery = (select, enabled) => {
+export const useQuizzersQuery = (select, enabled) => {
   const api = useApi();
 
   let isEnabled = api.isAuthenticated();
@@ -32,7 +32,7 @@ const doQuizzersQuery = (select, enabled) => {
   });
 };
 
-export const useQuizzersQuery = () => doQuizzersQuery();
+// export const useQuizzersQuery = () => doQuizzersQuery();
 
 const excludeQuizzer = (quizzers, excludeId) => {
   let modifiedQuizzers = quizzers;
@@ -44,16 +44,16 @@ const excludeQuizzer = (quizzers, excludeId) => {
 };
 
 export const useExcludeQuizzerQuery = (excludeId) =>
-  doQuizzersQuery((data) => excludeQuizzer(data, excludeId));
+  useQuizzersQuery((data) => excludeQuizzer(data, excludeId));
 
 export const useGetQuizzerQuery = (includeId) => {
   // console.log("Query quizzer with ID:", includeId);
   const enabled = includeId !== undefined && Number(includeId) > 0;
-  return doQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)), enabled);
+  return useQuizzersQuery((data) => data.find((q) => q.id === Number(includeId)), enabled);
 };
 
 export const useGetQuizzersQuery = (quizzerArray) =>
-  doQuizzersQuery((data) =>
+  useQuizzersQuery((data) =>
     select(
       data,
       (q) => q,

@@ -1,7 +1,6 @@
 import { AppShell, Divider, ScrollArea } from "@mantine/core";
 import Header from "./Header.jsx";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { quizzerMenuItems } from "../helpers/quizzerMenuItems";
 import { useUser } from "../contexts/UserProvider";
 import { ErrorBoundary } from "react-error-boundary";
 import { BasicErrorFallback, logErrorToService } from "../helpers/errorHandlers";

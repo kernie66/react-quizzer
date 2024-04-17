@@ -14,7 +14,7 @@ import {
 } from "react-icons/tb";
 import { useUser } from "../contexts/UserProvider.jsx";
 
-export function quizzerMenuItems(padding, toggle) {
+export function QuizzerMenuItems(padding, toggle) {
   const { user, logout } = useUser();
   const { t } = useTranslation();
   const location = useLocation();

@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "module": "ESNext",
     "checkJs": true,
     "jsx": "react",
-    "baseUrl": "./src",
-    "paths": {
-      "@mantine/core": ["./node_modules/@mantine/core/lib/index.d.ts"]
-    }
+    "baseUrl": "./src"
   },
   "include": ["src/**/*"]
 }

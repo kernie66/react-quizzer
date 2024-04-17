@@ -33,7 +33,7 @@ export default function EditUser({ opened, close, user }) {
 
   useEffect(() => {
     setUser(user);
-  }, [user]);
+  }, [user, setUser]);
 
   const form = useForm({
     initialValues: {
@@ -225,7 +225,7 @@ export default function EditUser({ opened, close, user }) {
               <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("name", _user.name)}
-                style={{ display: form.values.name != _user.name ? undefined : "none" }}
+                style={{ display: form.values.name !== _user.name ? undefined : "none" }}
               />
             }
             data-autofocus
@@ -241,7 +241,7 @@ export default function EditUser({ opened, close, user }) {
               <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("username", _user.username)}
-                style={{ display: form.values.username != _user.username ? undefined : "none" }}
+                style={{ display: form.values.username !== _user.username ? undefined : "none" }}
               />
             }
           />
@@ -256,7 +256,7 @@ export default function EditUser({ opened, close, user }) {
               <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("email", _user.email)}
-                style={{ display: form.values.email != _user.email ? undefined : "none" }}
+                style={{ display: form.values.email !== _user.email ? undefined : "none" }}
               />
             }
           />
