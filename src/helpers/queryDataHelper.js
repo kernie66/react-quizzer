@@ -1,8 +1,6 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { queryClient } from "../App";
 
-export const useGetLoggedInUserId = () => {
-  const queryClient = useQueryClient();
-
+export const getLoggedInUserId = () => {
   const queryState = queryClient.getQueryState(["loggedIn"]);
   console.log(queryState);
   if (queryState?.status === "error") {
@@ -11,8 +9,6 @@ export const useGetLoggedInUserId = () => {
   return queryClient.getQueryData(["loggedIn"]);
 };
 
-export const useClearLoggedInUserId = () => {
-  const queryClient = useQueryClient();
-
+export const clearLoggedInUserId = () => {
   queryClient.setQueryData(["loggedIn"], 0);
 };

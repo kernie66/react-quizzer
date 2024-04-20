@@ -5,6 +5,7 @@ import { useUser } from "../contexts/UserProvider";
 import { ErrorBoundary } from "react-error-boundary";
 import { BasicErrorFallback, logErrorToService } from "../helpers/errorHandlers";
 import { useEffect, useState } from "react";
+import { QuizzerMenuItems } from "../helpers/QuizzerMenuItems.jsx";
 
 const headerHeight = 48;
 
@@ -13,7 +14,7 @@ export default function QuizzerShell({ children }) {
   const { user } = useUser();
   const { height: viewportHeight } = useViewportSize();
   const [mainHeight, setMainHeight] = useState(0);
-  const menuItems = quizzerMenuItems(16, toggle);
+  const menuItems = QuizzerMenuItems(16, toggle);
 
   useEffect(() => {
     setMainHeight(viewportHeight - headerHeight);

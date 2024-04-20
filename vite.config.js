@@ -11,6 +11,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), eslint()],
     server: {
       port: env.PORT,
+      fs: {
+        cachedChecks: false,
+      },
     },
   };
 });

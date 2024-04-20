@@ -4,7 +4,6 @@
     "module": "ESNext",
     "checkJs": true,
     "jsx": "react",
-    "baseUrl": "./src"
-  },
-  "include": ["src/**/*"]
+    "baseUrl": "."
+  }
 }

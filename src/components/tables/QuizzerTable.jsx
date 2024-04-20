@@ -44,7 +44,7 @@ export default function QuizzerTable() {
         header: t("email"),
       },
     ],
-    [language, t],
+    [t],
   );
 
   const table = useMantineReactTable({
@@ -109,7 +109,7 @@ export default function QuizzerTable() {
     const shortLanguageCode = fullLanguageCode.split("-")[0];
     if (shortLanguageCode === "en") setLanguage(MRT_Localization_EN);
     if (shortLanguageCode === "sv") setLanguage(MRT_Localization_SV);
-  }, [setLanguage]);
+  }, [setLanguage, i18n.resolvedLanguage]);
 
   return <MantineReactTable table={table} />;
 }

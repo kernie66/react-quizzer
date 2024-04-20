@@ -4,10 +4,11 @@ import { TbChevronDown } from "react-icons/tb";
 import { useState } from "react";
 import { useShallowEffect } from "@mantine/hooks";
 import { useQueryClient } from "@tanstack/react-query";
+import { QuizzerMenuItems } from "../helpers/QuizzerMenuItems";
 
 export default function UserMenu() {
   const { user } = useUser();
-  const menuItems = quizzerMenuItems(1);
+  const menuItems = QuizzerMenuItems(1);
   const [avatarImage, setAvatarImage] = useState(null);
   const queryClient = useQueryClient();
 
