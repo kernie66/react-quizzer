@@ -30,7 +30,7 @@ export default function MainPage() {
       }
     };
     if (checked) setQuizMaster();
-  }, [checked]);
+  }, [checked, api, user.id]);
 
   const gotoGameList = () => {
     navigate("/gamelist");

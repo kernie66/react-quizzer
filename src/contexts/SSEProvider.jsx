@@ -26,7 +26,7 @@ export default function SSEProvider({ children }) {
         autoClose: 8000,
       });
     }
-  }, [t]);
+  }, [t, user]);
 
   useEffect(() => {
     let newUrl = endpoint;

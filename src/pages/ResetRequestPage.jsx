@@ -37,7 +37,7 @@ export default function ResetRequestPage() {
     setLanguage(languageCode.split("-")[0]);
     const currentURL = window.location.href;
     setResetURL(currentURL.replace("/reset-request", "/reset"));
-  }, []);
+  }, [i18n.resolvedLanguage]);
 
   const onSubmit = async () => {
     try {

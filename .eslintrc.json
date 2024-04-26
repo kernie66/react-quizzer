@@ -11,8 +11,7 @@
     "plugin:react/jsx-runtime",
     "plugin:react/recommended",
     "plugin:jest/recommended",
-    "plugin:@tanstack/eslint-plugin-query/recommended",
-    "react-app"
+    "plugin:@tanstack/eslint-plugin-query/recommended"
   ],
   "plugins": ["react", "@tanstack/query", "@typescript-eslint"],
   "overrides": [

@@ -1,14 +1,13 @@
+import { ActionIcon, Box, Tooltip } from "@mantine/core";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { Box } from "@mantine/core";
-import { useQuizzersQuery } from "../../hooks/useQuizzersQuery";
-import { useEffect, useMemo, useState } from "react";
-import { ActionIcon, Tooltip } from "@mantine/core";
-import { TbRefresh } from "react-icons/tb";
-import QuizzerAvatar from "../QuizzerAvatar";
 import { MRT_Localization_EN } from "mantine-react-table/locales/en/index.cjs";
 import { MRT_Localization_SV } from "mantine-react-table/locales/sv/index.cjs";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { TbRefresh } from "react-icons/tb";
+import { useQuizzersQuery } from "../../hooks/useQuizzersQuery";
 import { QuizzerLoadingError } from "../LoadingErrors";
+import QuizzerAvatar from "../QuizzerAvatar";
 
 export default function QuizzerTable() {
   const { t, i18n } = useTranslation();

@@ -1,11 +1,11 @@
-import { TbRefresh } from "react-icons/tb";
-import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { useGamesQuery } from "../../hooks/useGamesQuery";
-import { useMemo, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { ActionIcon, Tooltip } from "@mantine/core";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { MRT_Localization_EN } from "mantine-react-table/locales/en/index.cjs";
 import { MRT_Localization_SV } from "mantine-react-table/locales/sv/index.cjs";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { TbRefresh } from "react-icons/tb";
+import { useGamesQuery } from "../../hooks/useGamesQuery";
 import { GamesLoadingError } from "../LoadingErrors";
 
 export default function GameTable() {
@@ -85,7 +85,7 @@ export default function GameTable() {
     const shortLanguageCode = fullLanguageCode.split("-")[0];
     if (shortLanguageCode === "en") setLanguage(MRT_Localization_EN);
     if (shortLanguageCode === "sv") setLanguage(MRT_Localization_SV);
-  }, [setLanguage]);
+  }, [setLanguage, i18n.resolvedLanguage]);
 
   return <MantineReactTable table={table} />;
 }

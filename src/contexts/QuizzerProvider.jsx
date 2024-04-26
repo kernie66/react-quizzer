@@ -37,7 +37,7 @@ export default function QuizzerProvider({ children }) {
     if (!user) {
       setQuizzers({ quizMaster: [], quizzers: [] });
     }
-  }, [user]);
+  }, [user, setQuizzers]);
 
   useEffect(() => {
     setClients(quizzers.quizzers.length + quizzers.quizMaster.length);
