@@ -7,7 +7,7 @@ import useConfirm from "../hooks/useConfirm";
 import isInvalidUsername from "../helpers/isInvalidUsername";
 import { showNotification } from "@mantine/notifications";
 import { TbArrowBackUp, TbCheck, TbExclamationCircle, TbX } from "react-icons/tb";
-import { useSetState } from "@mantine/hooks";
+import { useSetState, useShallowEffect } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import {
   Button,
@@ -20,7 +20,6 @@ import {
   Textarea,
   rem,
 } from "@mantine/core";
-import { useEffect } from "react";
 import { useQuizzersQuery } from "../hooks/useQuizzersQuery";
 
 export default function EditUser({ opened, close, user }) {
@@ -30,10 +29,6 @@ export default function EditUser({ opened, close, user }) {
   const api = useApi();
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
-
-  useEffect(() => {
-    setUser(user);
-  }, [user, setUser]);
 
   const form = useForm({
     initialValues: {
@@ -46,6 +41,14 @@ export default function EditUser({ opened, close, user }) {
       name: (value) => (value.length < 2 ? t("please-enter-a-name") : null),
     },
   });
+
+  useShallowEffect(() => {
+    setUser(user);
+  }, [user]);
+
+  useShallowEffect(() => {
+    form.setValues(user);
+  }, [user]);
 
   const {
     isLoading: isLoadingQuizzers,

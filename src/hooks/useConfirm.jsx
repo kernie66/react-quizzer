@@ -21,7 +21,7 @@ const useConfirm = () => {
   };
 
   const ConfirmModal = ({
-    message,
+    message = "Undefined",
     title,
     confirmText,
     cancelText,
