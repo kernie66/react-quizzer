@@ -8,12 +8,14 @@
   "extends": [
     "eslint:recommended",
     //    "@mantine/eslint-config",
-    "plugin:react/jsx-runtime",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
     "plugin:jest/recommended",
-    "plugin:@tanstack/eslint-plugin-query/recommended"
+    "plugin:@tanstack/eslint-plugin-query/recommended",
+    "plugin:jsx-a11y/recommended"
   ],
-  "plugins": ["react", "@tanstack/query", "@typescript-eslint"],
+  "plugins": ["react", "@tanstack/query", "@typescript-eslint", "jsx-a11y"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"], // Your TypeScript files extension
@@ -35,7 +37,9 @@
       "files": ["*.js"],
       "rules": {
         "@typescript-eslint/no-unused-vars": "off",
-        "no-unused-vars": "error"
+        "no-unused-vars": "error",
+        "react/display-name": "error",
+        "react/no-children-prop": "error"
       }
     }
   ],
