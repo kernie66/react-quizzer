@@ -8,7 +8,7 @@ import isInvalidUsername from "../helpers/isInvalidUsername";
 import { showNotification } from "@mantine/notifications";
 import { TbArrowBackUp, TbCheck, TbExclamationCircle, TbX } from "react-icons/tb";
 import { useSetState, useShallowEffect } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { hasLength, useForm } from "@mantine/form";
 import {
   Button,
   CloseButton,
@@ -23,22 +23,47 @@ import {
 import { useQuizzersQuery } from "../hooks/useQuizzersQuery";
 
 export default function EditUser({ opened, close, user }) {
-  const [confirmModalText, setConfirmModalText] = useSetState({});
+  const { t } = useTranslation();
+  const [confirmModalText, setConfirmModalText] = useSetState({
+    title: "",
+    message: "",
+    confirmText: t("confirm"),
+    cancelText: t("cancel"),
+    size: "sm",
+  });
   const [_user, setUser] = useSetState(user);
+  const [confirmedChange, setConfirmedChange] = useSetState({ username: "", email: "" });
+  const [displayUndo, setDisplayUndo] = useSetState({
+    name: false,
+    username: false,
+    email: false,
+    aboutMe: false,
+  });
   const [getConfirmation, ConfirmModal] = useConfirm();
   const api = useApi();
-  const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       name: _user.name,
       username: _user.username,
       email: _user.email,
       aboutMe: _user.aboutMe || "",
     },
+    validateInputOnBlur: true,
+    onValuesChange: (values) => {
+      setDisplayUndo({
+        name: form.isDirty("name"),
+        username: form.isDirty("username"),
+        email: values.email !== _user.email,
+        aboutMe: values.aboutMe !== _user.aboutMe,
+      });
+    },
     validate: {
-      name: (value) => (value.length < 2 ? t("please-enter-a-name") : null),
+      name: hasLength({ min: 2, max: 20 }, t("please-enter-a-name")),
+      username: (value) => checkUsername(value),
+      email: (value) => checkEmail(value),
     },
   });
 
@@ -47,6 +72,8 @@ export default function EditUser({ opened, close, user }) {
   }, [user]);
 
   useShallowEffect(() => {
+    console.log("user", user);
+    form.setInitialValues(user);
     form.setValues(user);
   }, [user]);
 
@@ -56,108 +83,126 @@ export default function EditUser({ opened, close, user }) {
     data: quizzers,
   } = useQuizzersQuery();
 
-  const checkUsername = async () => {
-    let usernameError;
+  const checkUsername = (username) => {
+    let usernameError = null;
 
-    const newUsername = trim(form.values.username.toLowerCase());
+    const newUsername = trim(username.toLowerCase());
+    console.log("newUsername", newUsername);
     form.setFieldValue("username", newUsername);
-    if (newUsername && newUsername !== _user.username) {
-      const invalidUsername = isInvalidUsername(newUsername);
-      usernameError = invalidUsername && t(invalidUsername);
-
-      if (!usernameError) {
-        const checkUsername = quizzers.filter((quizzer) => {
-          return quizzer.username === newUsername;
-        });
-
-        if (!isEmpty(checkUsername)) {
-          usernameError = t("username-already-registered");
+    if (newUsername) {
+      if (newUsername !== _user.username) {
+        const invalidUsername = isInvalidUsername(newUsername);
+        if (invalidUsername) {
+          usernameError = t(invalidUsername);
         } else {
-          setConfirmModalText({
-            title: t("update-username"),
-            message: (
-              <Text>
-                {t("do-you-want-to-change-your-username")}
-                <br />
-                {t("from")}:&nbsp;
-                <Text span c="green" fw={500}>
-                  {_user.username}
-                </Text>
-                <br />
-                {t("to")}:&nbsp;
-                <Text span c="blue" fw={500}>
-                  {newUsername}
-                </Text>
-              </Text>
-            ),
-            confirmText: t("confirm"),
-            cancelText: t("cancel"),
-            size: "sm",
+          const existingUsername = quizzers.filter((quizzer) => {
+            return quizzer.username === newUsername;
           });
-          const confirm = await getConfirmation();
-          if (!confirm) {
-            form.setFieldValue("username", _user.username);
+          if (!isEmpty(existingUsername)) {
+            usernameError = t("username-already-registered");
+          }
+        }
+        if (!usernameError) {
+          if (newUsername !== confirmedChange.username) {
+            updateUsername(newUsername);
           }
         }
       }
     } else {
       usernameError = t("please-enter-a-username");
     }
-
-    form.setFieldError("username", usernameError);
-    return Promise.resolve("Username checked");
+    return usernameError;
   };
 
-  const checkEmail = async () => {
-    let emailError;
+  const updateUsername = async (newUsername) => {
+    let confirmedUsername = newUsername;
 
-    const newEmailAddress = trim(form.values.email.toLowerCase());
+    setConfirmModalText({
+      title: t("update-username"),
+      message: (
+        <Text>
+          {t("do-you-want-to-change-your-username")}
+          <br />
+          {t("from")}:&nbsp;
+          <Text span c="green" fw={500}>
+            {_user.username}
+          </Text>
+          <br />
+          {t("to")}:&nbsp;
+          <Text span c="blue" fw={500}>
+            {newUsername}
+          </Text>
+        </Text>
+      ),
+    });
+    const confirm = await getConfirmation();
+    if (!confirm) {
+      form.setFieldValue("username", _user.username);
+      confirmedUsername = "";
+    }
+    setConfirmedChange({ username: confirmedUsername });
+    return Promise.resolve("Username to be updated");
+  };
+
+  const checkEmail = (email) => {
+    let emailError = null;
+
+    const newEmailAddress = trim(email.toLowerCase());
     form.setFieldValue("email", newEmailAddress);
-    if (newEmailAddress && newEmailAddress !== _user.email) {
-      if (!isValidEmail(newEmailAddress)) {
-        emailError = t("please-enter-a-valid-email-address");
-      } else {
-        const checkEmailAddress = quizzers.filter((quizzer) => {
-          return quizzer.email === newEmailAddress;
-        });
-
-        if (!isEmpty(checkEmailAddress)) {
-          emailError = t("email-address-already-registered");
-        } else if (!isValidEmail(newEmailAddress)) {
+    if (newEmailAddress) {
+      if (newEmailAddress !== _user.email) {
+        if (!isValidEmail(newEmailAddress)) {
           emailError = t("please-enter-a-valid-email-address");
         } else {
-          setConfirmModalText({
-            title: t("update-email"),
-            message: (
-              <Text>
-                {t("do-you-want-to-change-your-email")}
-                <br />
-                {t("from")}:&nbsp;
-                <Text span c="green" fw={500}>
-                  {_user.email}
-                </Text>
-                <br />
-                {t("to")}:&nbsp;
-                <Text span c="blue" fw={500}>
-                  {newEmailAddress}
-                </Text>
-              </Text>
-            ),
-            confirmText: t("confirm"),
-            cancelText: t("cancel"),
-            size: "md",
+          const existingEmailAddress = quizzers.filter((quizzer) => {
+            return quizzer.email === newEmailAddress;
           });
-          const confirm = await getConfirmation();
-          if (!confirm) {
-            form.setFieldValue("email", _user.email);
+          if (!isEmpty(existingEmailAddress)) {
+            emailError = t("email-address-already-registered");
+          } else if (!isValidEmail(newEmailAddress)) {
+            emailError = t("please-enter-a-valid-email-address");
+          }
+        }
+        if (!emailError) {
+          if (newEmailAddress !== confirmedChange.email) {
+            updateEmail(newEmailAddress);
           }
         }
       }
     } else {
       emailError = t("please-enter-a-valid-email-address");
     }
-    form.setFieldError("email", emailError);
-    return Promise.resolve("Email checked");
+    return emailError;
+  };
+
+  const updateEmail = async (newEmailAddress) => {
+    let confirmedEmail = newEmailAddress;
+
+    setConfirmModalText({
+      title: t("update-email"),
+      message: (
+        <Text>
+          {t("do-you-want-to-change-your-email")}
+          <br />
+          {t("from")}:&nbsp;
+          <Text span c="green" fw={500}>
+            {_user.email}
+          </Text>
+          <br />
+          {t("to")}:&nbsp;
+          <Text span c="blue" fw={500}>
+            {newEmailAddress}
+          </Text>
+        </Text>
+      ),
+    });
+    const confirm = await getConfirmation();
+    if (!confirm) {
+      form.setFieldValue("email", _user.email);
+      confirmedEmail = "";
+    }
+    setConfirmedChange({ email: confirmedEmail });
+    return Promise.resolve("Email to be updated");
   };
 
   const onSubmit = async () => {
@@ -168,25 +213,26 @@ export default function EditUser({ opened, close, user }) {
       if (errors) {
         return;
       }
+      const formValues = form.getValues();
 
       console.log("Dirty?", form.isDirty());
       if (form.isDirty()) {
         const response = await api.put("/users/" + _user.id, {
-          name: form.values.name,
-          email: form.values.email,
-          aboutMe: form.values.aboutMe,
+          name: formValues.name,
+          email: formValues.email,
+          aboutMe: formValues.aboutMe,
         });
 
         if (response.ok) {
           showNotification({
-            title: form.values.name,
+            title: formValues.name,
             message: t("your-profile-has-been-updated"),
             color: "green",
             icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
           });
         } else {
           showNotification({
-            title: form.values.name,
+            title: formValues.name,
             message: t("the-profile-could-not-be-updated"),
             color: "red",
             icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
@@ -194,7 +240,7 @@ export default function EditUser({ opened, close, user }) {
         }
       } else {
         showNotification({
-          title: form.values.name,
+          title: formValues.name,
           message: t("the-profile-was-not-changed"),
           color: "blue",
           icon: <TbExclamationCircle style={{ width: rem(18), height: rem(18) }} />,
@@ -228,7 +274,7 @@ export default function EditUser({ opened, close, user }) {
               <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("name", _user.name)}
-                style={{ display: form.values.name !== _user.name ? undefined : "none" }}
+                style={{ display: displayUndo.name ? undefined : "none" }}
               />
             }
             data-autofocus
@@ -238,13 +284,12 @@ export default function EditUser({ opened, close, user }) {
             {...form.getInputProps("username")}
             withAsterisk
             mb="md"
-            onBlur={checkUsername}
             rightSectionPointerEvents="all"
             rightSection={
               <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("username", _user.username)}
-                style={{ display: form.values.username !== _user.username ? undefined : "none" }}
+                style={{ display: displayUndo.username ? undefined : "none" }}
               />
             }
           />
@@ -253,13 +298,12 @@ export default function EditUser({ opened, close, user }) {
             {...form.getInputProps("email")}
             withAsterisk
             mb="md"
-            onBlur={checkEmail}
             rightSectionPointerEvents="all"
             rightSection={
               <TbArrowBackUp
                 aria-label="Undo input"
                 onClick={() => form.setFieldValue("email", _user.email)}
-                style={{ display: form.values.email !== _user.email ? undefined : "none" }}
+                style={{ display: displayUndo.email ? undefined : "none" }}
               />
             }
           />
@@ -271,7 +315,7 @@ export default function EditUser({ opened, close, user }) {
               <CloseButton
                 aria-label="Clear input"
                 onClick={() => form.setFieldValue("aboutMe", "")}
-                style={{ display: form.values.aboutMe ? undefined : "none" }}
+                style={{ display: displayUndo.aboutMe ? undefined : "none" }}
               />
             }
           />

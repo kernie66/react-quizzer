@@ -28,5 +28,6 @@
   "files.autoSave": "onFocusChange", // optional but recommended
   "vs-code-prettier-eslint.prettierLast": false,
   "javascript.preferences.importModuleSpecifier": "shortest",
-  "autoimport.doubleQuotes": true // set as "true" to run 'prettier' last not first
+  "autoimport.doubleQuotes": true,
+  "iridium.npm.packageManager": "pnpm" // set as "true" to run 'prettier' last not first
 }
