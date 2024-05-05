@@ -201,5 +201,6 @@
   "quiz-master": "Quiz-master",
   "prepared": "Skapat",
   "started": "Startat",
-  "games": "Spel"
+  "games": "Spel",
+  "registration-of-new-user-failed-on-server-please-try-again": "Registrering av ny användare misslyckades på servern, försök igen"
 }

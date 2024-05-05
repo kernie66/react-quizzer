@@ -201,5 +201,6 @@
   "quiz-status": "Quiz Status",
   "prepared": "Prepared",
   "started": "Started",
-  "games": "Games"
+  "games": "Games",
+  "registration-of-new-user-failed-on-server-please-try-again": "Registration of new user failed on server, please try again"
 }

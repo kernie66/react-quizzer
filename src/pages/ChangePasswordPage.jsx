@@ -18,6 +18,7 @@ export default function ChangePasswordPage() {
   const navigate = useNavigate();
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       oldPassword: "",
       password: "",
@@ -36,10 +37,10 @@ export default function ChangePasswordPage() {
   });
 
   const onSubmit = async () => {
-    console.log("Passwords:", form.values);
+    const formValues = form.getValues();
     const response = await api.put(`/users/${user.id}/password`, {
-      oldPassword: form.values.oldPassword,
-      newPassword: form.values.password,
+      oldPassword: formValues.oldPassword,
+      newPassword: formValues.password,
     });
     if (response.status === 201) {
       showNotification({

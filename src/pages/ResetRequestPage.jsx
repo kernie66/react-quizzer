@@ -24,6 +24,7 @@ export default function ResetRequestPage() {
   const isMobile = useMediaQuery("(max-width: 50em)");
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       email: "",
     },
@@ -42,7 +43,7 @@ export default function ResetRequestPage() {
   const onSubmit = async () => {
     try {
       const response = await api.post("/auth/request-reset", {
-        email: form.values.email,
+        email: form.getValues().email,
         resetURL: resetURL,
         language: language,
       });

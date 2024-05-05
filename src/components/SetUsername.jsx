@@ -12,7 +12,7 @@ export default function SetUsername({ form, focus = true }) {
   const checkUsername = async () => {
     let usernameError;
 
-    const newUsername = trim(form.values.username.toLowerCase());
+    const newUsername = trim(form.getValues().username.toLowerCase());
     form.setFieldValue("username", newUsername);
     if (newUsername) {
       const invalidUsername = isInvalidUsername(newUsername);

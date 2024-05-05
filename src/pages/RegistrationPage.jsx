@@ -8,10 +8,12 @@ import SetPassword from "../components/SetPassword";
 import { sift } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
 import { Button, Divider, Group, Modal, rem } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { hasLength, matchesField, useForm } from "@mantine/form";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
+import isValidEmail from "../helpers/isValidEmail";
+import isInvalidUsername from "../helpers/isInvalidUsername";
 
 export default function RegistrationPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -22,6 +24,7 @@ export default function RegistrationPage() {
   const isMobile = useMediaQuery("(max-width: 50em)");
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       username: "",
       email: "",
@@ -29,10 +32,10 @@ export default function RegistrationPage() {
       password2: "",
     },
     validate: {
-      username: (value) => (value.length === 0 ? t("please-select-a-username") : null),
-      email: (value) => (value.length === 0 ? t("please-enter-a-valid-email-address") : null),
-      password: (value) => (value.length === 0 ? t("please-select-a-password") : null),
-      password2: (value) => (value.length === 0 ? t("please-repeat-the-password") : null),
+      username: (value) => (isInvalidUsername(value) ? t("please-select-a-username") : null),
+      email: (value) => (!isValidEmail(value) ? t("please-enter-a-valid-email-address") : null),
+      password: hasLength({ min: 3 }, t("please-select-a-password")),
+      password2: matchesField("password", t("please-repeat-the-password")),
     },
   });
 
@@ -47,12 +50,13 @@ export default function RegistrationPage() {
         return;
       }
 
-      const name = getNameFromEmail(form.values.email);
+      const formValues = form.getValues();
+      const name = getNameFromEmail(formValues.email);
       const data = await api.register({
-        username: form.values.username,
+        username: formValues.username,
         name: name,
-        email: form.values.email,
-        password: form.values.password,
+        email: formValues.email,
+        password: formValues.password,
       });
       if (data.ok) {
         close();
@@ -67,7 +71,7 @@ export default function RegistrationPage() {
       } else {
         showNotification({
           title: t("user-registration"),
-          message: "Registration of new user failed on server, please try again",
+          message: t("registration-of-new-user-failed-on-server-please-try-again"),
           color: "red",
           icon: <TbX style={{ width: rem(18), height: rem(18) }} />,
           autoClose: 5000,

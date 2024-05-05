@@ -13,7 +13,7 @@ export default function SetEmailAddress({ form, focus = false, newUser = true })
     let emailError;
     const validStatus = [200, 404];
 
-    const newEmailAddress = trim(form.values.email.toLowerCase());
+    const newEmailAddress = trim(form.getValues().email.toLowerCase());
     form.setFieldValue("email", newEmailAddress);
     if (newEmailAddress) {
       if (!isValidEmail(newEmailAddress)) {

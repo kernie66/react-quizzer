@@ -21,6 +21,7 @@ export default function LoginPage() {
   const { showBoundary } = useErrorBoundary();
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       username: "",
       password: "",
@@ -29,8 +30,9 @@ export default function LoginPage() {
 
   const onSubmit = async () => {
     try {
-      const username = trim(form.values.username.toLowerCase());
-      const password = form.values.password;
+      const formValues = form.getValues();
+      const username = trim(formValues.username.toLowerCase());
+      const password = formValues.password;
 
       const errors = {};
       let userCheck = {};

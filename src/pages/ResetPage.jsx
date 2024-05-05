@@ -20,6 +20,7 @@ export default function ResetPage() {
   const isMobile = useMediaQuery("(max-width: 50em)");
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       password: "",
       password2: "",
@@ -40,7 +41,7 @@ export default function ResetPage() {
     const response = await api.put("/auth/reset-password", {
       userId,
       token,
-      password: form.values.password,
+      password: form.getValues().password,
     });
     if (response.ok) {
       close();

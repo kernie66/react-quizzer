@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Divider, Grid, List, PasswordInput, Popover, Text } from "@mantine/core";
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import getPasswordStrength from "../helpers/getPasswordStrength";
 import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.jsx";
@@ -10,6 +10,7 @@ import PasswordStrengthBar from "./PasswordStrengthBar.jsx";
 export default function SetPassword({ form, focus = false }) {
   const [tooltipOpened, { open: tooltipOpen, close: tooltipClose }] = useDisclosure(false);
   const [password, setPassword] = useState("");
+  const [userInputs, setUserInputs] = useState([]);
   const [debouncedPassword] = useDebouncedValue(password, 200);
   const { t } = useTranslation();
   const [passwordCheck, setPasswordCheck] = useSetState({
@@ -18,13 +19,19 @@ export default function SetPassword({ form, focus = false }) {
     score: 0,
   });
 
-  const userInputs = useMemo(() => {
-    return [form.values.username, form.values.email, "Saab", "Quizzer", "lösenord"];
-  }, [form.values]);
-
   useEffect(() => {
     (async () => {
-      const zxcvbnResult = await getPasswordStrength(debouncedPassword, userInputs);
+      const formValues = form.getValues();
+      const _userInputs = [
+        formValues.username,
+        formValues.email,
+        formValues.name,
+        "Saab",
+        "Quizzer",
+        "lösenord",
+      ];
+      setUserInputs(_userInputs);
+      const zxcvbnResult = await getPasswordStrength(debouncedPassword, _userInputs);
       let tooltipText = "enter-5-characters-for-hints";
       let suggestions = [];
       const score = zxcvbnResult.score;
@@ -44,7 +51,7 @@ export default function SetPassword({ form, focus = false }) {
       console.log("zxcvbnResult:", zxcvbnResult);
       setPasswordCheck({ warning: tooltipText, suggestions: suggestions, score: score });
     })();
-  }, [debouncedPassword, password.length, setPasswordCheck, userInputs]);
+  }, [debouncedPassword, password.length, setPasswordCheck, form]);
 
   const updatePassword = (event) => {
     const typedPassword = event.currentTarget.value;
@@ -69,11 +76,9 @@ export default function SetPassword({ form, focus = false }) {
   // Check password 2
   const checkPassword2 = () => {
     let passwordsError;
-
-    if (form.values.password2) {
-      if (form.values.password2 !== form.values.password) {
-        passwordsError = t("the-passwords-doesnt-match");
-      }
+    const formValues = form.getValues();
+    if (formValues.password2 && formValues.password2 !== formValues.password) {
+      passwordsError = t("the-passwords-doesnt-match");
     }
     form.setFieldError("password2", passwordsError);
   };
