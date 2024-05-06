@@ -53,19 +53,20 @@ export default function SetPassword({ form, focus = false }) {
     })();
   }, [debouncedPassword, password.length, setPasswordCheck, form]);
 
+  // Typing password on change
   const updatePassword = (event) => {
-    const typedPassword = event.currentTarget.value;
+    const typedPassword = event.target.value;
+    console.log("typedPassword", typedPassword);
     setPassword(typedPassword);
     tooltipOpen();
   };
 
-  // Check password
+  // Check password score on blur
   const checkPassword = () => {
     let passwordError;
 
     tooltipClose();
     if (password) {
-      form.setValues({ password: password });
       if (passwordCheck.score < 3) {
         passwordError = t("the-password-is-too-weak");
       }
@@ -99,7 +100,6 @@ export default function SetPassword({ form, focus = false }) {
               <PasswordInput
                 label={t("password")}
                 {...form.getInputProps("password")}
-                value={password}
                 withAsterisk
                 mb="md"
                 mr="auto"
