@@ -8,6 +8,7 @@ import { useUser } from "../contexts/UserProvider";
 import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function ChangePasswordPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -16,19 +17,26 @@ export default function ChangePasswordPage() {
   const isMobile = useMediaQuery("(max-width: 50em)");
   const { user } = useUser();
   const navigate = useNavigate();
+  const [password, setPassword] = useState("");
 
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
+      username: user.username,
+      email: user.email,
+      name: user.name,
       oldPassword: "",
       password: "",
       password2: "",
+    },
+    onValuesChange: (values) => {
+      setPassword(values.password);
     },
     validate: (values) => ({
       oldPassword: values.oldPassword.length === 0 ? t("please-enter-your-current-password") : null,
       password:
         values.password.length === 0
-          ? `Values: ${values.password}` // t("please-select-a-password")
+          ? t("please-select-a-password")
           : values.password === values.oldPassword
             ? t("please-enter-a-different-password-than-the-current")
             : null,
@@ -111,7 +119,7 @@ export default function ChangePasswordPage() {
             className="CurrentPassword"
             w="84%"
           />
-          <SetPassword form={form} focus={false} />
+          <SetPassword form={form} focus={false} password={password} />
           <Divider mb={8} />
           <Group justify="space-between" my={8} pt={16}>
             <Button type="submit">{t("update")}</Button>

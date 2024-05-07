@@ -1,5 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { Divider, Grid, List, PasswordInput, Popover, Text } from "@mantine/core";
+import {
+  Divider,
+  Grid,
+  List,
+  PasswordInput,
+  Popover,
+  Text,
+  TextInput,
+  VisuallyHidden,
+} from "@mantine/core";
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import getPasswordStrength from "../helpers/getPasswordStrength";
@@ -7,9 +16,9 @@ import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.jsx";
 import PasswordStrengthBar from "./PasswordStrengthBar.jsx";
 
-export default function SetPassword({ form, focus = false }) {
+export default function SetPassword({ form, focus = false, password = "" }) {
   const [tooltipOpened, { open: tooltipOpen, close: tooltipClose }] = useDisclosure(false);
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   const [userInputs, setUserInputs] = useState([]);
   const [debouncedPassword] = useDebouncedValue(password, 200);
   const { t } = useTranslation();
@@ -48,18 +57,24 @@ export default function SetPassword({ form, focus = false }) {
           suggestions = zxcvbnResult.feedback.suggestions;
         }
       }
-      console.log("zxcvbnResult:", zxcvbnResult);
       setPasswordCheck({ warning: tooltipText, suggestions: suggestions, score: score });
     })();
   }, [debouncedPassword, password.length, setPasswordCheck, form]);
 
   // Typing password on change
-  const updatePassword = (event) => {
+  /* const updatePassword = (event) => {
     const typedPassword = event.target.value;
     console.log("typedPassword", typedPassword);
     setPassword(typedPassword);
     tooltipOpen();
   };
+  */
+
+  useEffect(() => {
+    if (password) {
+      tooltipOpen();
+    }
+  }, [password, tooltipOpen]);
 
   // Check password score on blur
   const checkPassword = () => {
@@ -104,7 +119,6 @@ export default function SetPassword({ form, focus = false }) {
                 mb="md"
                 mr="auto"
                 autoComplete="new-password"
-                onChange={updatePassword}
                 onBlur={checkPassword}
                 data-autofocus={focus}
               />
@@ -136,6 +150,13 @@ export default function SetPassword({ form, focus = false }) {
             autoComplete="new-password"
             onBlur={checkPassword2}
           />
+          <VisuallyHidden>
+            <TextInput
+              label="Username"
+              {...form.getInputProps("username")}
+              autoComplete="username"
+            />
+          </VisuallyHidden>
         </Grid.Col>
         <Grid.Col span="content" pt="2rem">
           <PasswordStrength password={debouncedPassword} passwordUserInputs={userInputs} />

@@ -202,5 +202,6 @@
   "prepared": "Skapat",
   "started": "Startat",
   "games": "Spel",
-  "registration-of-new-user-failed-on-server-please-try-again": "Registrering av ny användare misslyckades på servern, försök igen"
+  "registration-of-new-user-failed-on-server-please-try-again": "Registrering av ny användare misslyckades på servern, försök igen",
+  "patterns": "Mönster"
 }

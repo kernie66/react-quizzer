@@ -17,9 +17,12 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
   } = useQuery({
     queryKey: ["strength", { password: password, userInputs: passwordUserInputs }],
     queryFn: () => getPasswordStrength(password, passwordUserInputs),
-    staleTime: 1000 * 60 * 5,
+    placeholderData: { score: 0, guesses: 0 },
+    staleTime: 1000 * 10,
+    gcTime: 1000 * 10,
   });
 
+  /*
   if (isLoadingQuery) {
     return (
       <Button variant="outline" size="sm" disabled mt={8} loading>
@@ -27,6 +30,7 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
       </Button>
     );
   }
+  */
 
   if (isError) {
     console.log("Loading complete:", error.message);
@@ -45,7 +49,9 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
           size="sm"
           onClick={popoverToggle}
           mx={8}
+          w={"4rem"}
           className="PasswordStrength"
+          loading={isLoadingQuery}
         >
           {t("info")}
         </Button>
@@ -113,7 +119,7 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
             )}
             {passwordStrength.sequence.length !== 0 && (
               <List>
-                <Text fw={700}>Patterns:</Text>
+                <Text fw={700}>{t("patterns")}:</Text>
                 {passwordStrength.sequence.map((sequence, index) => (
                   <List.Item key={index}>
                     <Text>
