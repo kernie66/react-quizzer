@@ -1,14 +1,5 @@
 import { useTranslation } from "react-i18next";
-import {
-  Divider,
-  Grid,
-  List,
-  PasswordInput,
-  Popover,
-  Text,
-  TextInput,
-  VisuallyHidden,
-} from "@mantine/core";
+import { Divider, Grid, List, PasswordInput, Popover, Text } from "@mantine/core";
 import { useDebouncedValue, useDisclosure, useSetState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import getPasswordStrength from "../helpers/getPasswordStrength";
@@ -123,7 +114,7 @@ export default function SetPassword({ form, focus = false, password = "" }) {
                 data-autofocus={focus}
               />
             </Popover.Target>
-            <Popover.Dropdown bg="red.1" color="dark" my={4}>
+            <Popover.Dropdown bg="blue.1" color="dark" my={4}>
               {passwordCheck.warning && (
                 <Text size="sm" mb={8} color={passwordCheck.warningColor}>
                   {t(`warnings.${passwordCheck.warning}`)}
@@ -150,13 +141,7 @@ export default function SetPassword({ form, focus = false, password = "" }) {
             autoComplete="new-password"
             onBlur={checkPassword2}
           />
-          <VisuallyHidden>
-            <TextInput
-              label="Username"
-              {...form.getInputProps("username")}
-              autoComplete="username"
-            />
-          </VisuallyHidden>
+          <input label="Username" hidden autoComplete="username" />
         </Grid.Col>
         <Grid.Col span="content" pt="2rem">
           <PasswordStrength password={debouncedPassword} passwordUserInputs={userInputs} />

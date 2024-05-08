@@ -2,7 +2,7 @@ import { useApi } from "../contexts/ApiProvider";
 import SetPassword from "../components/SetPassword";
 import { useTranslation } from "react-i18next";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { hasLength, matchesField, useForm } from "@mantine/form";
 import { Button, Divider, Group, Modal, PasswordInput, Text, rem } from "@mantine/core";
 import { useUser } from "../contexts/UserProvider";
 import { showNotification } from "@mantine/notifications";
@@ -32,16 +32,17 @@ export default function ChangePasswordPage() {
     onValuesChange: (values) => {
       setPassword(values.password);
     },
-    validate: (values) => ({
-      oldPassword: values.oldPassword.length === 0 ? t("please-enter-your-current-password") : null,
-      password:
-        values.password.length === 0
-          ? t("please-select-a-password")
-          : values.password === values.oldPassword
-            ? t("please-enter-a-different-password-than-the-current")
-            : null,
-      password2: values.password2.length === 0 ? t("please-repeat-the-password") : null,
-    }),
+    validate: {
+      oldPassword: hasLength({ min: 5 }, t("please-enter-your-current-password")),
+      password: (value, values) => {
+        if (value.length < 5) {
+          t("please-select-a-password");
+        } else if (values === values.oldPassword) {
+          t("please-enter-a-different-password-than-the-current");
+        } else null;
+      },
+      password2: matchesField("password", t("please-repeat-the-password")),
+    },
   });
 
   const onSubmit = async () => {
