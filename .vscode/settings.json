@@ -29,5 +29,7 @@
   "vs-code-prettier-eslint.prettierLast": false,
   "javascript.preferences.importModuleSpecifier": "shortest",
   "autoimport.doubleQuotes": true,
-  "iridium.npm.packageManager": "pnpm" // set as "true" to run 'prettier' last not first
+  "iridium.npm.packageManager": "pnpm",
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": true // set as "true" to run 'prettier' last not first
 }

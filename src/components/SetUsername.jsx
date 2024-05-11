@@ -1,36 +1,79 @@
 import { useTranslation } from "react-i18next";
 import { useApi } from "../contexts/ApiProvider";
 import isInvalidUsername from "../helpers/isInvalidUsername";
-import { TextInput } from "@mantine/core";
+import { Loader, TextInput } from "@mantine/core";
 import { trim } from "radash";
+import { useDebouncedValue } from "@mantine/hooks";
+import { useQuery } from "@tanstack/react-query";
+import { TbCheck } from "react-icons/tb";
+import { useState } from "react";
 
-export default function SetUsername({ form, focus = true }) {
+export default function SetUsername({ form, focus, newUser = true, newUsername = "" }) {
   const api = useApi();
   const { t } = useTranslation();
+  const [usernameEntered, setUsernameEntered] = useState(false);
 
-  // Check username
-  const checkUsername = async () => {
-    let usernameError;
+  const [debouncedUsername] = useDebouncedValue(newUsername, 500);
 
-    const newUsername = trim(form.getValues().username.toLowerCase());
-    form.setFieldValue("username", newUsername);
+  const getUsernameStatus = async (newUsername) => {
     if (newUsername) {
-      const invalidUsername = isInvalidUsername(newUsername);
-      usernameError = invalidUsername && t(invalidUsername);
-
-      if (!usernameError) {
-        const existingUser = await api.get("/check", { username: newUsername });
-        if (existingUser.status === 200) {
-          usernameError = t("username-already-registered");
-        } else if (existingUser.status !== 404) {
-          usernameError = t("cannot-validate-the-username-server-not-responding");
+      try {
+        const existingUsername = await api.get("/check", { username: newUsername });
+        if (existingUsername.status === 200) {
+          return "Username exist";
+        } else {
+          throw new Error("Server error", existingUsername);
         }
+      } catch (error) {
+        if (newUser && error.response.status === 404) {
+          return "Username is free";
+        }
+        throw new Error("Error checking username", error);
       }
     }
-
-    form.setFieldError("username", usernameError);
-    return Promise.resolve(true);
+    return "";
   };
+
+  const {
+    isLoading,
+    isError,
+    data: usernameStatus,
+  } = useQuery({
+    queryKey: ["username", { username: debouncedUsername }],
+    queryFn: () => getUsernameStatus(debouncedUsername),
+    enabled: usernameEntered,
+    retry: false,
+    gcTime: 1000,
+  });
+
+  // Check username
+  const checkUsername = () => {
+    let formUsername = trim(form.getValues().username.toLowerCase());
+    form.setValues({ username: formUsername });
+    if (formUsername) {
+      const invalidUsername = isInvalidUsername(formUsername);
+      if (invalidUsername) {
+        form.setFieldError("username", t(invalidUsername));
+      }
+    }
+    setUsernameEntered(true);
+  };
+
+  if (isError) {
+    form.setFieldError("username", t("cannot-validate-the-username-server-not-responding"));
+  }
+
+  if (usernameStatus === "Username is free") {
+    if (!newUser) {
+      form.setFieldError("username", t("please-enter-a-username"));
+    }
+  }
+
+  if (usernameStatus === "Username exist") {
+    if (newUser) {
+      form.setFieldError("username", t("username-already-registered"));
+    }
+  }
 
   return (
     <TextInput
@@ -38,8 +81,21 @@ export default function SetUsername({ form, focus = true }) {
       {...form.getInputProps("username")}
       withAsterisk
       mb="md"
+      rightSection={
+        isLoading ? (
+          <Loader size="sm" />
+        ) : (
+          <TbCheck
+            aria-label="checked"
+            color="green"
+            style={{ display: usernameStatus === "Username is free" ? undefined : "none" }}
+          />
+        )
+      }
       onBlur={checkUsername}
+      onFocus={() => setUsernameEntered(false)}
       data-autofocus={focus}
+      autoComplete="username"
       className="SetUsername"
     />
   );

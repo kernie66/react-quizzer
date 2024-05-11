@@ -14,6 +14,7 @@ import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
 import isValidEmail from "../helpers/isValidEmail";
 import isInvalidUsername from "../helpers/isInvalidUsername";
+import { useState } from "react";
 
 export default function RegistrationPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -22,8 +23,12 @@ export default function RegistrationPage() {
   const { t } = useTranslation();
   const { showBoundary } = useErrorBoundary();
   const isMobile = useMediaQuery("(max-width: 50em)");
+  const [password, setPassword] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newUsername, setNewUsername] = useState("");
 
   const form = useForm({
+    name: "registration-form",
     mode: "uncontrolled",
     initialValues: {
       username: "",
@@ -31,10 +36,15 @@ export default function RegistrationPage() {
       password: "",
       password2: "",
     },
+    onValuesChange: (values) => {
+      setPassword(values.password);
+      setNewEmail(values.email);
+      setNewUsername(values.username);
+    },
     validate: {
       username: (value) => (isInvalidUsername(value) ? t("please-select-a-username") : null),
       email: (value) => (!isValidEmail(value) ? t("please-enter-a-valid-email-address") : null),
-      password: hasLength({ min: 3 }, t("please-select-a-password")),
+      password: hasLength({ min: 5 }, t("please-select-a-password")),
       password2: matchesField("password", t("please-repeat-the-password")),
     },
   });
@@ -102,9 +112,9 @@ export default function RegistrationPage() {
       >
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
-          <SetUsername form={form} />
-          <SetEmailAddress form={form} />
-          <SetPassword form={form} />
+          <SetUsername form={form} focus={true} newUsername={newUsername} />
+          <SetEmailAddress form={form} newEmail={newEmail} />
+          <SetPassword form={form} password={password} />
           <Divider mb={8} />
           <Group justify="space-between" my={8} pt={16}>
             <Button type="submit">{t("register")}</Button>

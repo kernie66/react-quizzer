@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next";
-import { useDisclosure } from "@mantine/hooks";
 import { Button, Divider, List, Popover, ScrollArea, Text } from "@mantine/core";
-import getPasswordStrength from "../helpers/getPasswordStrength";
+import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import bigNumbersToText from "../helpers/bigNumbersToText";
+import getPasswordStrength from "../helpers/getPasswordStrength";
 
 export default function PasswordStrength({ password, passwordUserInputs }) {
   const [popoverOpened, { toggle: popoverToggle }] = useDisclosure(false);
@@ -18,24 +18,14 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
     queryKey: ["strength", { password: password, userInputs: passwordUserInputs }],
     queryFn: () => getPasswordStrength(password, passwordUserInputs),
     placeholderData: { score: 0, guesses: 0 },
-    staleTime: 1000 * 10,
-    gcTime: 1000 * 10,
+    staleTime: 1000,
+    gcTime: 1000,
   });
-
-  /*
-  if (isLoadingQuery) {
-    return (
-      <Button variant="outline" size="sm" disabled mt={8} loading>
-        {t("info")}
-      </Button>
-    );
-  }
-  */
 
   if (isError) {
     console.log("Loading complete:", error.message);
     return (
-      <Button variant="outline" size="sm" disabled mt={8}>
+      <Button variant="outline" size="sm" disabled mx={8} w={"4rem"}>
         {t("info")}
       </Button>
     );

@@ -82,7 +82,7 @@ export const connectGlobalSSE = async (req, res, next) => {
         }
         return false;
       });
-      logger.info("Removed SSE client for ", removedClient[0].user?.username);
+      removedClient[0] && logger.info("Removed SSE client for", removedClient[0].user?.username);
       clientsSSE();
       quizzersSSE();
 
