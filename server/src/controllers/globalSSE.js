@@ -33,6 +33,7 @@ export const connectGlobalSSE = async (req, res, next) => {
         logger.error("No user ID for SSE");
         res.status(204);
         next();
+        return;
       }
       if (user) {
         const tokens = await Token.findAll({ where: { userId: user.id } });
@@ -41,10 +42,12 @@ export const connectGlobalSSE = async (req, res, next) => {
         }
       } else {
         next();
+        return;
       }
     } catch (error) {
       logger.error("Database query failed (SSE):", error);
       next(error);
+      return;
     }
 
     const clientId = user.id;
