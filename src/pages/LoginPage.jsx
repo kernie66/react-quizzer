@@ -7,13 +7,15 @@ import { trim } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
 import { useDisclosure } from "@mantine/hooks";
 import { Button, Divider, Group, Modal, PasswordInput, Text, TextInput, rem } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
+import { useState } from "react";
 
 export default function LoginPage() {
   const [opened, { open, close }] = useDisclosure(true);
   const { login } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
   const api = useApi();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -26,16 +28,21 @@ export default function LoginPage() {
       username: "",
       password: "",
     },
+    validate: {
+      username: isNotEmpty(t("username-or-email-is-missing")),
+      password: isNotEmpty(t("password-is-missing")),
+    },
   });
 
   const onSubmit = async () => {
+    setIsLoading(true);
     try {
       const formValues = form.getValues();
       const username = trim(formValues.username.toLowerCase());
       const password = formValues.password;
 
       const errors = {};
-      let userCheck = {};
+      const userCheck = {};
       if (!username) {
         errors.username = t("username-or-email-is-missing");
       } else {
@@ -46,11 +53,18 @@ export default function LoginPage() {
         }
         try {
           const existingUser = await api.get("/check", userCheck);
-          if (existingUser.status !== 200) {
-            errors.username = t("user-not-found");
+          if (existingUser.status === 200) {
+            console.log("existingUser", existingUser);
+            console.log("User exists");
+          } else {
+            throw new Error("Server error", existingUser);
           }
         } catch (error) {
-          throw new Error("User not found");
+          if (error.response.status === 404) {
+            errors.username = t("user-not-found");
+          } else {
+            throw new Error("Error checking username", error);
+          }
         }
       }
       if (!password) {
@@ -89,7 +103,9 @@ export default function LoginPage() {
         }
       }
       form.setErrors(errors);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       showBoundary(error);
     }
   };
@@ -114,7 +130,9 @@ export default function LoginPage() {
             withAsterisk
           />
           <Group justify="space-between" my={8} pb={8} pt={16}>
-            <Button type="submit">{t("login")}</Button>
+            <Button type="submit" loading={isLoading}>
+              {t("login")}
+            </Button>
             <Button variant="outline" onClick={close}>
               {t("cancel")}
             </Button>

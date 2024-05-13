@@ -15,7 +15,7 @@ export default function SetUsername({ form, focus, newUser = true, newUsername =
 
   const [debouncedUsername] = useDebouncedValue(newUsername, 500);
 
-  const getUsernameStatus = async (newUsername) => {
+  const getUsernameStatus = async (newUsername, newUser) => {
     if (newUsername) {
       try {
         const existingUsername = await api.get("/check", { username: newUsername });
@@ -39,8 +39,8 @@ export default function SetUsername({ form, focus, newUser = true, newUsername =
     isError,
     data: usernameStatus,
   } = useQuery({
-    queryKey: ["username", { username: debouncedUsername }],
-    queryFn: () => getUsernameStatus(debouncedUsername),
+    queryKey: ["username", { username: debouncedUsername, newUser }],
+    queryFn: () => getUsernameStatus(debouncedUsername, newUser),
     enabled: usernameEntered,
     retry: false,
     gcTime: 1000,
