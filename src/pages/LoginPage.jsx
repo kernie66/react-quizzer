@@ -34,13 +34,16 @@ export default function LoginPage() {
     },
   });
 
+  const trimUsername = () => {
+    const username = trim(form.getValues().username.toLowerCase());
+    form.setValues({ username: username });
+  };
+
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      const formValues = form.getValues();
-      const username = trim(formValues.username.toLowerCase());
-      form.setValues({ username: username });
-      const password = formValues.password;
+      const username = form.getValues().username;
+      const password = form.getValues().password;
 
       const errors = {};
       const userCheck = {};
@@ -122,6 +125,7 @@ export default function LoginPage() {
             key={form.key("username")}
             autoComplete="username"
             withAsterisk
+            onBlur={trimUsername}
             mb="md"
             data-autofocus
           />
