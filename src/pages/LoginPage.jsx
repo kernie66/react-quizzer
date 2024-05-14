@@ -39,6 +39,7 @@ export default function LoginPage() {
     try {
       const formValues = form.getValues();
       const username = trim(formValues.username.toLowerCase());
+      form.setValues({ username: username });
       const password = formValues.password;
 
       const errors = {};
@@ -118,6 +119,7 @@ export default function LoginPage() {
           <TextInput
             label={t("username-or-email-address")}
             {...form.getInputProps("username")}
+            key={form.key("username")}
             autoComplete="username"
             withAsterisk
             mb="md"
@@ -126,6 +128,7 @@ export default function LoginPage() {
           <PasswordInput
             label={t("password")}
             {...form.getInputProps("password")}
+            key={form.key("password")}
             autoComplete="current-password"
             withAsterisk
           />

@@ -267,6 +267,7 @@ export default function EditUser({ opened, close, user }) {
           <TextInput
             label={t("name")}
             {...form.getInputProps("name")}
+            key={form.key("name")}
             withAsterisk
             mb="md"
             rightSectionPointerEvents="all"
@@ -282,6 +283,7 @@ export default function EditUser({ opened, close, user }) {
           <TextInput
             label={t("username")}
             {...form.getInputProps("username")}
+            key={form.key("username")}
             withAsterisk
             mb="md"
             rightSectionPointerEvents="all"
@@ -296,6 +298,7 @@ export default function EditUser({ opened, close, user }) {
           <TextInput
             label={t("email")}
             {...form.getInputProps("email")}
+            key={form.key("email")}
             withAsterisk
             mb="md"
             rightSectionPointerEvents="all"
@@ -310,6 +313,7 @@ export default function EditUser({ opened, close, user }) {
           <Textarea
             label={t("about-me")}
             {...form.getInputProps("aboutMe")}
+            key={form.key("aboutMe")}
             rightSectionPointerEvents="all"
             rightSection={
               <CloseButton
