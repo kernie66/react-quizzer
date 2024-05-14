@@ -7,7 +7,7 @@ import { trim } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
 import { useDisclosure } from "@mantine/hooks";
 import { Button, Divider, Group, Modal, PasswordInput, Text, TextInput, rem } from "@mantine/core";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
 import { useState } from "react";
@@ -23,26 +23,21 @@ export default function LoginPage() {
   const { showBoundary } = useErrorBoundary();
 
   const form = useForm({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: {
       username: "",
       password: "",
     },
     validate: {
       username: isNotEmpty(t("username-or-email-is-missing")),
-      password: isNotEmpty(t("password-is-missing")),
+      password: hasLength({ min: 5 }, t("password-is-missing")),
     },
   });
-
-  const trimUsername = () => {
-    const username = trim(form.getValues().username.toLowerCase());
-    form.setValues({ username: username });
-  };
 
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      const username = form.getValues().username;
+      const username = trim(form.getValues().username.toLowerCase());
       const password = form.getValues().password;
 
       const errors = {};
@@ -124,8 +119,10 @@ export default function LoginPage() {
             {...form.getInputProps("username")}
             key={form.key("username")}
             autoComplete="username"
+            onBlur={() =>
+              form.setFieldValue("username", trim(form.getValues().username.toLowerCase()))
+            }
             withAsterisk
-            onBlur={trimUsername}
             mb="md"
             data-autofocus
           />
