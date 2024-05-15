@@ -97,13 +97,13 @@ export default function UserProvider({ children }) {
       }
       return result;
     },
-    [api],
+    [api, updateUserQuery],
   );
 
   const logout = useCallback(async () => {
     await api.logout();
     removeLogin();
-  }, [api]);
+  }, [api, removeLogin]);
 
   return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
 }

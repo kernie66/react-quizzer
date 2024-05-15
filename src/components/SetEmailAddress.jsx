@@ -5,15 +5,12 @@ import isValidEmail from "../helpers/isValidEmail";
 import { Loader, TextInput } from "@mantine/core";
 import { trim } from "radash";
 import { useQuery } from "@tanstack/react-query";
-import { useDebouncedValue } from "@mantine/hooks";
 import { useState } from "react";
 
-export default function SetEmailAddress({ form, focus, newUser = true, newEmail = "" }) {
+export default function SetEmailAddress({ form, focus, newUser = true }) {
   const api = useApi();
   const { t } = useTranslation();
-  const [emailEntered, setEmailEntered] = useState(false);
-
-  const [debouncedEmail] = useDebouncedValue(newEmail, 500);
+  const [newEmail, setNewEmail] = useState("");
 
   const getEmailStatus = async (newEmailAddress) => {
     if (newEmailAddress) {
@@ -40,9 +37,8 @@ export default function SetEmailAddress({ form, focus, newUser = true, newEmail 
     isError,
     data: emailStatus,
   } = useQuery({
-    queryKey: ["email", { email: debouncedEmail }],
-    queryFn: () => getEmailStatus(debouncedEmail),
-    enabled: emailEntered && isValidEmail(debouncedEmail),
+    queryKey: ["email", { email: newEmail }],
+    queryFn: () => getEmailStatus(newEmail),
     retry: false,
     gcTime: 1000,
   });
@@ -53,9 +49,10 @@ export default function SetEmailAddress({ form, focus, newUser = true, newEmail 
     if (formEmailAddress) {
       if (!isValidEmail(formEmailAddress)) {
         form.setFieldError("email", t("please-enter-a-valid-email-address"));
+        formEmailAddress = "";
       }
     }
-    setEmailEntered(true);
+    setNewEmail(formEmailAddress);
   };
 
   if (isError) {
@@ -95,7 +92,6 @@ export default function SetEmailAddress({ form, focus, newUser = true, newEmail 
         )
       }
       onBlur={checkEmail}
-      onFocus={() => setEmailEntered(false)}
       data-autofocus={focus}
       autoComplete="username"
       className="SetEmailAddress"

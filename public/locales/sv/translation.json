@@ -203,5 +203,6 @@
   "started": "Startat",
   "games": "Spel",
   "registration-of-new-user-failed-on-server-please-try-again": "Registrering av ny användare misslyckades på servern, försök igen",
-  "patterns": "Mönster"
+  "patterns": "Mönster",
+  "please-use-only-alphanumeric-characters": "Använd endast alfanumeriska tecken"
 }

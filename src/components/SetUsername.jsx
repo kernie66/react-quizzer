@@ -3,17 +3,14 @@ import { useApi } from "../contexts/ApiProvider";
 import isInvalidUsername from "../helpers/isInvalidUsername";
 import { Loader, TextInput } from "@mantine/core";
 import { trim } from "radash";
-import { useDebouncedValue } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { TbCheck } from "react-icons/tb";
 import { useState } from "react";
 
-export default function SetUsername({ form, focus, newUser = true, newUsername = "" }) {
+export default function SetUsername({ form, focus, newUser = true }) {
   const api = useApi();
   const { t } = useTranslation();
-  const [usernameEntered, setUsernameEntered] = useState(false);
-
-  const [debouncedUsername] = useDebouncedValue(newUsername, 500);
+  const [newUsername, setNewUsername] = useState("");
 
   const getUsernameStatus = async (newUsername, newUser) => {
     if (newUsername) {
@@ -39,9 +36,8 @@ export default function SetUsername({ form, focus, newUser = true, newUsername =
     isError,
     data: usernameStatus,
   } = useQuery({
-    queryKey: ["username", { username: debouncedUsername, newUser }],
-    queryFn: () => getUsernameStatus(debouncedUsername, newUser),
-    enabled: usernameEntered,
+    queryKey: ["username", { username: newUsername, newUser }],
+    queryFn: () => getUsernameStatus(newUsername, newUser),
     retry: false,
     gcTime: 1000,
   });
@@ -54,9 +50,10 @@ export default function SetUsername({ form, focus, newUser = true, newUsername =
       const invalidUsername = isInvalidUsername(formUsername);
       if (invalidUsername) {
         form.setFieldError("username", t(invalidUsername));
+        formUsername = "";
       }
     }
-    setUsernameEntered(true);
+    setNewUsername(formUsername);
   };
 
   if (isError) {
@@ -93,7 +90,6 @@ export default function SetUsername({ form, focus, newUser = true, newUsername =
         )
       }
       onBlur={checkUsername}
-      onFocus={() => setUsernameEntered(false)}
       data-autofocus={focus}
       autoComplete="username"
       className="SetUsername"

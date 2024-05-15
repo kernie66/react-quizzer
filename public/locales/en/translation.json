@@ -203,5 +203,6 @@
   "started": "Started",
   "games": "Games",
   "registration-of-new-user-failed-on-server-please-try-again": "Registration of new user failed on server, please try again",
-  "patterns": "Patterns"
+  "patterns": "Patterns",
+  "please-use-only-alphanumeric-characters": "Please use only alphanumeric characters"
 }

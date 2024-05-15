@@ -28,19 +28,6 @@ export default function SSEProvider({ children }) {
     }
   }, [t, user]);
 
-  useEffect(() => {
-    let newUrl = endpoint;
-    if (user) {
-      console.log("user.id", user.id);
-      newUrl = endpoint + "/" + user.id;
-      startListening();
-    } else {
-      stopListening();
-      globalEventSource.close();
-    }
-    setUrl(newUrl);
-  }, [user]);
-
   const globalEventSource = useEventSource({
     source: url,
   });
@@ -57,6 +44,19 @@ export default function SSEProvider({ children }) {
       },
     },
   });
+
+  useEffect(() => {
+    let newUrl = endpoint;
+    if (user) {
+      console.log("user.id", user.id);
+      newUrl = endpoint + "/" + user.id;
+      startListening();
+    } else {
+      stopListening();
+      globalEventSource.close();
+    }
+    setUrl(newUrl);
+  }, [user, startListening, stopListening, globalEventSource]);
 
   return <SSEContext.Provider value={{ globalEventSource }}>{children}</SSEContext.Provider>;
 }

@@ -8,7 +8,7 @@ import SetPassword from "../components/SetPassword";
 import { sift } from "radash";
 import { useErrorBoundary } from "react-error-boundary";
 import { Button, Divider, Group, Modal, rem } from "@mantine/core";
-import { hasLength, matchesField, useForm } from "@mantine/form";
+import { hasLength, useForm } from "@mantine/form";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
@@ -24,12 +24,10 @@ export default function RegistrationPage() {
   const { showBoundary } = useErrorBoundary();
   const isMobile = useMediaQuery("(max-width: 50em)");
   const [password, setPassword] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newUsername, setNewUsername] = useState("");
 
   const form = useForm({
     name: "registration-form",
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: {
       username: "",
       email: "",
@@ -38,14 +36,12 @@ export default function RegistrationPage() {
     },
     onValuesChange: (values) => {
       setPassword(values.password);
-      setNewEmail(values.email);
-      setNewUsername(values.username);
     },
     validate: {
       username: (value) => (isInvalidUsername(value) ? t("please-select-a-username") : null),
       email: (value) => (!isValidEmail(value) ? t("please-enter-a-valid-email-address") : null),
       password: hasLength({ min: 5 }, t("please-select-a-password")),
-      password2: matchesField("password", t("please-repeat-the-password")),
+      password2: hasLength({ min: 5 }, t("please-repeat-the-password")),
     },
   });
 
@@ -112,8 +108,8 @@ export default function RegistrationPage() {
       >
         <Divider mb={8} />
         <form onSubmit={form.onSubmit(onSubmit)}>
-          <SetUsername form={form} focus={true} newUsername={newUsername} />
-          <SetEmailAddress form={form} newEmail={newEmail} />
+          <SetUsername form={form} focus={true} />
+          <SetEmailAddress form={form} />
           <SetPassword form={form} password={password} />
           <Divider mb={8} />
           <Group justify="space-between" my={8} pt={16}>
