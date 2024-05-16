@@ -11,6 +11,7 @@ export default function SetPassword({ form, focus = false, password = "" }) {
   const [tooltipOpened, { open: tooltipOpen, close: tooltipClose }] = useDisclosure(false);
   // const [password, setPassword] = useState("");
   const [userInputs, setUserInputs] = useState([]);
+  const [dictionariesLoaded, setDictionariesLoaded] = useState(false);
   const [debouncedPassword] = useDebouncedValue(password, 200);
   const { t } = useTranslation();
   const [passwordCheck, setPasswordCheck] = useSetState({
@@ -21,21 +22,32 @@ export default function SetPassword({ form, focus = false, password = "" }) {
 
   useEffect(() => {
     (async () => {
+      let zxcvbnResult = { score: "", warning: "", suggestion: "" };
+      let isLoaded = dictionariesLoaded;
       const formValues = form.getValues();
       const _userInputs = [
-        formValues.username,
-        formValues.email,
-        formValues.name,
+        formValues.username || "",
+        formValues.email || "",
+        formValues.name || "",
         "Saab",
         "Quizzer",
         "lösenord",
       ];
       setUserInputs(_userInputs);
-      const zxcvbnResult = await getPasswordStrength(debouncedPassword, _userInputs);
+      console.log("dictionariesLoaded", dictionariesLoaded);
+      if (debouncedPassword.length >= 5) {
+        zxcvbnResult = await getPasswordStrength(
+          debouncedPassword,
+          _userInputs,
+          dictionariesLoaded,
+        );
+        isLoaded = true;
+      }
+      setDictionariesLoaded(isLoaded);
       let tooltipText = "enter-5-characters-for-hints";
       let suggestions = [];
       const score = zxcvbnResult.score;
-      if (password.length >= 5) {
+      if (debouncedPassword.length >= 5) {
         tooltipText = "password-is-not-good-enough";
         if (zxcvbnResult.feedback.warning) {
           tooltipText = zxcvbnResult.feedback.warning;
@@ -50,16 +62,7 @@ export default function SetPassword({ form, focus = false, password = "" }) {
       }
       setPasswordCheck({ warning: tooltipText, suggestions: suggestions, score: score });
     })();
-  }, [debouncedPassword, password.length, setPasswordCheck, form]);
-
-  // Typing password on change
-  /* const updatePassword = (event) => {
-    const typedPassword = event.target.value;
-    console.log("typedPassword", typedPassword);
-    setPassword(typedPassword);
-    tooltipOpen();
-  };
-  */
+  }, [debouncedPassword, setPasswordCheck, form, dictionariesLoaded]);
 
   useEffect(() => {
     if (password) {

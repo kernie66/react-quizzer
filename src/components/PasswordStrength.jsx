@@ -6,29 +6,33 @@ import bigNumbersToText from "../helpers/bigNumbersToText";
 import getPasswordStrength from "../helpers/getPasswordStrength";
 
 export default function PasswordStrength({ password, passwordUserInputs }) {
-  const [popoverOpened, { toggle: popoverToggle }] = useDisclosure(false);
+  const [popoverOpened, { toggle: popoverToggle, close: popoverClose }] = useDisclosure(false);
   const { t } = useTranslation();
 
   const {
     isLoading: isLoadingQuery,
     isError,
     data: passwordStrength,
-    error,
   } = useQuery({
     queryKey: ["strength", { password: password, userInputs: passwordUserInputs }],
     queryFn: () => getPasswordStrength(password, passwordUserInputs),
     placeholderData: { score: 0, guesses: 0 },
+    enabled: password.length >= 5,
     staleTime: 1000,
     gcTime: 1000,
   });
 
   if (isError) {
-    console.log("Loading complete:", error.message);
+    if (popoverOpened) {
+      popoverClose();
+    }
+    /*
     return (
       <Button variant="outline" size="sm" disabled mx={8} w={"4rem"}>
         {t("info")}
       </Button>
     );
+    */
   }
 
   return (
@@ -42,6 +46,7 @@ export default function PasswordStrength({ password, passwordUserInputs }) {
           w={"4rem"}
           className="PasswordStrength"
           loading={isLoadingQuery}
+          disabled={isError}
         >
           {t("info")}
         </Button>
