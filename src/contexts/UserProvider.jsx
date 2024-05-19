@@ -15,17 +15,20 @@ export default function UserProvider({ children }) {
   const queryClient = useQueryClient();
   const { showBoundary } = useErrorBoundary();
 
-  const updateUserQuery = (userData) => {
-    if (userData) {
-      console.log("Update user:", userData);
-      queryClient.setQueryData(["loggedIn"], userData.id);
-      console.log("Refresh quizzers query by invalidation");
+  const updateUserQuery = useCallback(
+    (userData) => {
+      if (userData) {
+        console.log("Update user:", userData);
+        queryClient.setQueryData(["loggedIn"], userData.id);
+        console.log("Refresh quizzers query by invalidation");
 
-      queryClient.invalidateQueries({ queryKey: ["quizzers"], refetchType: "all" });
-    } else {
-      queryClient.setQueryData(["loggedIn"], 0);
-    }
-  };
+        queryClient.invalidateQueries({ queryKey: ["quizzers"], refetchType: "all" });
+      } else {
+        queryClient.setQueryData(["loggedIn"], 0);
+      }
+    },
+    [queryClient],
+  );
 
   const {
     isLoading: isLoadingLoggedIn,
@@ -41,12 +44,12 @@ export default function UserProvider({ children }) {
     // refetch: refreshUser,
   } = useGetQuizzerQuery(loggedInId);
 
-  const removeLogin = () => {
+  const removeLogin = useCallback(() => {
     console.log("Remove login");
     api.removeLogin();
     queryClient.removeQueries(["loggedIn"]);
     navigate("/login");
-  };
+  }, [api, navigate, queryClient]);
 
   useShallowEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["loggedIn"] });
