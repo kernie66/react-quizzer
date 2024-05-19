@@ -3,11 +3,11 @@ import { useDisclosure } from "@mantine/hooks";
 import { useTranslation } from "react-i18next";
 import bigNumbersToText from "../helpers/bigNumbersToText";
 
-export default function PasswordStrength({ passwordStrength, isError }) {
+export default function PasswordStrength({ passwordStrength, disabled }) {
   const [popoverOpened, { toggle: popoverToggle, close: popoverClose }] = useDisclosure(false);
   const { t } = useTranslation();
 
-  if (isError) {
+  if (disabled) {
     if (popoverOpened) {
       popoverClose();
     }
@@ -23,7 +23,7 @@ export default function PasswordStrength({ passwordStrength, isError }) {
           mx={8}
           w={"4rem"}
           className="PasswordStrength"
-          disabled={isError}
+          disabled={disabled}
         >
           {t("info")}
         </Button>
@@ -36,7 +36,7 @@ export default function PasswordStrength({ passwordStrength, isError }) {
           {": "}
           {passwordStrength.score} {t("of-4")}
         </Text>
-        {passwordStrength.guesses > 0 && (
+        {passwordStrength && passwordStrength.guesses > 1 && (
           <ScrollArea.Autosize type="auto" mah={200} offsetScrollbars>
             <Text>
               <Text span fw={700}>

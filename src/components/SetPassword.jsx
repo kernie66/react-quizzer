@@ -6,7 +6,7 @@ import getPasswordStrength from "../helpers/getPasswordStrength";
 import { isEmpty } from "radash";
 import PasswordStrength from "./PasswordStrength.jsx";
 import PasswordStrengthBar from "./PasswordStrengthBar.jsx";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export default function SetPassword({ form, focus = false, password = "" }) {
   const [tooltipOpened, { open: tooltipOpen, close: tooltipClose }] = useDisclosure(false);
@@ -20,11 +20,16 @@ export default function SetPassword({ form, focus = false, password = "" }) {
     score: 0,
   });
 
-  const { isError, data: passwordStrength } = useQuery({
+  const {
+    isError,
+    isLoading,
+    data: passwordStrength,
+  } = useQuery({
     queryKey: ["strength", { data: debouncedPassword, userInputs: userInputs }],
     queryFn: () => getPasswordStrength(debouncedPassword, userInputs),
-    placeholderData: { score: 0, guesses: 0, feedback: { warning: "", suggestions: "" } },
-    enabled: debouncedPassword.length >= 5,
+    // initialData: { score: 0, guesses: 0, feedback: { warning: "", suggestions: "" } },
+    placeholderData: keepPreviousData,
+    // enabled: !debouncedPassword || debouncedPassword.length >= 5,
     staleTime: Infinity,
     gcTime: 1000,
   });
@@ -45,18 +50,18 @@ export default function SetPassword({ form, focus = false, password = "" }) {
   useEffect(() => {
     let tooltipText = "enter-5-characters-for-hints";
     let suggestions = [];
-    const score = passwordStrength.score;
+    const score = passwordStrength?.score;
     if (debouncedPassword.length >= 5) {
       tooltipText = "password-is-not-good-enough";
-      if (passwordStrength.feedback.warning) {
-        tooltipText = passwordStrength.feedback.warning;
+      if (passwordStrength?.feedback.warning) {
+        tooltipText = passwordStrength?.feedback.warning;
       } else if (score === 3) {
         tooltipText = "password-strength-is-sufficient";
       } else if (score === 4) {
         tooltipText = "password-strength-is-very-good";
       }
-      if (!isEmpty(passwordStrength.feedback.suggestions)) {
-        suggestions = passwordStrength.feedback.suggestions;
+      if (!isEmpty(passwordStrength?.feedback.suggestions)) {
+        suggestions = passwordStrength?.feedback.suggestions;
       }
     }
     setPasswordCheck({ warning: tooltipText, suggestions: suggestions, score: score });
@@ -145,7 +150,9 @@ export default function SetPassword({ form, focus = false, password = "" }) {
           <input label="Username" hidden autoComplete="username" />
         </Grid.Col>
         <Grid.Col span="content" pt="2rem">
-          <PasswordStrength passwordStrength={passwordStrength} isError={isError} />
+          {passwordStrength && (
+            <PasswordStrength passwordStrength={passwordStrength} disabled={isError || isLoading} />
+          )}
         </Grid.Col>
       </Grid>
     </>
