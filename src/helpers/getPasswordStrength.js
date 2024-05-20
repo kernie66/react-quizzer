@@ -56,7 +56,8 @@ const options = {
 zxcvbnOptions.setOptions(options);
 */
 
-const getPasswordStrength = async (password, userInputs, loaded) => {
+const getPasswordStrength = async (password, userInputs) => {
+  const loaded = localStorage.getItem("dictionaries");
   if (!loaded) {
     // optional
     const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
@@ -65,6 +66,7 @@ const getPasswordStrength = async (password, userInputs, loaded) => {
     const options = await loadOptions();
     zxcvbnOptions.setOptions(options);
     console.log("Password dictionaries loaded...");
+    localStorage.setItem("dictionaries", "loaded");
   }
   const response = await zxcvbnAsync(password, userInputs);
   return response;
