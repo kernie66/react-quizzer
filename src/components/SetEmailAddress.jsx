@@ -5,7 +5,7 @@ import isValidEmail from "../helpers/isValidEmail";
 import { Loader, TextInput } from "@mantine/core";
 import { trim } from "radash";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SetEmailAddress({ form, focus, newUser = true }) {
   const api = useApi();
@@ -59,20 +59,22 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
     form.setFieldError("email", t("cannot-validate-the-email-address-server-not-responding"));
   }
 
-  if (emailStatus === "Email is free") {
-    if (!newUser) {
-      form.setFieldError("email", t("email-address-not-registered"));
+  useEffect(() => {
+    if (emailStatus === "Email is free") {
+      if (!newUser) {
+        form.setFieldError("email", t("email-address-not-registered"));
+      }
     }
-  }
 
-  if (emailStatus === "Email exist") {
-    if (newUser) {
-      form.setFieldError(
-        "email",
-        t("email-address-already-registered-did-you-forget-your-password"),
-      );
+    if (emailStatus === "Email exist") {
+      if (newUser) {
+        form.setFieldError(
+          "email",
+          t("email-address-already-registered-did-you-forget-your-password"),
+        );
+      }
     }
-  }
+  }, [emailStatus, form, newUser, t]);
 
   return (
     <TextInput

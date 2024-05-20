@@ -5,7 +5,7 @@ import { Loader, TextInput } from "@mantine/core";
 import { trim } from "radash";
 import { useQuery } from "@tanstack/react-query";
 import { TbCheck } from "react-icons/tb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SetUsername({ form, focus, newUser = true }) {
   const api = useApi();
@@ -60,17 +60,19 @@ export default function SetUsername({ form, focus, newUser = true }) {
     form.setFieldError("username", t("cannot-validate-the-username-server-not-responding"));
   }
 
-  if (usernameStatus === "Username is free") {
-    if (!newUser) {
-      form.setFieldError("username", t("please-enter-a-username"));
+  useEffect(() => {
+    if (usernameStatus === "Username is free") {
+      if (!newUser) {
+        form.setFieldError("username", t("please-enter-a-username"));
+      }
     }
-  }
 
-  if (usernameStatus === "Username exist") {
-    if (newUser) {
-      form.setFieldError("username", t("username-already-registered"));
+    if (usernameStatus === "Username exist") {
+      if (newUser) {
+        form.setFieldError("username", t("username-already-registered"));
+      }
     }
-  }
+  }, [usernameStatus, form, newUser, t]);
 
   return (
     <TextInput
