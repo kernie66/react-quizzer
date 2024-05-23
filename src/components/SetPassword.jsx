@@ -150,9 +150,7 @@ export default function SetPassword({ form, focus = false, password = "" }) {
           <input label="Username" hidden autoComplete="username" />
         </Grid.Col>
         <Grid.Col span="content" pt="2rem">
-          {passwordStrength && (
-            <PasswordStrength passwordStrength={passwordStrength} disabled={isError || isLoading} />
-          )}
+          <PasswordStrength passwordStrength={passwordStrength} disabled={isError || isLoading} />
         </Grid.Col>
       </Grid>
     </>

@@ -2,16 +2,19 @@ import { Button, Divider, List, Popover, ScrollArea, Text } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks";
 import { useTranslation } from "react-i18next";
 import bigNumbersToText from "../helpers/bigNumbersToText";
+import { useEffect } from "react";
 
 export default function PasswordStrength({ passwordStrength, disabled }) {
   const [popoverOpened, { toggle: popoverToggle, close: popoverClose }] = useDisclosure(false);
   const { t } = useTranslation();
 
-  if (disabled) {
-    if (popoverOpened) {
-      popoverClose();
+  useEffect(() => {
+    if (disabled) {
+      if (popoverOpened) {
+        popoverClose();
+      }
     }
-  }
+  }, [disabled, popoverOpened, popoverClose]);
 
   return (
     <Popover opened={popoverOpened} position="top-center">
@@ -34,9 +37,9 @@ export default function PasswordStrength({ passwordStrength, disabled }) {
             {t("score")}
           </Text>
           {": "}
-          {passwordStrength.score} {t("of-4")}
+          {passwordStrength?.score} {t("of-4")}
         </Text>
-        {passwordStrength && passwordStrength.guesses > 1 && (
+        {passwordStrength?.guesses > 1 && (
           <ScrollArea.Autosize type="auto" mah={200} offsetScrollbars>
             <Text>
               <Text span fw={700}>

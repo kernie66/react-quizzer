@@ -80,6 +80,7 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
     <TextInput
       label={t("email-address")}
       {...form.getInputProps("email")}
+      key={form.key("email")}
       withAsterisk
       mb="md"
       rightSection={

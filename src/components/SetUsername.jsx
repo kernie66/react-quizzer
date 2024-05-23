@@ -77,6 +77,7 @@ export default function SetUsername({ form, focus, newUser = true }) {
   return (
     <TextInput
       label={t("username")}
+      key={form.key("username")}
       {...form.getInputProps("username")}
       withAsterisk
       mb="md"
