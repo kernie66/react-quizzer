@@ -9,6 +9,7 @@ import { useForm } from "@mantine/form";
 import { useErrorBoundary } from "react-error-boundary";
 import { showNotification } from "@mantine/notifications";
 import { TbCheck, TbX } from "react-icons/tb";
+import isValidEmail from "../helpers/isValidEmail";
 
 export default function ResetRequestPage() {
   const [opened, { close }] = useDisclosure(true);
@@ -29,7 +30,7 @@ export default function ResetRequestPage() {
       email: "",
     },
     validate: {
-      email: (value) => (value.length === 0 ? t("please-enter-a-valid-email-address") : null),
+      email: (value) => (!isValidEmail(value) ? t("please-enter-a-valid-email-address") : null),
     },
   });
 

@@ -1,30 +1,33 @@
 import { TbCheck } from "react-icons/tb";
 import { useTranslation } from "react-i18next";
 import { useApi } from "../contexts/ApiProvider";
-import isValidEmail from "../helpers/isValidEmail";
 import { Loader, TextInput } from "@mantine/core";
 import { trim } from "radash";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import isValidEmail from "../helpers/isValidEmail";
 
 export default function SetEmailAddress({ form, focus, newUser = true }) {
   const api = useApi();
   const { t } = useTranslation();
   const [newEmail, setNewEmail] = useState("");
+  const [emailOk, setEmailOk] = useState(false);
 
   const getEmailStatus = async (newEmailAddress) => {
     if (newEmailAddress) {
       try {
         const existingEmail = await api.get("/check", { email: newEmailAddress });
         if (existingEmail.status === 200) {
-          return "Email exist";
+          return { exists: true, text: "Email exist" };
         } else {
+          console.log("existingEmail", existingEmail);
           throw new Error("Server error", existingEmail);
         }
       } catch (error) {
+        console.log("error", error);
         console.log("Email status error:", error.response.status);
-        if (newUser && error.response.status === 404) {
-          return "Email is free";
+        if (error.response.status === 404) {
+          return { exists: false, text: "Email is free" };
         }
         throw new Error("Error checking email", error);
       }
@@ -55,25 +58,39 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
     setNewEmail(formEmailAddress);
   };
 
-  if (isError) {
-    form.setFieldError("email", t("cannot-validate-the-email-address-server-not-responding"));
-  }
+  useEffect(() => {
+    if (isError) {
+      form.setFieldError("email", t("cannot-validate-the-email-address-server-not-responding"));
+    }
+  }, [form, isError, t]);
 
   useEffect(() => {
-    if (emailStatus === "Email is free") {
-      if (!newUser) {
-        form.setFieldError("email", t("email-address-not-registered"));
-      }
-    }
+    let validEmail = false;
 
-    if (emailStatus === "Email exist") {
-      if (newUser) {
-        form.setFieldError(
-          "email",
-          t("email-address-already-registered-did-you-forget-your-password"),
-        );
+    if (emailStatus) {
+      // Check if the email address is free
+      if (!emailStatus.exists) {
+        if (!newUser) {
+          form.setFieldError("email", t("email-address-not-registered"));
+        } else {
+          validEmail = true;
+        }
+      }
+
+      // Check if the email address is taken
+      if (emailStatus.exists) {
+        if (newUser) {
+          form.setFieldError(
+            "email",
+            t("email-address-already-registered-did-you-forget-your-password"),
+          );
+        } else {
+          validEmail = true;
+        }
       }
     }
+    console.log("validEmail", validEmail);
+    setEmailOk(validEmail);
   }, [emailStatus, form, newUser, t]);
 
   return (
@@ -90,7 +107,7 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
           <TbCheck
             aria-label="checked"
             color="green"
-            style={{ display: emailStatus === "Email is free" ? undefined : "none" }}
+            style={{ display: emailOk ? undefined : "none" }}
           />
         )
       }
