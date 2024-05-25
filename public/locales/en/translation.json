@@ -204,5 +204,10 @@
   "games": "Games",
   "registration-of-new-user-failed-on-server-please-try-again": "Registration of new user failed on server, please try again",
   "patterns": "Patterns",
-  "please-use-only-alphanumeric-characters": "Please use only alphanumeric characters"
+  "please-use-only-alphanumeric-characters": "Please use only alphanumeric characters",
+  "email-exist": "Email exist",
+  "email-is-free": "Email is free",
+  "username-is-free": "Username is free",
+  "username-exist": "Username exist",
+  "username-not-registered-for-any-quizzer": "Username not registered for any quizzer"
 }

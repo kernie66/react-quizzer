@@ -9,7 +9,8 @@
   "i18n-ally.keystyle": "flat",
   "i18n-ally.sourceLanguage": "en",
   "i18n-ally.extract.ignoredByFiles": {
-    "src/pages/LoginPage.js": ["\n              Forgot your password? Request a "]
+    "src/pages/LoginPage.js": ["\n              Forgot your password? Request a "],
+    "src/components/SetEmailAddress.jsx": ["Error checking email"]
   },
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"

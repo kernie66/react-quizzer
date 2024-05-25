@@ -18,16 +18,13 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
       try {
         const existingEmail = await api.get("/check", { email: newEmailAddress });
         if (existingEmail.status === 200) {
-          return { exists: true, text: "Email exist" };
+          return { exists: true, text: "email-exist" };
         } else {
-          console.log("existingEmail", existingEmail);
           throw new Error("Server error", existingEmail);
         }
       } catch (error) {
-        console.log("error", error);
-        console.log("Email status error:", error.response.status);
         if (error.response.status === 404) {
-          return { exists: false, text: "Email is free" };
+          return { exists: false, text: "email-is-free" };
         }
         throw new Error("Error checking email", error);
       }
@@ -46,6 +43,7 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
     gcTime: 1000,
   });
 
+  // Check email address
   const checkEmail = () => {
     let formEmailAddress = trim(form.getValues().email.toLowerCase());
     form.setValues({ email: formEmailAddress });
@@ -89,7 +87,6 @@ export default function SetEmailAddress({ form, focus, newUser = true }) {
         }
       }
     }
-    console.log("validEmail", validEmail);
     setEmailOk(validEmail);
   }, [emailStatus, form, newUser, t]);
 
