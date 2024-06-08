@@ -48,6 +48,7 @@ export default function ResetRequestPage() {
         resetURL: resetURL,
         language: language,
       });
+      console.log("response", response);
       if (response.ok) {
         close();
         showNotification({
@@ -55,10 +56,11 @@ export default function ResetRequestPage() {
           message: t("you-will-receive-an-email-with-instructions-to-reset-your-password"),
           color: "green",
           icon: <TbCheck style={{ width: rem(18), height: rem(18) }} />,
-          autoClose: 5000,
+          autoClose: 10000,
         });
         navigate("/login");
       } else {
+        form.setFieldError("email", t("couldnt-request-a-password-reset"));
         showNotification({
           title: t("reset-password"),
           message: t("couldnt-request-a-password-reset"),
@@ -91,7 +93,9 @@ export default function ResetRequestPage() {
           <SetEmailAddress form={form} focus={true} newUser={false} />
           <Divider mb={8} />
           <Group justify="space-between" my={8} pt={16}>
-            <Button type="submit">{t("reset-password")}</Button>
+            <Button type="submit" disabled={!form.isValid()}>
+              {t("reset-password")}
+            </Button>
             <Button variant="outline" onClick={cancelRequest}>
               {t("cancel")}
             </Button>

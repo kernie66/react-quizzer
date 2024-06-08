@@ -1,7 +1,7 @@
 import { User, ResetToken } from "../../models/index.js";
 import bcrypt from "bcrypt";
 import { logger } from "../logger/logger.js";
-import sendEmail from "../utils/sendEmail.js";
+import { sendEmail } from "../utils/sendEmail.js";
 import { BadRequest, NotFound } from "../utils/errorHandler.js";
 import dbUpdateUser from "../db/db.updateUser.js";
 
